@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes" ?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
-    <title>Others | Academic</title>
+    <title>Others | Soham Bonnerjee&#39;s Home Page</title>
     <link>/tags/others/</link>
       <atom:link href="/tags/others/index.xml" rel="self" type="application/rss+xml" />
     <description>Others</description>
@@ -13,7 +13,7 @@
     </image>
     
     <item>
-      <title>Internal Project</title>
+      <title>Multiple Correspondence Analysis</title>
       <link>/project/multiple-correspondence-analysis/</link>
       <pubDate>Wed, 27 Apr 2016 00:00:00 +0000</pubDate>
       <guid>/project/multiple-correspondence-analysis/</guid>
