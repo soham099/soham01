@@ -1,0 +1,1410 @@
+<!DOCTYPE html>
+<html lang="en-us">
+
+<head>
+
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="generator" content="Source Themes Academic 4.6.3">
+
+  
+
+  
+  
+  
+  
+  
+    
+    
+    
+  
+  
+
+  <meta name="author" content="Soham Bonnerjee">
+
+  
+  
+  
+    
+  
+  <meta name="description" content="This is a post to give a basic understanding of statistical modelling of epidemiology. In this post, we shall explore the performance of deterministic SIR model which to be fitted using a least squares procedure. Then, we shall use it to generate projections for the epidemic situation in India">
+
+  
+  <link rel="alternate" hreflang="en-us" href="/post/covid19-project/">
+
+  
+
+
+  
+  
+  
+  <meta name="theme-color" content="#2962ff">
+  
+
+  
+  
+
+  
+  
+  
+  
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/academicons/1.8.6/css/academicons.min.css" integrity="sha256-uFVgMKfistnJAfoCUQigIl+JfUaP47GrRKjf6CTPVmw=" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.11.2/css/all.min.css" integrity="sha256-+N4/V/SbAFiW1MPBCXnfnP9QSN3+Keu+NlB+0ev/YKQ=" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.5.7/jquery.fancybox.min.css" integrity="sha256-Vzbj7sDDS/woiFS3uNKo8eIuni59rjyNGtXfstRzStA=" crossorigin="anonymous">
+
+    
+    
+    
+      
+    
+    
+      
+      
+        
+          <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.10/styles/github.min.css" crossorigin="anonymous" title="hl-light">
+          <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.10/styles/dracula.min.css" crossorigin="anonymous" title="hl-dark" disabled>
+        
+      
+    
+
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.5.1/leaflet.css" integrity="sha256-SHMGCYmST46SoyGgo4YR/9AlK1vf3ff84Aq9yK4hdqM=" crossorigin="anonymous">
+    
+
+    
+
+    
+    
+      
+
+      
+      
+
+      
+    
+      
+
+      
+      
+
+      
+    
+      
+
+      
+      
+
+      
+    
+      
+
+      
+      
+
+      
+    
+      
+
+      
+      
+
+      
+    
+      
+
+      
+      
+
+      
+    
+      
+
+      
+      
+
+      
+    
+      
+
+      
+      
+
+      
+    
+      
+
+      
+      
+
+      
+    
+      
+
+      
+      
+
+      
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/lazysizes/5.1.2/lazysizes.min.js" integrity="sha256-Md1qLToewPeKjfAHU1zyPwOutccPAm5tahnaw7Osw0A=" crossorigin="anonymous" async></script>
+      
+    
+      
+
+      
+      
+
+      
+    
+      
+
+      
+      
+
+      
+    
+      
+
+      
+      
+        
+      
+
+      
+    
+      
+
+      
+      
+
+      
+    
+
+  
+
+  
+  
+  
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Montserrat:400,700%7CRoboto:400,400italic,700%7CRoboto+Mono&display=swap">
+  
+
+  
+  
+  
+  
+  <link rel="stylesheet" href="/css/academic.css">
+
+  
+
+
+
+
+  
+
+
+  
+
+  <link rel="manifest" href="/index.webmanifest">
+  <link rel="icon" type="image/png" href="/img/icon-32.png">
+  <link rel="apple-touch-icon" type="image/png" href="/img/icon-192.png">
+
+  <link rel="canonical" href="/post/covid19-project/">
+
+  
+  
+  
+  
+    
+  
+  
+  <meta property="twitter:card" content="summary_large_image">
+  
+  <meta property="og:site_name" content="Soham Bonnerjee&#39;s Home Page">
+  <meta property="og:url" content="/post/covid19-project/">
+  <meta property="og:title" content="SIR Modelling of COVID-19 Pandemic situation | Soham Bonnerjee&#39;s Home Page">
+  <meta property="og:description" content="This is a post to give a basic understanding of statistical modelling of epidemiology. In this post, we shall explore the performance of deterministic SIR model which to be fitted using a least squares procedure. Then, we shall use it to generate projections for the epidemic situation in India"><meta property="og:image" content="/post/covid19-project/featured.jpg">
+  <meta property="twitter:image" content="/post/covid19-project/featured.jpg"><meta property="og:locale" content="en-us">
+  
+    
+      <meta property="article:published_time" content="2020-03-25T00:00:00&#43;00:00">
+    
+    <meta property="article:modified_time" content="2020-03-25T00:00:00&#43;00:00">
+  
+
+  
+
+
+    
+
+
+
+
+
+
+  
+
+
+
+
+
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "mainEntityOfPage": {
+    "@type": "WebPage",
+    "@id": "/post/covid19-project/"
+  },
+  "headline": "SIR Modelling of COVID-19 Pandemic situation",
+  
+  "image": [
+    "/post/covid19-project/featured.jpg"
+  ],
+  
+  "datePublished": "2020-03-25T00:00:00Z",
+  "dateModified": "2020-03-25T00:00:00Z",
+  
+  "author": {
+    "@type": "Person",
+    "name": "Soham Bonnerjee"
+  },
+  
+  "publisher": {
+    "@type": "Organization",
+    "name": "Soham Bonnerjee's Home Page",
+    "logo": {
+      "@type": "ImageObject",
+      "url": "/img/icon-512.png"
+    }
+  },
+  "description": "This is a post to give a basic understanding of statistical modelling of epidemiology. In this post, we shall explore the performance of deterministic SIR model which to be fitted using a least squares procedure. Then, we shall use it to generate projections for the epidemic situation in India"
+}
+</script>
+
+  
+
+  
+
+
+  
+
+
+  
+
+
+
+
+
+  <title>SIR Modelling of COVID-19 Pandemic situation | Soham Bonnerjee&#39;s Home Page</title>
+
+</head>
+
+<body id="top" data-spy="scroll" data-offset="70" data-target="#TableOfContents" >
+
+  <aside class="search-results" id="search">
+  <div class="container">
+    <section class="search-header">
+
+      <div class="row no-gutters justify-content-between mb-3">
+        <div class="col-6">
+          <h1>Search</h1>
+        </div>
+        <div class="col-6 col-search-close">
+          <a class="js-search" href="#"><i class="fas fa-times-circle text-muted" aria-hidden="true"></i></a>
+        </div>
+      </div>
+
+      <div id="search-box">
+        
+        <input name="q" id="search-query" placeholder="Search..." autocapitalize="off"
+        autocomplete="off" autocorrect="off" spellcheck="false" type="search">
+        
+      </div>
+
+    </section>
+    <section class="section-search-results">
+
+      <div id="search-hits">
+        
+      </div>
+
+    </section>
+  </div>
+</aside>
+
+
+  
+
+<nav class="navbar navbar-expand-lg navbar-light compensate-for-scrollbar" id="navbar-main">
+  <div class="container">
+
+    
+    <div class="d-none d-lg-inline-flex">
+      <a class="navbar-brand" href="/">Soham Bonnerjee&#39;s Home Page</a>
+    </div>
+    
+
+    
+    <button type="button" class="navbar-toggler" data-toggle="collapse"
+            data-target="#navbar-content" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
+    <span><i class="fas fa-bars"></i></span>
+    </button>
+    
+
+    
+    <div class="navbar-brand-mobile-wrapper d-inline-flex d-lg-none">
+      <a class="navbar-brand" href="/">Soham Bonnerjee&#39;s Home Page</a>
+    </div>
+    
+
+    
+    
+    <div class="navbar-collapse main-menu-item collapse justify-content-start" id="navbar-content">
+
+      
+      <ul class="navbar-nav d-md-inline-flex">
+        
+
+        
+
+        
+        
+        
+          
+        
+
+        
+        
+        
+        
+        
+        
+          
+          
+          
+            
+          
+          
+        
+
+        <li class="nav-item">
+          <a class="nav-link " href="/#posts"><span>Posts</span></a>
+        </li>
+
+        
+        
+
+        
+
+        
+        
+        
+          
+        
+
+        
+        
+        
+        
+        
+        
+          
+          
+          
+            
+          
+          
+        
+
+        <li class="nav-item">
+          <a class="nav-link " href="/#projects"><span>Projects</span></a>
+        </li>
+
+        
+        
+
+        
+
+        
+        
+        
+          
+        
+
+        
+        
+        
+        
+        
+        
+          
+          
+          
+            
+          
+          
+        
+
+        <li class="nav-item">
+          <a class="nav-link " href="/#featured"><span>Publications</span></a>
+        </li>
+
+        
+        
+
+        
+
+        
+        
+        
+          
+        
+
+        
+        
+        
+        
+        
+        
+
+        <li class="nav-item">
+          <a class="nav-link " href="/courses/"><span>Courses</span></a>
+        </li>
+
+        
+        
+
+        
+
+        
+        
+        
+          
+        
+
+        
+        
+        
+        
+        
+        
+          
+          
+          
+            
+          
+          
+        
+
+        <li class="nav-item">
+          <a class="nav-link " href="/#contact"><span>Contact</span></a>
+        </li>
+
+        
+        
+
+      
+
+        
+      </ul>
+    </div>
+
+    <ul class="nav-icons navbar-nav flex-row ml-auto d-flex pl-md-2">
+      
+      <li class="nav-item">
+        <a class="nav-link js-search" href="#"><i class="fas fa-search" aria-hidden="true"></i></a>
+      </li>
+      
+
+      
+      <li class="nav-item">
+        <a class="nav-link js-dark-toggle" href="#"><i class="fas fa-moon" aria-hidden="true"></i></a>
+      </li>
+      
+
+      
+
+    </ul>
+
+  </div>
+</nav>
+
+
+  <article class="article">
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+
+<div class="article-container pt-3">
+  <h1>SIR Modelling of COVID-19 Pandemic situation</h1>
+
+  
+  <p class="page-subtitle">During the time of shelter-in-place lockdown due to global pandemic of COVID-19</p>
+  
+
+  
+
+
+<div class="article-metadata">
+
+  
+  
+  
+  
+  <div>
+    
+
+
+
+  
+  <span><a href="/authors/admin/">Soham Bonnerjee</a></span>, <span><a href="/authors/subhrajyoty-roy/">Subhrajyoty Roy</a></span>
+
+  </div>
+  
+  
+
+  
+  <span class="article-date">
+    
+    
+      
+    
+    Mar 25, 2020
+  </span>
+  
+
+  
+
+  
+  <span class="middot-divider"></span>
+  <span class="article-reading-time">
+    14 min read
+  </span>
+  
+
+  
+  
+  
+
+  
+  
+
+</div>
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</div>
+
+
+<div class="article-header article-container featured-image-wrapper mt-4 mb-4" style="max-width: 720px; max-height: 405px;">
+  <div style="position: relative">
+    <img src="/post/covid19-project/featured_hu18a794b5657252051e3c90aa258d47f3_54381_720x0_resize_q90_lanczos.jpg" alt="" class="featured-image">
+    <span class="article-header-caption"><a href="https://edition.cnn.com/2020/03/24/world/coronavirus-newsletter-03-24-20/index.html">CNN.com</a></span>
+  </div>
+</div>
+
+
+
+  <div class="article-container">
+
+    <div class="article-style">
+      <h1 id="the-current-global-scenario">The Current Global Scenario</h1>
+<p>At the end of December 2019, a cluster of an unknown pneumonia like cases were reported in Wuhan, a city in the Hubei province, China. They quickly identified that the source of the infection was a novel coronavirus belonging to the coronavirus family, which includes the virus related to the outbreaks of  Severe Acute Respiratory Syndrome (SARS) from 2002-2004 and Middle East Respiratory Syndrome (MERS) in 2012. It  spread through and outside of Wuhan, resulting in an rapidly escalating and deadly contagious epidemic throughout China, followed by an increasing number of cases in other countries throughout the world.<br>
+On January 30, the WHO declared coronavirus a global emergency  as the death toll in China jumped to 170, with 7,711 cases reported in the country, where the virus had spread to all 31 provinces.  In mid-February WHO announced that the new coronavirus would be called &ldquo;COVID-19&rdquo;.</p>
+<p>China's bold approach to contain the rapid spread of this new respiratory pathogen  by massive lockdowns and electronic surveillance measures has changed the changed the course of the epidemic . The number of new infections reported in China has been declining gradually. With over 422,915 reported cases and more than 18,543 recorded deaths worldwide , the outbreak of COVID-19 has surpassed the toll of the 2002-2003 SARS outbreak, which also originated in China and is expected to continue to increase.  Although the infection originated in China, now the epicenter of the pandemic is Europe, which now has more cases reported each day than China did at the height of its outbreak.  In Italy alone the COVID-19 has infected more than 69,000 people and killed at least 6,800. There is an increasing number of cases in several EU/EEA countries without epidemiological links to explain the source of transmission. The speed with which COVID-19 can cause nationally incapacitating epidemics once transmission within the community is established indicates that it is likely that in a few weeks or even days, similar situations to those seen in China and Italy may be seen in other EU/EEA countries or the UK, as more countries report evidence of community transmission.
+The COVID-19 virus spreads primarily through droplets of saliva or discharge from the nose when an infected person coughs or sneezes.  At the time of this writing, there are no specific vaccines or treatments for COVID-19 which is generally accepted.</p>
+<h1 id="introduction">Introduction</h1>
+<p>This is a post to give a basic understanding of statistical modelling of epidemiology. In past few days of Shelter-in-place lockdown situation in Kolkata (and throughout the whole India from today onwards), me and one of my friend <a href="https://subroy13.github.io/">Subhrajyoty Roy</a> (we were attending the same college before lockdown to purse Masters degree in Statistics), was reading about different epidemiological models available in the literature and using it to generate projections for the number of infected people in India.</p>
+<p>In this post, we shall explore the performance of deterministic SIR model which to be fitted using a least squares procedure. Then, we shall use it to generate projections for the epidemic situation in India, till the end of this lockdown, which is currently annouced to be remain till April 14, 2020, about 3 weeks from today.</p>
+<h1 id="exploratory-analysis">Exploratory Analysis</h1>
+<p>Before proceeding with introducing the SIR model, let us first read the data into <code>R</code> (which is what we are going to use through out), and perform some exploratory analysis. We shall be using the <a href="https://www.tidyverse.org/">tidyverse</a> library, which is a collection of some very useful packages for data proprocessing and exploratory analysis.</p>
+<pre><code class="language-r">library(readr)
+library(dplyr)
+library(tidyr)
+library(lubridate)
+library(ggplot2)
+</code></pre>
+<p>For the related coronavirus, there are may different sources available. Many international organizations like WHO (World Health Organization), ECDC (European Centre for Disease Prevention and Control) and many national governments are releasing day to day basis publicly available data. As well as different news agencies are also collecting and compileing data from the hospitals and different other sources on a regular basis. John Hopkins University (JHU) CSSE department has also released a dataset compiled from the collection of these sources in a github repository <a href="https://github.com/CSSEGISandData/COVID-19">here</a>.</p>
+<p>The datasets are being updated on a daily basis. We shall use this data provided by <a href="https://github.com/CSSEGISandData/COVID-19">JHU CSSE</a>.</p>
+<pre><code class="language-r">confirmed.dat &lt;- read_csv('./datasets/time_series_19-covid-Confirmed.csv')
+deaths.dat &lt;- read_csv('./datasets/time_series_19-covid-Deaths.csv')
+recovered.dat &lt;- read_csv('./datasets/time_series_19-covid-Recovered.csv')
+
+confirmed.dat &lt;- confirmed.dat %&gt;%
+    rename( State = `Province/State`, Country = `Country/Region` ) %&gt;% 
+    gather(key = &quot;Date&quot;, value = &quot;Confirmed&quot;, -c(1:4) ) %&gt;%
+    mutate(Date = mdy(Date))
+    
+
+deaths.dat &lt;- deaths.dat %&gt;%
+    rename( State = `Province/State`, Country = `Country/Region` ) %&gt;% 
+    gather(key = &quot;Date&quot;, value = &quot;Deaths&quot;, -c(1:4) ) %&gt;% 
+    mutate(Date = mdy(Date))
+
+recovered.dat &lt;- recovered.dat %&gt;%
+    rename( State = `Province/State`, Country = `Country/Region` ) %&gt;% 
+    gather(key = &quot;Date&quot;, value = &quot;Recovered&quot;, -c(1:4) ) %&gt;%
+    mutate(Date = mdy(Date))
+
+
+# merge all of them together
+dat &lt;- Reduce(merge, list(confirmed.dat, deaths.dat, recovered.dat))
+dat &lt;- as_tibble(dat)
+
+knitr::kable(head(dat, 5))
+</code></pre>
+<table>
+<thead>
+<tr>
+<th>State</th>
+<th>Country</th>
+<th>Lat</th>
+<th>Long</th>
+<th>Date</th>
+<th>Confirmed</th>
+<th>Deaths</th>
+<th>Recovered</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Adams, IN</td>
+<td>US</td>
+<td>39.8522</td>
+<td>-77.2865</td>
+<td>2020-01-22</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+</tr>
+<tr>
+<td>Adams, IN</td>
+<td>US</td>
+<td>39.8522</td>
+<td>-77.2865</td>
+<td>2020-01-23</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+</tr>
+<tr>
+<td>Adams, IN</td>
+<td>US</td>
+<td>39.8522</td>
+<td>-77.2865</td>
+<td>2020-01-24</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+</tr>
+<tr>
+<td>Adams, IN</td>
+<td>US</td>
+<td>39.8522</td>
+<td>-77.2865</td>
+<td>2020-01-25</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+</tr>
+<tr>
+<td>Adams, IN</td>
+<td>US</td>
+<td>39.8522</td>
+<td>-77.2865</td>
+<td>2020-01-26</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+</tr>
+</tbody>
+</table>
+<p>Now we shall try to see how the total number of Confirmed, deaths and recovered people changed across the globe.</p>
+<pre><code class="language-r">temp &lt;- dat %&gt;% group_by(Date) %&gt;% 
+    summarise(Confirmed = sum(Confirmed), Deaths = sum(Deaths), Recovered = sum(Recovered)) %&gt;%
+    gather(key = &quot;Variable&quot;, value = &quot;Count&quot;, -Date)
+
+ggplot(temp, aes(x = Date, y = Count, color = Variable)) + geom_line(size = 1)
+</code></pre>
+<p><img src="./unnamed-chunk-6-1.png" alt=""></p>
+<p>The situation is very severe, as the current trend in exponentially increasing in terms of confirmed cases, and the growth rate of recovered is sufficiently slow. If we particular focus on the situation of India, (after 1st March, 2020),</p>
+<p><img src="unnamed-chunk-7-1.png" alt=""></p>
+<p>As of now, there are very less number of recoveries, some deaths, and a lot of (about 400) affected people. We have also compiled how these changes occurs spatially in different countries. They are shown below.</p>
+<p><img src="./confirmed-1.gif" alt=""></p>
+<p><img src="./deaths-1.gif" alt=""></p>
+<h1 id="sir-model-description">SIR Model Description</h1>
+<p>The SIR model is one of the compartmental models in epidemiology which is used to mathematically model the spread of an infectious disease. This model was firstly introduced by William Ogilvy Kermack and A. G. McKendrick, and named as <strong>Kermack-McKendrick Model.</strong> However, with time, this model has obtained several variants, each being better than the one before.</p>
+<p>SIR modelling starts with defining 3 different compartments, of states in which a person can be. The states are as follows:</p>
+<pre><code class="language-mermaid">graph LR;
+    S(Susceptible) --&gt; I(Infected);
+    I(Infected) --&gt; R(Recovered / Removed);
+</code></pre>
+<p><strong>Susceptibles</strong> are the general population, who is susceptible to get the disease from an infectious person. <strong>Infected</strong> state reperesents the persons who have the symptoms of the infection and is able to spread it. And finally, <strong>Recovered</strong> or <strong>Removed</strong> is the state when a person is recovered from the disease and gain immunity to it, or is dead. Let, $Y_t^S, Y_t^I, Y_t^R$ dentoes the number of people in these states respectively at the time $t$. The corresponding proportions are denoted by $\theta_t^S, \theta_t^I$ and $\theta_t^R$, where the proportion is defined as the number of people in a state divided by the total number of people, i.e. the population count. Note that, since these three states are assumed to be exhaustive, hence $Y_t^S + Y_t^I + Y_t^R = N$, where $N$ is the total population of the particular region under study.</p>
+<p>The mathematical relations between these quantities are defined as follows:</p>
+<p>$$
+\begin{align}
+\dfrac{d\theta_t^S}{dt} &amp; = -\beta \theta_t^S \theta_t^I\\\<br>
+&amp; \\\<br>
+\dfrac{d\theta_t^I}{dt} &amp; = \beta \theta_t^S \theta_t^I - \gamma \theta_t^I\\\<br>
+&amp; \\\<br>
+\dfrac{d\theta_t^R}{dt} &amp; = \gamma \theta_t^I\\\<br>
+\end{align}
+$$</p>
+<p>Note that, since $Y_t^S + Y_t^I + Y_t^R = N$, we have $\theta_t^S + \theta_t^I + \theta_t^R = 1$, which is constant. Hence, we must have,</p>
+<p>$$ \dfrac{d\theta_t^S}{dt} + \dfrac{d\theta_t^I}{dt} + \dfrac{d\theta_t^R}{dt} = 0 $$</p>
+<p>which is satisfied by the mathematical formulation. In this, $\beta, \gamma$ are unknown parameters which is to be estimated from the data.</p>
+<p>These mathematical equations did not drop from the sky. Let us understand how these mathematical formula emerges from an intuitive points of view.</p>
+<ol>
+<li>
+<p>We consider the third equation first. It models the change in the number of recovered people. Now, the change in the number (or proportion) of recovered people can occur only when an infectious person, gets treatment, which happens with rate $\gamma$, which can be interpreted as the recovery rate of an infectious person. Therefore, it changes by the amount $\gamma \theta_t^I$.</p>
+</li>
+<li>
+<p>Now we consider the first equation. It models the change in the number of susceptible population. The change in susceptible population occurs, when an infectious person comes in contact with a susceptible person, and the infection spreads. Now, there are $Y_t^I Y_t^S$ many interactions possible, and each interaction would spread the virus with rate $\beta$ say. Considering proportions, we have the change being equal to $-\beta\theta_t^I\theta_t^S$, with the negative sign showing that number of susceptibles can only decrease.</p>
+</li>
+<li>
+<p>Due to the restriction, $\dfrac{d\theta_t^S}{dt} + \dfrac{d\theta_t^I}{dt} + \dfrac{d\theta_t^R}{dt} = 0$, the choice of $\dfrac{d\theta_t^I}{dt}$ can be justfied from previous points.</p>
+</li>
+</ol>
+<p>A very important measure in this model is the quantity;</p>
+<p>$$R_0 = \dfrac{\beta}{\gamma}$$</p>
+<p>This basically interprets as the average number of people an infectious person infects before recovering or dying. So, if $R_0 &lt; 1$, then an infectious person infects less than one person in average before recovering, which means the infection pandemic will eventually die out. Whereas, if $R_0 &gt; 1$, then an infectious person infects more than one person in average before recovering, hence the number of infected would increase exponentially and eventually all of the population will become infected.</p>
+<h1 id="estimation-of-sir-model">Estimation of SIR Model</h1>
+<p>There are two possible ways of estimation of the parameters of an SIR model.</p>
+<ol>
+<li>
+<p>A deterministic estimation.</p>
+</li>
+<li>
+<p>A stochastic estimation.</p>
+</li>
+</ol>
+<p>A deterministic estimation does not require any other assumptions on the model parameters, as well as the data. It basically works simply on the basis of solution to the above differential equations. However, a stochastic estimation requires specifications of the distributional assumptions on the data, as well as model parameters. In this post, we are going to use only a deterministic setup of the model as explained in the mathematical formulation, nothing more.</p>
+<p>For this reason, we shall use <a href="https://en.wikipedia.org/wiki/Runge%E2%80%93Kutta_methods">Runge Kutta methods</a> of numerically solving a system of differential equations, under some particular choice of the model parameters $\beta, \gamma$. However, as we solve the differential equations, we shall be able to obtain estimates $\hat{Y}_t^S, \hat{Y}_t^I$ and $\hat{Y}_t^R$. Then, we can use a Least Squares approach to solve this problem, to estimate $\beta, \gamma$ as;</p>
+<p>$$
+(\hat{\beta}, \hat{\gamma}) = \min_{\beta, \gamma} \sum_t \left[ \left(Y_t^S - \hat{Y}_t^S\right)^2 + \left(Y_t^I - \hat{Y}_t^I\right)^2 + \left(Y_t^R - \hat{Y}_t^R\right)^2 \right]
+$$</p>
+<p>To this end, we write the function <code>pred.SIR</code> and <code>LS.SIR</code> which performs the prediction given the initial value and parameters, and computes the value of the objective function written above by tallying it with the observed data.</p>
+<pre><code class="language-r">pred.SIR &lt;- function(n_time, beta, gamma, init.theta) {
+    theta &lt;- matrix(0, nrow = n_time, ncol = 3)
+    theta[1, ] &lt;- init.theta / sum(init.theta)
+    
+    for (t in 2:n_time) {
+        # for each time, create the Runge Kutta approximation
+        Km &lt;- numeric(12)   # 12 coefficients are needed
+        
+        # computes coefficients of runge kutta
+        Km[1] &lt;- - beta * theta[t-1,1] * theta[t-1,2]
+        Km[9] &lt;- gamma * theta[t-1,2]
+        Km[5] &lt;- -Km[1]-Km[9]
+        
+        Km[2] &lt;- - beta * (theta[t-1,1]+ 0.5*Km[1]) * (theta[t-1,2]+0.5*Km[5])
+        Km[10] &lt;- gamma*(theta[t-1,2]+0.5*Km[5])
+        Km[6] &lt;- -Km[2]-Km[10]
+        
+        Km[3] &lt;- -beta*(theta[t-1,1]+0.5*Km[2])*(theta[t-1,2]+0.5*Km[6])
+        Km[11] &lt;- gamma*(theta[t-1,2]+0.5*Km[6])
+        Km[7] &lt;- -Km[3]-Km[11]
+      
+        Km[4] &lt;- -beta*(theta[t-1,1]+Km[3])*(theta[t-1,2]+Km[7])
+        Km[12] &lt;- gamma*(theta[t-1,2]+Km[7])
+        Km[8] &lt;- -Km[4]-Km[12]
+        
+        innov.S &lt;- ( Km[1] + 2 *Km[2] + 2*Km[3] + Km[4])/6
+        innov.I &lt;- ( Km[5] + 2 *Km[6] + 2*Km[7] + Km[8])/6
+        innov.R &lt;- ( Km[9] + 2 *Km[10] + 2*Km[11] + Km[12])/6
+        
+        theta[t, ] &lt;- theta[(t-1), ] + c(innov.S, innov.I, innov.R)
+        theta[t, ] &lt;- theta[t, ]/sum(theta[t, ])
+    }
+    
+    return(theta)
+}
+LS.SIR &lt;- function(params, Y) {
+    beta &lt;- params[1]
+    gamma &lt;- params[2]
+    n_time &lt;- nrow(Y)
+    N &lt;- sum(Y[1, ])
+    
+    init.theta &lt;- Y[1, ] / N
+    preds &lt;- pred.SIR(n_time, beta, gamma, init.theta)
+    
+    return( sum((Y - preds * N )^2) ) 
+}
+</code></pre>
+<h1 id="performance-of-sir-model">Performance of SIR model</h1>
+<h2 id="estimation-for-hong-kong-china">Estimation for Hong Kong, China</h2>
+<p>We choose the Hong Kong province in China to see how SIR model performs. According to World Bank data, the province Hong Kong is home to about $73.9$ lakhs people. Therefore, we have $N = 73.9\times 10^5$, in our model.</p>
+<pre><code class="language-r">N &lt;- 73.9e5   # population of Hong Kong
+temp  &lt;- dat %&gt;% filter(Country == &quot;China&quot; &amp; State == &quot;Hong Kong&quot;) %&gt;% 
+    mutate(Removed = Deaths + Recovered, Susceptible = N - Removed - Confirmed) %&gt;% 
+    select(Date, Susceptible, Confirmed, Removed)
+
+knitr::kable(head(temp))
+</code></pre>
+<table>
+<thead>
+<tr>
+<th>Date</th>
+<th>Susceptible</th>
+<th>Confirmed</th>
+<th>Removed</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>2020-01-22</td>
+<td>7390000</td>
+<td>0</td>
+<td>0</td>
+</tr>
+<tr>
+<td>2020-01-23</td>
+<td>7389998</td>
+<td>2</td>
+<td>0</td>
+</tr>
+<tr>
+<td>2020-01-24</td>
+<td>7389998</td>
+<td>2</td>
+<td>0</td>
+</tr>
+<tr>
+<td>2020-01-25</td>
+<td>7389995</td>
+<td>5</td>
+<td>0</td>
+</tr>
+<tr>
+<td>2020-01-26</td>
+<td>7389992</td>
+<td>8</td>
+<td>0</td>
+</tr>
+<tr>
+<td>2020-01-27</td>
+<td>7389992</td>
+<td>8</td>
+<td>0</td>
+</tr>
+</tbody>
+</table>
+<p>As you can see, the first appearence of Coronavirus in Hong Kong is on 23rd of Janurary, 2020. So, we should use the data from 2nd row onwards to fit into SIR model. We shall be using the data corresponding to $61$ days, i.e. till 23rd of May, 2020. Among this, we shall be training the model using data of first $47$ days, and then we build the prediction for next $14$ days, to see the performance of the fitted model. We shall be using <code>optim</code> function of <code>R</code> to optimize our objective function in order to find Least Sqaures estimate.</p>
+<pre><code class="language-r">Y &lt;- as.matrix(temp[2:48, 2:4])
+ops &lt;- optim(par = c(1e-2, 1e-5), fn = LS.SIR, method = &quot;BFGS&quot;, Y = Y, control = list(trace = 1))
+</code></pre>
+<pre><code>initial  value 552556.538521 
+iter  10 value 68951.183015
+final  value 65031.692121 
+converged
+</code></pre>
+<pre><code class="language-r">ops$par[1] / ops$par[2]   # R0
+</code></pre>
+<pre><code>[1] 3.149289
+</code></pre>
+<p>Now that we have the estimated parameters, we can simply generate predictions for last $14$ days, using this <code>pred.SIR</code> method. Before that, estimate of $R_0$ turns out to be higher than 1, thereby showing the seriousness of the COVID-19 epidemic situation.</p>
+<pre><code class="language-r"># since predictions are proportions, we multiply with the population to get the count estimates
+
+preds &lt;- pred.SIR(14, ops$par[1], ops$par[2], as.matrix(temp[49, 2:4])) * N
+pred.dat &lt;- tibble(Date = temp$Date[49:62], Pred.Confirmed = preds[, 2], Pred.Removed = preds[, 3])
+pred.dat &lt;- left_join(temp, pred.dat, by = c(&quot;Date&quot; = &quot;Date&quot;))  # create a full dataset containing predicted data as well
+
+ggplot( pred.dat , aes(x = Date) ) +
+    geom_line(aes(y = Confirmed), color = &quot;black&quot;, size = 1) +
+    geom_line(aes(y = Pred.Confirmed), color = &quot;blue&quot;, size = 1, linetype = &quot;dashed&quot;)
+</code></pre>
+<p><img src="./unnamed-chunk-12-1.png" alt=""></p>
+<p>Therefore, we see that SIR model overestimates the true number by about $75$ people at the last day. Nevertheless, this is simple model, which performs fairly good. However, it would have been nice if we could give a confidence interval around that estimate.</p>
+<h2 id="performance-for-india">Performance for India</h2>
+<p>We perform the same exercise for India as well. For India, the population is huge (about $131$ crores) and there is lesser amount of data available, although the first confirmed case of COVID-19 was identified in 30th January, 2020. We have data on $54$ days, among which we shall use all the data before last week, and generate predictions for last week, to visualize its performance.</p>
+<p>The $R_0$ coefficient turns out to be 12.4850813, which is severe as it is a lot more than $1$.</p>
+<pre><code class="language-r">preds &lt;- pred.SIR(7, ops$par[1], ops$par[2], as.matrix(temp[48, 2:4])) * N
+pred.dat &lt;- tibble(Date = temp$Date[48:54], Pred.Confirmed = preds[, 2], Pred.Removed = preds[, 3])
+pred.dat &lt;- left_join(temp, pred.dat, by = c(&quot;Date&quot; = &quot;Date&quot;))  # create a full dataset containing predicted data as well
+
+ggplot( pred.dat , aes(x = Date) ) +
+    geom_line(aes(y = Confirmed), color = &quot;black&quot;, size = 1) +
+    geom_line(aes(y = Pred.Confirmed), color = &quot;blue&quot;, size = 1, linetype = &quot;dashed&quot;)
+</code></pre>
+<p><img src="./unnamed-chunk-14-1.png" alt=""></p>
+<p>Yet in this case, the SIR model does a underestimation in determining the number of confirmed cases by about $100$ cases. Therefore, the seriousness of the pandemic situation is even worse than what is depicted by the number $R_0$, i.e. 12.4850813, it is enitrely possible that the true $R_0$ value is even more at the last week, thereby showing on average an infectious person is infecting more than $12$ persons, which is bad, seriously bad.</p>
+<h2 id="predictions-till-the-end-of-the-lockdown">Predictions till the end of the Lockdown</h2>
+<p>To make this prediction, we use all the available datapoints for estimation of the parameters. So, we refit the model.</p>
+<pre><code class="language-r">Y &lt;- as.matrix(temp[, 2:4])
+ops &lt;- optim(par = c(1e-2, 1e-5), fn = LS.SIR, method = &quot;BFGS&quot;, Y = Y)
+
+preds &lt;- pred.SIR(22, ops$par[1], ops$par[2], as.matrix(temp[54, 2:4])) * N
+pred.dat &lt;- tibble(Date = temp$Date[54] + 1:22, 
+                   Pred.Confirmed = preds[, 2], Pred.Removed = preds[, 3])
+pred.dat &lt;- full_join(temp, pred.dat, by = c(&quot;Date&quot; = &quot;Date&quot;))  # create a full dataset containing predicted data as well
+
+ggplot( pred.dat , aes(x = Date) ) +
+    geom_line(aes(y = Confirmed), color = &quot;black&quot;, size = 1) +
+    geom_line(aes(y = Pred.Confirmed), color = &quot;blue&quot;, size = 1, linetype = &quot;dashed&quot;)
+</code></pre>
+<p><img src="./unnamed-chunk-15-1.png" alt=""></p>
+<p>So, if there was no lockdown happening, the prediction of confirmed cases in India by middle of April would have be about $4000$.</p>
+<p>Note that SIR is the best-case scenario, hence this is an underestimate. Thus without any quarantining intervention, the situation looks grim; But all hope is not lost, for in the next post, we'll show how different measures of quarantining, including lockdown, help decrease the rate of increase in confirmed cases. Till then stay united, and stay safe. We would get through this hard time.</p>
+<p><strong>WHO Guidelines to STAY SAFE:</strong></p>
+<ul>
+<li>
+<p>The best way to prevent and slow down transmission is be well informed about the COVID-19 virus, the disease it causes and how it spreads.</p>
+</li>
+<li>
+<p>Wash your hands frequently with an alcohol based rub or soap.</p>
+</li>
+<li>
+<p>Maintain social distancing.</p>
+</li>
+<li>
+<p>Avoid touching eyes, nose and mouth.</p>
+</li>
+<li>
+<p>Practice respiratory hygiene.</p>
+</li>
+<li>
+<p>If you have fever, cough and difficulty breathing, seek medical care early.</p>
+</li>
+<li>
+<p>Stay informed and follow advice given by your healthcare provider.</p>
+</li>
+<li>
+<p>Protect yourselves and protect others.</p>
+</li>
+</ul>
+<dl>
+<dt>Signing off</dt>
+<dd>$\qquad &mdash; $ Soham Bonnerjee &amp; Subhrajyoty Roy</dd>
+</dl>
+<blockquote>
+<p>Stay informed, Stay home, Stay safe.</p>
+</blockquote>
+
+    </div>
+
+    
+
+
+
+
+
+
+
+<div class="share-box" aria-hidden="true">
+  <ul class="share">
+    
+      
+      
+      
+        
+      
+      
+      
+      <li>
+        <a href="https://twitter.com/intent/tweet?url=/post/covid19-project/&amp;text=SIR%20Modelling%20of%20COVID-19%20Pandemic%20situation" target="_blank" rel="noopener" class="share-btn-twitter">
+          <i class="fab fa-twitter"></i>
+        </a>
+      </li>
+    
+      
+      
+      
+        
+      
+      
+      
+      <li>
+        <a href="https://www.facebook.com/sharer.php?u=/post/covid19-project/&amp;t=SIR%20Modelling%20of%20COVID-19%20Pandemic%20situation" target="_blank" rel="noopener" class="share-btn-facebook">
+          <i class="fab fa-facebook"></i>
+        </a>
+      </li>
+    
+      
+      
+      
+        
+      
+      
+      
+      <li>
+        <a href="mailto:?subject=SIR%20Modelling%20of%20COVID-19%20Pandemic%20situation&amp;body=/post/covid19-project/" target="_blank" rel="noopener" class="share-btn-email">
+          <i class="fas fa-envelope"></i>
+        </a>
+      </li>
+    
+      
+      
+      
+        
+      
+      
+      
+      <li>
+        <a href="https://www.linkedin.com/shareArticle?url=/post/covid19-project/&amp;title=SIR%20Modelling%20of%20COVID-19%20Pandemic%20situation" target="_blank" rel="noopener" class="share-btn-linkedin">
+          <i class="fab fa-linkedin-in"></i>
+        </a>
+      </li>
+    
+      
+      
+      
+        
+      
+      
+      
+      <li>
+        <a href="https://web.whatsapp.com/send?text=SIR%20Modelling%20of%20COVID-19%20Pandemic%20situation%20/post/covid19-project/" target="_blank" rel="noopener" class="share-btn-whatsapp">
+          <i class="fab fa-whatsapp"></i>
+        </a>
+      </li>
+    
+      
+      
+      
+        
+      
+      
+      
+      <li>
+        <a href="https://service.weibo.com/share/share.php?url=/post/covid19-project/&amp;title=SIR%20Modelling%20of%20COVID-19%20Pandemic%20situation" target="_blank" rel="noopener" class="share-btn-weibo">
+          <i class="fab fa-weibo"></i>
+        </a>
+      </li>
+    
+  </ul>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+  
+
+
+
+
+
+
+  
+  
+  
+    
+  
+  
+  <div class="media author-card content-widget-hr">
+    
+      
+      <img class="portrait mr-3" src="/authors/admin/avatar_hu2e04bc443a4410ec563608206c63699b_76774_250x250_fill_q90_lanczos_center.jpg" alt="Avatar">
+    
+
+    <div class="media-body">
+      <h5 class="card-title"><a href="/">Soham Bonnerjee</a></h5>
+      <h6 class="card-subtitle">M.Stat 1st Year Student</h6>
+      
+      <ul class="network-icon" aria-hidden="true">
+  
+    
+    
+    
+      
+    
+    
+    
+    
+    
+      
+    
+    <li>
+      <a href="/#contact" >
+        <i class="fas fa-envelope"></i>
+      </a>
+    </li>
+  
+    
+    
+    
+      
+    
+    
+    
+    
+    
+      
+    
+    <li>
+      <a href="https://twitter.com/GeorgeCushen" target="_blank" rel="noopener">
+        <i class="fab fa-twitter"></i>
+      </a>
+    </li>
+  
+    
+    
+    
+    
+    
+    
+    
+      
+    
+    <li>
+      <a href="https://scholar.google.co.uk/citations?user=sIwtMXoAAAAJ" target="_blank" rel="noopener">
+        <i class="ai ai-google-scholar"></i>
+      </a>
+    </li>
+  
+    
+    
+    
+      
+    
+    
+    
+    
+    
+      
+    
+    <li>
+      <a href="https://github.com/gcushen" target="_blank" rel="noopener">
+        <i class="fab fa-github"></i>
+      </a>
+    </li>
+  
+</ul>
+
+    </div>
+  </div>
+
+
+
+
+
+
+
+
+
+  
+  
+
+
+
+  </div>
+</article>
+
+      
+
+    
+    
+    
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.imagesloaded/4.1.4/imagesloaded.pkgd.min.js" integrity="sha256-lqvxZrPLtfffUl2G/e7szqSvPBILGbwmsGE1MKlOi0Q=" crossorigin="anonymous"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.isotope/3.0.6/isotope.pkgd.min.js" integrity="sha256-CBrpuqrMhXwcLLUd5tvQ4euBHCdh7wGlDfNz8vbu/iI=" crossorigin="anonymous"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.5.7/jquery.fancybox.min.js" integrity="sha256-yt2kYMy0w8AbtF89WXb2P1rfjcP/HTHLT7097U8Y5b8=" crossorigin="anonymous"></script>
+
+      
+
+      
+        
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.10/highlight.min.js" integrity="sha256-1zu+3BnLYV9LdiY85uXMzii3bdrkelyp37e0ZyTAQh0=" crossorigin="anonymous"></script>
+        
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.10/languages/r.min.js"></script>
+        
+      
+
+    
+
+    
+    
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.5.1/leaflet.js" integrity="sha256-EErZamuLefUnbMBQbsEqu1USa+btR2oIlCpBJbyD4/g=" crossorigin="anonymous"></script>
+    
+
+    
+    
+    <script>const code_highlighting = true;</script>
+    
+
+    
+    
+    
+    
+    
+    
+    <script>
+      const search_config = {"indexURI":"/index.json","minLength":1,"threshold":0.3};
+      const i18n = {"no_results":"No results found","placeholder":"Search...","results":"results found"};
+      const content_type = {
+        'post': "Posts",
+        'project': "Projects",
+        'publication' : "Publications",
+        'talk' : "Talks"
+        };
+    </script>
+    
+
+    
+    
+
+    
+    
+    <script id="search-hit-fuse-template" type="text/x-template">
+      <div class="search-hit" id="summary-{{key}}">
+      <div class="search-hit-content">
+        <div class="search-hit-name">
+          <a href="{{relpermalink}}">{{title}}</a>
+          <div class="article-metadata search-hit-type">{{type}}</div>
+          <p class="search-hit-description">{{snippet}}</p>
+        </div>
+      </div>
+      </div>
+    </script>
+    
+
+    
+    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/fuse.js/3.2.1/fuse.min.js" integrity="sha256-VzgmKYmhsGNNN4Ph1kMW+BjoYJM2jV5i4IlFoeZA9XI=" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.1/jquery.mark.min.js" integrity="sha256-4HLtjeVgH0eIB3aZ9mLYF6E8oU5chNdjU6p6rrXpl9U=" crossorigin="anonymous"></script>
+    
+
+    
+    
+
+    
+    
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+      
+    
+    
+    
+    
+    <script src="/js/academic.min.600a2e440c16093e23e26e90951c4d4b.js"></script>
+
+    
+
+
+
+
+
+
+  
+  
+  <div class="container">
+    <footer class="site-footer">
+  
+  <p class="powered-by">
+    
+      <a href="/privacy/">Privacy Policy</a>
+    
+    
+       &middot; 
+      <a href="/terms/">Terms</a>
+    
+  </p>
+  
+
+  <p class="powered-by">
+    
+
+    Powered by the
+    <a href="https://sourcethemes.com/academic/" target="_blank" rel="noopener">Academic theme</a> for
+    <a href="https://gohugo.io" target="_blank" rel="noopener">Hugo</a>.
+
+    
+    <span class="float-right" aria-hidden="true">
+      <a href="#" class="back-to-top">
+        <span class="button_icon">
+          <i class="fas fa-chevron-up fa-2x"></i>
+        </span>
+      </a>
+    </span>
+    
+  </p>
+</footer>
+
+  </div>
+  
+
+  
+<div id="modal" class="modal fade" role="dialog">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Cite</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <pre><code class="tex hljs"></code></pre>
+      </div>
+      <div class="modal-footer">
+        <a class="btn btn-outline-primary my-1 js-copy-cite" href="#" target="_blank">
+          <i class="fas fa-copy"></i> Copy
+        </a>
+        <a class="btn btn-outline-primary my-1 js-download-cite" href="#" target="_blank">
+          <i class="fas fa-download"></i> Download
+        </a>
+        <div id="modal-error"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+</body>
+</html>

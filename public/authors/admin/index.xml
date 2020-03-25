@@ -5,7 +5,7 @@
     <link>/authors/admin/</link>
       <atom:link href="/authors/admin/index.xml" rel="self" type="application/rss+xml" />
     <description>Soham Bonnerjee&#39;s Home Page</description>
-    <generator>Source Themes Academic (https://sourcethemes.com/academic/)</generator><language>en-us</language><lastBuildDate>Sun, 01 Sep 2019 00:00:00 +0000</lastBuildDate>
+    <generator>Source Themes Academic (https://sourcethemes.com/academic/)</generator><language>en-us</language><lastBuildDate>Wed, 25 Mar 2020 00:00:00 +0000</lastBuildDate>
     <image>
       <url>/img/icon-192.png</url>
       <title>Soham Bonnerjee&#39;s Home Page</title>
@@ -13,153 +13,390 @@
     </image>
     
     <item>
+      <title>SIR Modelling of COVID-19 Pandemic situation</title>
+      <link>/post/covid19-project/</link>
+      <pubDate>Wed, 25 Mar 2020 00:00:00 +0000</pubDate>
+      <guid>/post/covid19-project/</guid>
+      <description>&lt;h1 id=&#34;the-current-global-scenario&#34;&gt;The Current Global Scenario&lt;/h1&gt;
+&lt;p&gt;At the end of December 2019, a cluster of an unknown pneumonia like cases were reported in Wuhan, a city in the Hubei province, China. They quickly identified that the source of the infection was a novel coronavirus belonging to the coronavirus family, which includes the virus related to the outbreaks of  Severe Acute Respiratory Syndrome (SARS) from 2002-2004 and Middle East Respiratory Syndrome (MERS) in 2012. It  spread through and outside of Wuhan, resulting in an rapidly escalating and deadly contagious epidemic throughout China, followed by an increasing number of cases in other countries throughout the world.&lt;br&gt;
+On January 30, the WHO declared coronavirus a global emergency  as the death toll in China jumped to 170, with 7,711 cases reported in the country, where the virus had spread to all 31 provinces.  In mid-February WHO announced that the new coronavirus would be called &amp;ldquo;COVID-19&amp;rdquo;.&lt;/p&gt;
+&lt;p&gt;China&#39;s bold approach to contain the rapid spread of this new respiratory pathogen  by massive lockdowns and electronic surveillance measures has changed the changed the course of the epidemic . The number of new infections reported in China has been declining gradually. With over 422,915 reported cases and more than 18,543 recorded deaths worldwide , the outbreak of COVID-19 has surpassed the toll of the 2002-2003 SARS outbreak, which also originated in China and is expected to continue to increase.  Although the infection originated in China, now the epicenter of the pandemic is Europe, which now has more cases reported each day than China did at the height of its outbreak.  In Italy alone the COVID-19 has infected more than 69,000 people and killed at least 6,800. There is an increasing number of cases in several EU/EEA countries without epidemiological links to explain the source of transmission. The speed with which COVID-19 can cause nationally incapacitating epidemics once transmission within the community is established indicates that it is likely that in a few weeks or even days, similar situations to those seen in China and Italy may be seen in other EU/EEA countries or the UK, as more countries report evidence of community transmission.
+The COVID-19 virus spreads primarily through droplets of saliva or discharge from the nose when an infected person coughs or sneezes.  At the time of this writing, there are no specific vaccines or treatments for COVID-19 which is generally accepted.&lt;/p&gt;
+&lt;h1 id=&#34;introduction&#34;&gt;Introduction&lt;/h1&gt;
+&lt;p&gt;This is a post to give a basic understanding of statistical modelling of epidemiology. In past few days of Shelter-in-place lockdown situation in Kolkata (and throughout the whole India from today onwards), me and one of my friend &lt;a href=&#34;https://subroy13.github.io/&#34;&gt;Subhrajyoty Roy&lt;/a&gt; (we were attending the same college before lockdown to purse Masters degree in Statistics), was reading about different epidemiological models available in the literature and using it to generate projections for the number of infected people in India.&lt;/p&gt;
+&lt;p&gt;In this post, we shall explore the performance of deterministic SIR model which to be fitted using a least squares procedure. Then, we shall use it to generate projections for the epidemic situation in India, till the end of this lockdown, which is currently annouced to be remain till April 14, 2020, about 3 weeks from today.&lt;/p&gt;
+&lt;h1 id=&#34;exploratory-analysis&#34;&gt;Exploratory Analysis&lt;/h1&gt;
+&lt;p&gt;Before proceeding with introducing the SIR model, let us first read the data into &lt;code&gt;R&lt;/code&gt; (which is what we are going to use through out), and perform some exploratory analysis. We shall be using the &lt;a href=&#34;https://www.tidyverse.org/&#34;&gt;tidyverse&lt;/a&gt; library, which is a collection of some very useful packages for data proprocessing and exploratory analysis.&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-r&#34;&gt;library(readr)
+library(dplyr)
+library(tidyr)
+library(lubridate)
+library(ggplot2)
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;For the related coronavirus, there are may different sources available. Many international organizations like WHO (World Health Organization), ECDC (European Centre for Disease Prevention and Control) and many national governments are releasing day to day basis publicly available data. As well as different news agencies are also collecting and compileing data from the hospitals and different other sources on a regular basis. John Hopkins University (JHU) CSSE department has also released a dataset compiled from the collection of these sources in a github repository &lt;a href=&#34;https://github.com/CSSEGISandData/COVID-19&#34;&gt;here&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;The datasets are being updated on a daily basis. We shall use this data provided by &lt;a href=&#34;https://github.com/CSSEGISandData/COVID-19&#34;&gt;JHU CSSE&lt;/a&gt;.&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-r&#34;&gt;confirmed.dat &amp;lt;- read_csv(&#39;./datasets/time_series_19-covid-Confirmed.csv&#39;)
+deaths.dat &amp;lt;- read_csv(&#39;./datasets/time_series_19-covid-Deaths.csv&#39;)
+recovered.dat &amp;lt;- read_csv(&#39;./datasets/time_series_19-covid-Recovered.csv&#39;)
+
+confirmed.dat &amp;lt;- confirmed.dat %&amp;gt;%
+    rename( State = `Province/State`, Country = `Country/Region` ) %&amp;gt;% 
+    gather(key = &amp;quot;Date&amp;quot;, value = &amp;quot;Confirmed&amp;quot;, -c(1:4) ) %&amp;gt;%
+    mutate(Date = mdy(Date))
+    
+
+deaths.dat &amp;lt;- deaths.dat %&amp;gt;%
+    rename( State = `Province/State`, Country = `Country/Region` ) %&amp;gt;% 
+    gather(key = &amp;quot;Date&amp;quot;, value = &amp;quot;Deaths&amp;quot;, -c(1:4) ) %&amp;gt;% 
+    mutate(Date = mdy(Date))
+
+recovered.dat &amp;lt;- recovered.dat %&amp;gt;%
+    rename( State = `Province/State`, Country = `Country/Region` ) %&amp;gt;% 
+    gather(key = &amp;quot;Date&amp;quot;, value = &amp;quot;Recovered&amp;quot;, -c(1:4) ) %&amp;gt;%
+    mutate(Date = mdy(Date))
+
+
+# merge all of them together
+dat &amp;lt;- Reduce(merge, list(confirmed.dat, deaths.dat, recovered.dat))
+dat &amp;lt;- as_tibble(dat)
+
+knitr::kable(head(dat, 5))
+&lt;/code&gt;&lt;/pre&gt;
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;State&lt;/th&gt;
+&lt;th&gt;Country&lt;/th&gt;
+&lt;th&gt;Lat&lt;/th&gt;
+&lt;th&gt;Long&lt;/th&gt;
+&lt;th&gt;Date&lt;/th&gt;
+&lt;th&gt;Confirmed&lt;/th&gt;
+&lt;th&gt;Deaths&lt;/th&gt;
+&lt;th&gt;Recovered&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;Adams, IN&lt;/td&gt;
+&lt;td&gt;US&lt;/td&gt;
+&lt;td&gt;39.8522&lt;/td&gt;
+&lt;td&gt;-77.2865&lt;/td&gt;
+&lt;td&gt;2020-01-22&lt;/td&gt;
+&lt;td&gt;0&lt;/td&gt;
+&lt;td&gt;0&lt;/td&gt;
+&lt;td&gt;0&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;Adams, IN&lt;/td&gt;
+&lt;td&gt;US&lt;/td&gt;
+&lt;td&gt;39.8522&lt;/td&gt;
+&lt;td&gt;-77.2865&lt;/td&gt;
+&lt;td&gt;2020-01-23&lt;/td&gt;
+&lt;td&gt;0&lt;/td&gt;
+&lt;td&gt;0&lt;/td&gt;
+&lt;td&gt;0&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;Adams, IN&lt;/td&gt;
+&lt;td&gt;US&lt;/td&gt;
+&lt;td&gt;39.8522&lt;/td&gt;
+&lt;td&gt;-77.2865&lt;/td&gt;
+&lt;td&gt;2020-01-24&lt;/td&gt;
+&lt;td&gt;0&lt;/td&gt;
+&lt;td&gt;0&lt;/td&gt;
+&lt;td&gt;0&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;Adams, IN&lt;/td&gt;
+&lt;td&gt;US&lt;/td&gt;
+&lt;td&gt;39.8522&lt;/td&gt;
+&lt;td&gt;-77.2865&lt;/td&gt;
+&lt;td&gt;2020-01-25&lt;/td&gt;
+&lt;td&gt;0&lt;/td&gt;
+&lt;td&gt;0&lt;/td&gt;
+&lt;td&gt;0&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;Adams, IN&lt;/td&gt;
+&lt;td&gt;US&lt;/td&gt;
+&lt;td&gt;39.8522&lt;/td&gt;
+&lt;td&gt;-77.2865&lt;/td&gt;
+&lt;td&gt;2020-01-26&lt;/td&gt;
+&lt;td&gt;0&lt;/td&gt;
+&lt;td&gt;0&lt;/td&gt;
+&lt;td&gt;0&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;p&gt;Now we shall try to see how the total number of Confirmed, deaths and recovered people changed across the globe.&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-r&#34;&gt;temp &amp;lt;- dat %&amp;gt;% group_by(Date) %&amp;gt;% 
+    summarise(Confirmed = sum(Confirmed), Deaths = sum(Deaths), Recovered = sum(Recovered)) %&amp;gt;%
+    gather(key = &amp;quot;Variable&amp;quot;, value = &amp;quot;Count&amp;quot;, -Date)
+
+ggplot(temp, aes(x = Date, y = Count, color = Variable)) + geom_line(size = 1)
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;&lt;img src=&#34;./unnamed-chunk-6-1.png&#34; alt=&#34;&#34;&gt;&lt;/p&gt;
+&lt;p&gt;The situation is very severe, as the current trend in exponentially increasing in terms of confirmed cases, and the growth rate of recovered is sufficiently slow. If we particular focus on the situation of India, (after 1st March, 2020),&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;unnamed-chunk-7-1.png&#34; alt=&#34;&#34;&gt;&lt;/p&gt;
+&lt;p&gt;As of now, there are very less number of recoveries, some deaths, and a lot of (about 400) affected people. We have also compiled how these changes occurs spatially in different countries. They are shown below.&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;./confirmed-1.gif&#34; alt=&#34;&#34;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;./deaths-1.gif&#34; alt=&#34;&#34;&gt;&lt;/p&gt;
+&lt;h1 id=&#34;sir-model-description&#34;&gt;SIR Model Description&lt;/h1&gt;
+&lt;p&gt;The SIR model is one of the compartmental models in epidemiology which is used to mathematically model the spread of an infectious disease. This model was firstly introduced by William Ogilvy Kermack and A. G. McKendrick, and named as &lt;strong&gt;Kermack-McKendrick Model.&lt;/strong&gt; However, with time, this model has obtained several variants, each being better than the one before.&lt;/p&gt;
+&lt;p&gt;SIR modelling starts with defining 3 different compartments, of states in which a person can be. The states are as follows:&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-mermaid&#34;&gt;graph LR;
+    S(Susceptible) --&amp;gt; I(Infected);
+    I(Infected) --&amp;gt; R(Recovered / Removed);
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;&lt;strong&gt;Susceptibles&lt;/strong&gt; are the general population, who is susceptible to get the disease from an infectious person. &lt;strong&gt;Infected&lt;/strong&gt; state reperesents the persons who have the symptoms of the infection and is able to spread it. And finally, &lt;strong&gt;Recovered&lt;/strong&gt; or &lt;strong&gt;Removed&lt;/strong&gt; is the state when a person is recovered from the disease and gain immunity to it, or is dead. Let, $Y_t^S, Y_t^I, Y_t^R$ dentoes the number of people in these states respectively at the time $t$. The corresponding proportions are denoted by $\theta_t^S, \theta_t^I$ and $\theta_t^R$, where the proportion is defined as the number of people in a state divided by the total number of people, i.e. the population count. Note that, since these three states are assumed to be exhaustive, hence $Y_t^S + Y_t^I + Y_t^R = N$, where $N$ is the total population of the particular region under study.&lt;/p&gt;
+&lt;p&gt;The mathematical relations between these quantities are defined as follows:&lt;/p&gt;
+&lt;p&gt;$$
+\begin{align}
+\dfrac{d\theta_t^S}{dt} &amp;amp; = -\beta \theta_t^S \theta_t^I\\\&lt;br&gt;
+&amp;amp; \\\&lt;br&gt;
+\dfrac{d\theta_t^I}{dt} &amp;amp; = \beta \theta_t^S \theta_t^I - \gamma \theta_t^I\\\&lt;br&gt;
+&amp;amp; \\\&lt;br&gt;
+\dfrac{d\theta_t^R}{dt} &amp;amp; = \gamma \theta_t^I\\\&lt;br&gt;
+\end{align}
+$$&lt;/p&gt;
+&lt;p&gt;Note that, since $Y_t^S + Y_t^I + Y_t^R = N$, we have $\theta_t^S + \theta_t^I + \theta_t^R = 1$, which is constant. Hence, we must have,&lt;/p&gt;
+&lt;p&gt;$$ \dfrac{d\theta_t^S}{dt} + \dfrac{d\theta_t^I}{dt} + \dfrac{d\theta_t^R}{dt} = 0 $$&lt;/p&gt;
+&lt;p&gt;which is satisfied by the mathematical formulation. In this, $\beta, \gamma$ are unknown parameters which is to be estimated from the data.&lt;/p&gt;
+&lt;p&gt;These mathematical equations did not drop from the sky. Let us understand how these mathematical formula emerges from an intuitive points of view.&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;
+&lt;p&gt;We consider the third equation first. It models the change in the number of recovered people. Now, the change in the number (or proportion) of recovered people can occur only when an infectious person, gets treatment, which happens with rate $\gamma$, which can be interpreted as the recovery rate of an infectious person. Therefore, it changes by the amount $\gamma \theta_t^I$.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Now we consider the first equation. It models the change in the number of susceptible population. The change in susceptible population occurs, when an infectious person comes in contact with a susceptible person, and the infection spreads. Now, there are $Y_t^I Y_t^S$ many interactions possible, and each interaction would spread the virus with rate $\beta$ say. Considering proportions, we have the change being equal to $-\beta\theta_t^I\theta_t^S$, with the negative sign showing that number of susceptibles can only decrease.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Due to the restriction, $\dfrac{d\theta_t^S}{dt} + \dfrac{d\theta_t^I}{dt} + \dfrac{d\theta_t^R}{dt} = 0$, the choice of $\dfrac{d\theta_t^I}{dt}$ can be justfied from previous points.&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;A very important measure in this model is the quantity;&lt;/p&gt;
+&lt;p&gt;$$R_0 = \dfrac{\beta}{\gamma}$$&lt;/p&gt;
+&lt;p&gt;This basically interprets as the average number of people an infectious person infects before recovering or dying. So, if $R_0 &amp;lt; 1$, then an infectious person infects less than one person in average before recovering, which means the infection pandemic will eventually die out. Whereas, if $R_0 &amp;gt; 1$, then an infectious person infects more than one person in average before recovering, hence the number of infected would increase exponentially and eventually all of the population will become infected.&lt;/p&gt;
+&lt;h1 id=&#34;estimation-of-sir-model&#34;&gt;Estimation of SIR Model&lt;/h1&gt;
+&lt;p&gt;There are two possible ways of estimation of the parameters of an SIR model.&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;
+&lt;p&gt;A deterministic estimation.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;A stochastic estimation.&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;A deterministic estimation does not require any other assumptions on the model parameters, as well as the data. It basically works simply on the basis of solution to the above differential equations. However, a stochastic estimation requires specifications of the distributional assumptions on the data, as well as model parameters. In this post, we are going to use only a deterministic setup of the model as explained in the mathematical formulation, nothing more.&lt;/p&gt;
+&lt;p&gt;For this reason, we shall use &lt;a href=&#34;https://en.wikipedia.org/wiki/Runge%E2%80%93Kutta_methods&#34;&gt;Runge Kutta methods&lt;/a&gt; of numerically solving a system of differential equations, under some particular choice of the model parameters $\beta, \gamma$. However, as we solve the differential equations, we shall be able to obtain estimates $\hat{Y}_t^S, \hat{Y}_t^I$ and $\hat{Y}_t^R$. Then, we can use a Least Squares approach to solve this problem, to estimate $\beta, \gamma$ as;&lt;/p&gt;
+&lt;p&gt;$$
+(\hat{\beta}, \hat{\gamma}) = \min_{\beta, \gamma} \sum_t \left[ \left(Y_t^S - \hat{Y}_t^S\right)^2 + \left(Y_t^I - \hat{Y}_t^I\right)^2 + \left(Y_t^R - \hat{Y}_t^R\right)^2 \right]
+$$&lt;/p&gt;
+&lt;p&gt;To this end, we write the function &lt;code&gt;pred.SIR&lt;/code&gt; and &lt;code&gt;LS.SIR&lt;/code&gt; which performs the prediction given the initial value and parameters, and computes the value of the objective function written above by tallying it with the observed data.&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-r&#34;&gt;pred.SIR &amp;lt;- function(n_time, beta, gamma, init.theta) {
+    theta &amp;lt;- matrix(0, nrow = n_time, ncol = 3)
+    theta[1, ] &amp;lt;- init.theta / sum(init.theta)
+    
+    for (t in 2:n_time) {
+        # for each time, create the Runge Kutta approximation
+        Km &amp;lt;- numeric(12)   # 12 coefficients are needed
+        
+        # computes coefficients of runge kutta
+        Km[1] &amp;lt;- - beta * theta[t-1,1] * theta[t-1,2]
+        Km[9] &amp;lt;- gamma * theta[t-1,2]
+        Km[5] &amp;lt;- -Km[1]-Km[9]
+        
+        Km[2] &amp;lt;- - beta * (theta[t-1,1]+ 0.5*Km[1]) * (theta[t-1,2]+0.5*Km[5])
+        Km[10] &amp;lt;- gamma*(theta[t-1,2]+0.5*Km[5])
+        Km[6] &amp;lt;- -Km[2]-Km[10]
+        
+        Km[3] &amp;lt;- -beta*(theta[t-1,1]+0.5*Km[2])*(theta[t-1,2]+0.5*Km[6])
+        Km[11] &amp;lt;- gamma*(theta[t-1,2]+0.5*Km[6])
+        Km[7] &amp;lt;- -Km[3]-Km[11]
+      
+        Km[4] &amp;lt;- -beta*(theta[t-1,1]+Km[3])*(theta[t-1,2]+Km[7])
+        Km[12] &amp;lt;- gamma*(theta[t-1,2]+Km[7])
+        Km[8] &amp;lt;- -Km[4]-Km[12]
+        
+        innov.S &amp;lt;- ( Km[1] + 2 *Km[2] + 2*Km[3] + Km[4])/6
+        innov.I &amp;lt;- ( Km[5] + 2 *Km[6] + 2*Km[7] + Km[8])/6
+        innov.R &amp;lt;- ( Km[9] + 2 *Km[10] + 2*Km[11] + Km[12])/6
+        
+        theta[t, ] &amp;lt;- theta[(t-1), ] + c(innov.S, innov.I, innov.R)
+        theta[t, ] &amp;lt;- theta[t, ]/sum(theta[t, ])
+    }
+    
+    return(theta)
+}
+LS.SIR &amp;lt;- function(params, Y) {
+    beta &amp;lt;- params[1]
+    gamma &amp;lt;- params[2]
+    n_time &amp;lt;- nrow(Y)
+    N &amp;lt;- sum(Y[1, ])
+    
+    init.theta &amp;lt;- Y[1, ] / N
+    preds &amp;lt;- pred.SIR(n_time, beta, gamma, init.theta)
+    
+    return( sum((Y - preds * N )^2) ) 
+}
+&lt;/code&gt;&lt;/pre&gt;
+&lt;h1 id=&#34;performance-of-sir-model&#34;&gt;Performance of SIR model&lt;/h1&gt;
+&lt;h2 id=&#34;estimation-for-hong-kong-china&#34;&gt;Estimation for Hong Kong, China&lt;/h2&gt;
+&lt;p&gt;We choose the Hong Kong province in China to see how SIR model performs. According to World Bank data, the province Hong Kong is home to about $73.9$ lakhs people. Therefore, we have $N = 73.9\times 10^5$, in our model.&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-r&#34;&gt;N &amp;lt;- 73.9e5   # population of Hong Kong
+temp  &amp;lt;- dat %&amp;gt;% filter(Country == &amp;quot;China&amp;quot; &amp;amp; State == &amp;quot;Hong Kong&amp;quot;) %&amp;gt;% 
+    mutate(Removed = Deaths + Recovered, Susceptible = N - Removed - Confirmed) %&amp;gt;% 
+    select(Date, Susceptible, Confirmed, Removed)
+
+knitr::kable(head(temp))
+&lt;/code&gt;&lt;/pre&gt;
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;Date&lt;/th&gt;
+&lt;th&gt;Susceptible&lt;/th&gt;
+&lt;th&gt;Confirmed&lt;/th&gt;
+&lt;th&gt;Removed&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;2020-01-22&lt;/td&gt;
+&lt;td&gt;7390000&lt;/td&gt;
+&lt;td&gt;0&lt;/td&gt;
+&lt;td&gt;0&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;2020-01-23&lt;/td&gt;
+&lt;td&gt;7389998&lt;/td&gt;
+&lt;td&gt;2&lt;/td&gt;
+&lt;td&gt;0&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;2020-01-24&lt;/td&gt;
+&lt;td&gt;7389998&lt;/td&gt;
+&lt;td&gt;2&lt;/td&gt;
+&lt;td&gt;0&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;2020-01-25&lt;/td&gt;
+&lt;td&gt;7389995&lt;/td&gt;
+&lt;td&gt;5&lt;/td&gt;
+&lt;td&gt;0&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;2020-01-26&lt;/td&gt;
+&lt;td&gt;7389992&lt;/td&gt;
+&lt;td&gt;8&lt;/td&gt;
+&lt;td&gt;0&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;2020-01-27&lt;/td&gt;
+&lt;td&gt;7389992&lt;/td&gt;
+&lt;td&gt;8&lt;/td&gt;
+&lt;td&gt;0&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;p&gt;As you can see, the first appearence of Coronavirus in Hong Kong is on 23rd of Janurary, 2020. So, we should use the data from 2nd row onwards to fit into SIR model. We shall be using the data corresponding to $61$ days, i.e. till 23rd of May, 2020. Among this, we shall be training the model using data of first $47$ days, and then we build the prediction for next $14$ days, to see the performance of the fitted model. We shall be using &lt;code&gt;optim&lt;/code&gt; function of &lt;code&gt;R&lt;/code&gt; to optimize our objective function in order to find Least Sqaures estimate.&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-r&#34;&gt;Y &amp;lt;- as.matrix(temp[2:48, 2:4])
+ops &amp;lt;- optim(par = c(1e-2, 1e-5), fn = LS.SIR, method = &amp;quot;BFGS&amp;quot;, Y = Y, control = list(trace = 1))
+&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;initial  value 552556.538521 
+iter  10 value 68951.183015
+final  value 65031.692121 
+converged
+&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code class=&#34;language-r&#34;&gt;ops$par[1] / ops$par[2]   # R0
+&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;[1] 3.149289
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;Now that we have the estimated parameters, we can simply generate predictions for last $14$ days, using this &lt;code&gt;pred.SIR&lt;/code&gt; method. Before that, estimate of $R_0$ turns out to be higher than 1, thereby showing the seriousness of the COVID-19 epidemic situation.&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-r&#34;&gt;# since predictions are proportions, we multiply with the population to get the count estimates
+
+preds &amp;lt;- pred.SIR(14, ops$par[1], ops$par[2], as.matrix(temp[49, 2:4])) * N
+pred.dat &amp;lt;- tibble(Date = temp$Date[49:62], Pred.Confirmed = preds[, 2], Pred.Removed = preds[, 3])
+pred.dat &amp;lt;- left_join(temp, pred.dat, by = c(&amp;quot;Date&amp;quot; = &amp;quot;Date&amp;quot;))  # create a full dataset containing predicted data as well
+
+ggplot( pred.dat , aes(x = Date) ) +
+    geom_line(aes(y = Confirmed), color = &amp;quot;black&amp;quot;, size = 1) +
+    geom_line(aes(y = Pred.Confirmed), color = &amp;quot;blue&amp;quot;, size = 1, linetype = &amp;quot;dashed&amp;quot;)
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;&lt;img src=&#34;./unnamed-chunk-12-1.png&#34; alt=&#34;&#34;&gt;&lt;/p&gt;
+&lt;p&gt;Therefore, we see that SIR model overestimates the true number by about $75$ people at the last day. Nevertheless, this is simple model, which performs fairly good. However, it would have been nice if we could give a confidence interval around that estimate.&lt;/p&gt;
+&lt;h2 id=&#34;performance-for-india&#34;&gt;Performance for India&lt;/h2&gt;
+&lt;p&gt;We perform the same exercise for India as well. For India, the population is huge (about $131$ crores) and there is lesser amount of data available, although the first confirmed case of COVID-19 was identified in 30th January, 2020. We have data on $54$ days, among which we shall use all the data before last week, and generate predictions for last week, to visualize its performance.&lt;/p&gt;
+&lt;p&gt;The $R_0$ coefficient turns out to be 12.4850813, which is severe as it is a lot more than $1$.&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-r&#34;&gt;preds &amp;lt;- pred.SIR(7, ops$par[1], ops$par[2], as.matrix(temp[48, 2:4])) * N
+pred.dat &amp;lt;- tibble(Date = temp$Date[48:54], Pred.Confirmed = preds[, 2], Pred.Removed = preds[, 3])
+pred.dat &amp;lt;- left_join(temp, pred.dat, by = c(&amp;quot;Date&amp;quot; = &amp;quot;Date&amp;quot;))  # create a full dataset containing predicted data as well
+
+ggplot( pred.dat , aes(x = Date) ) +
+    geom_line(aes(y = Confirmed), color = &amp;quot;black&amp;quot;, size = 1) +
+    geom_line(aes(y = Pred.Confirmed), color = &amp;quot;blue&amp;quot;, size = 1, linetype = &amp;quot;dashed&amp;quot;)
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;&lt;img src=&#34;./unnamed-chunk-14-1.png&#34; alt=&#34;&#34;&gt;&lt;/p&gt;
+&lt;p&gt;Yet in this case, the SIR model does a underestimation in determining the number of confirmed cases by about $100$ cases. Therefore, the seriousness of the pandemic situation is even worse than what is depicted by the number $R_0$, i.e. 12.4850813, it is enitrely possible that the true $R_0$ value is even more at the last week, thereby showing on average an infectious person is infecting more than $12$ persons, which is bad, seriously bad.&lt;/p&gt;
+&lt;h2 id=&#34;predictions-till-the-end-of-the-lockdown&#34;&gt;Predictions till the end of the Lockdown&lt;/h2&gt;
+&lt;p&gt;To make this prediction, we use all the available datapoints for estimation of the parameters. So, we refit the model.&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-r&#34;&gt;Y &amp;lt;- as.matrix(temp[, 2:4])
+ops &amp;lt;- optim(par = c(1e-2, 1e-5), fn = LS.SIR, method = &amp;quot;BFGS&amp;quot;, Y = Y)
+
+preds &amp;lt;- pred.SIR(22, ops$par[1], ops$par[2], as.matrix(temp[54, 2:4])) * N
+pred.dat &amp;lt;- tibble(Date = temp$Date[54] + 1:22, 
+                   Pred.Confirmed = preds[, 2], Pred.Removed = preds[, 3])
+pred.dat &amp;lt;- full_join(temp, pred.dat, by = c(&amp;quot;Date&amp;quot; = &amp;quot;Date&amp;quot;))  # create a full dataset containing predicted data as well
+
+ggplot( pred.dat , aes(x = Date) ) +
+    geom_line(aes(y = Confirmed), color = &amp;quot;black&amp;quot;, size = 1) +
+    geom_line(aes(y = Pred.Confirmed), color = &amp;quot;blue&amp;quot;, size = 1, linetype = &amp;quot;dashed&amp;quot;)
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;&lt;img src=&#34;./unnamed-chunk-15-1.png&#34; alt=&#34;&#34;&gt;&lt;/p&gt;
+&lt;p&gt;So, if there was no lockdown happening, the prediction of confirmed cases in India by middle of April would have be about $4000$.&lt;/p&gt;
+&lt;p&gt;Note that SIR is the best-case scenario, hence this is an underestimate. Thus without any quarantining intervention, the situation looks grim; But all hope is not lost, for in the next post, we&#39;ll show how different measures of quarantining, including lockdown, help decrease the rate of increase in confirmed cases. Till then stay united, and stay safe. We would get through this hard time.&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;WHO Guidelines to STAY SAFE:&lt;/strong&gt;&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;The best way to prevent and slow down transmission is be well informed about the COVID-19 virus, the disease it causes and how it spreads.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Wash your hands frequently with an alcohol based rub or soap.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Maintain social distancing.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Avoid touching eyes, nose and mouth.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Practice respiratory hygiene.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;If you have fever, cough and difficulty breathing, seek medical care early.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Stay informed and follow advice given by your healthcare provider.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Protect yourselves and protect others.&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;dl&gt;
+&lt;dt&gt;Signing off&lt;/dt&gt;
+&lt;dd&gt;$\qquad &amp;mdash; $ Soham Bonnerjee &amp;amp; Subhrajyoty Roy&lt;/dd&gt;
+&lt;/dl&gt;
+&lt;blockquote&gt;
+&lt;p&gt;Stay informed, Stay home, Stay safe.&lt;/p&gt;
+&lt;/blockquote&gt;
+</description>
+    </item>
+    
+    <item>
       <title>Onset Detection- A New Approach to QBH System</title>
       <link>/publication/journal-article/</link>
       <pubDate>Sun, 01 Sep 2019 00:00:00 +0000</pubDate>
       <guid>/publication/journal-article/</guid>
       <description>&lt;p&gt;Supplementary notes can be added here, including &lt;a href=&#34;https://sourcethemes.com/academic/docs/writing-markdown-latex/&#34;&gt;code and math&lt;/a&gt;.&lt;/p&gt;
-</description>
-    </item>
-    
-    <item>
-      <title>Display Jupyter Notebooks with Academic</title>
-      <link>/post/jupyter/</link>
-      <pubDate>Tue, 05 Feb 2019 00:00:00 +0000</pubDate>
-      <guid>/post/jupyter/</guid>
-      <description>&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;from IPython.core.display import Image
-Image(&#39;https://www.python.org/static/community_logos/python-logo-master-v3-TM-flattened.png&#39;)
-&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;&lt;img src=&#34;./index_1_0.png&#34; alt=&#34;png&#34;&gt;&lt;/p&gt;
-&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;print(&amp;quot;Welcome to Academic!&amp;quot;)
-&lt;/code&gt;&lt;/pre&gt;
-&lt;pre&gt;&lt;code&gt;Welcome to Academic!
-&lt;/code&gt;&lt;/pre&gt;
-&lt;h2 id=&#34;install-python-and-jupyterlab&#34;&gt;Install Python and JupyterLab&lt;/h2&gt;
-&lt;p&gt;&lt;a href=&#34;https://www.anaconda.com/distribution/#download-section&#34;&gt;Install Anaconda&lt;/a&gt; which includes Python 3 and JupyterLab.&lt;/p&gt;
-&lt;p&gt;Alternatively, install JupyterLab with &lt;code&gt;pip3 install jupyterlab&lt;/code&gt;.&lt;/p&gt;
-&lt;h2 id=&#34;create-or-upload-a-jupyter-notebook&#34;&gt;Create or upload a Jupyter notebook&lt;/h2&gt;
-&lt;p&gt;Run the following commands in your Terminal, substituting &lt;code&gt;&amp;lt;MY-WEBSITE-FOLDER&amp;gt;&lt;/code&gt; and &lt;code&gt;&amp;lt;SHORT-POST-TITLE&amp;gt;&lt;/code&gt; with the file path to your Academic website folder and a short title for your blog post (use hyphens instead of spaces), respectively:&lt;/p&gt;
-&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;mkdir -p &amp;lt;MY-WEBSITE-FOLDER&amp;gt;/content/post/&amp;lt;SHORT-POST-TITLE&amp;gt;/
-cd &amp;lt;MY-WEBSITE-FOLDER&amp;gt;/content/post/&amp;lt;SHORT-POST-TITLE&amp;gt;/
-jupyter lab index.ipynb
-&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;The &lt;code&gt;jupyter&lt;/code&gt; command above will launch the JupyterLab editor, allowing us to add Academic metadata and write the content.&lt;/p&gt;
-&lt;h2 id=&#34;edit-your-post-metadata&#34;&gt;Edit your post metadata&lt;/h2&gt;
-&lt;p&gt;The first cell of your Jupter notebook will contain your post metadata (&lt;a href=&#34;https://sourcethemes.com/academic/docs/front-matter/&#34;&gt;front matter&lt;/a&gt;).&lt;/p&gt;
-&lt;p&gt;In Jupter, choose &lt;em&gt;Markdown&lt;/em&gt; as the type of the first cell and wrap your Academic metadata in three dashes, indicating that it is YAML front matter:&lt;/p&gt;
-&lt;pre&gt;&lt;code&gt;---
-title: My post&#39;s title
-date: 2019-09-01
-
-# Put any other Academic metadata here...
----
-&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;Edit the metadata of your post, using the &lt;a href=&#34;https://sourcethemes.com/academic/docs/managing-content&#34;&gt;documentation&lt;/a&gt; as a guide to the available options.&lt;/p&gt;
-&lt;p&gt;To set a &lt;a href=&#34;https://sourcethemes.com/academic/docs/managing-content/#featured-image&#34;&gt;featured image&lt;/a&gt;, place an image named &lt;code&gt;featured&lt;/code&gt; into your post&#39;s folder.&lt;/p&gt;
-&lt;p&gt;For other tips, such as using math, see the guide on &lt;a href=&#34;https://sourcethemes.com/academic/docs/writing-markdown-latex/&#34;&gt;writing content with Academic&lt;/a&gt;.&lt;/p&gt;
-&lt;h2 id=&#34;convert-notebook-to-markdown&#34;&gt;Convert notebook to Markdown&lt;/h2&gt;
-&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;jupyter nbconvert index.ipynb --to markdown --NbConvertApp.output_files_dir=.
-&lt;/code&gt;&lt;/pre&gt;
-&lt;h2 id=&#34;example&#34;&gt;Example&lt;/h2&gt;
-&lt;p&gt;This post was created with Jupyter. The orginal files can be found at &lt;a href=&#34;https://github.com/gcushen/hugo-academic/tree/master/exampleSite/content/post/jupyter&#34;&gt;https://github.com/gcushen/hugo-academic/tree/master/exampleSite/content/post/jupyter&lt;/a&gt;&lt;/p&gt;
-</description>
-    </item>
-    
-    <item>
-      <title>Academic: the website builder for Hugo</title>
-      <link>/post/getting-started/</link>
-      <pubDate>Wed, 20 Apr 2016 00:00:00 +0000</pubDate>
-      <guid>/post/getting-started/</guid>
-      <description>&lt;p&gt;&lt;strong&gt;Create a free website with Academic using Markdown, Jupyter, or RStudio. Choose a beautiful color theme and build anything with the Page Builder - over 40 &lt;em&gt;widgets&lt;/em&gt;, &lt;em&gt;themes&lt;/em&gt;, and &lt;em&gt;language packs&lt;/em&gt; included!&lt;/strong&gt;&lt;/p&gt;
-&lt;p&gt;&lt;a href=&#34;https://academic-demo.netlify.com/&#34;&gt;Check out the latest &lt;strong&gt;demo&lt;/strong&gt;&lt;/a&gt; of what you&#39;ll get in less than 10 minutes, or &lt;a href=&#34;https://sourcethemes.com/academic/#expo&#34;&gt;view the &lt;strong&gt;showcase&lt;/strong&gt;&lt;/a&gt; of personal, project, and business sites.&lt;/p&gt;
-&lt;ul&gt;
-&lt;li&gt;👉 &lt;a href=&#34;#install&#34;&gt;&lt;strong&gt;Get Started&lt;/strong&gt;&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;📚 &lt;a href=&#34;https://sourcethemes.com/academic/docs/&#34;&gt;View the &lt;strong&gt;documentation&lt;/strong&gt;&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;💬 &lt;a href=&#34;https://discourse.gohugo.io&#34;&gt;&lt;strong&gt;Ask a question&lt;/strong&gt; on the forum&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;👥 &lt;a href=&#34;https://spectrum.chat/academic&#34;&gt;Chat with the &lt;strong&gt;community&lt;/strong&gt;&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;🐦 Twitter: &lt;a href=&#34;https://twitter.com/source_themes&#34;&gt;@source_themes&lt;/a&gt; &lt;a href=&#34;https://twitter.com/GeorgeCushen&#34;&gt;@GeorgeCushen&lt;/a&gt; &lt;a href=&#34;https://twitter.com/search?q=%23MadeWithAcademic&amp;amp;src=typd&#34;&gt;#MadeWithAcademic&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;💡 &lt;a href=&#34;https://github.com/gcushen/hugo-academic/issues&#34;&gt;Request a &lt;strong&gt;feature&lt;/strong&gt; or report a &lt;strong&gt;bug&lt;/strong&gt;&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;⬆️ &lt;strong&gt;Updating?&lt;/strong&gt; View the &lt;a href=&#34;https://sourcethemes.com/academic/docs/update/&#34;&gt;Update Guide&lt;/a&gt; and &lt;a href=&#34;https://sourcethemes.com/academic/updates/&#34;&gt;Release Notes&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;❤ &lt;strong&gt;Support development&lt;/strong&gt; of Academic:
-&lt;ul&gt;
-&lt;li&gt;☕️ &lt;a href=&#34;https://paypal.me/cushen&#34;&gt;&lt;strong&gt;Donate a coffee&lt;/strong&gt;&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;💵 &lt;a href=&#34;https://www.patreon.com/cushen&#34;&gt;Become a backer on &lt;strong&gt;Patreon&lt;/strong&gt;&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;🖼️ &lt;a href=&#34;https://www.redbubble.com/people/neutreno/works/34387919-academic&#34;&gt;Decorate your laptop or journal with an Academic &lt;strong&gt;sticker&lt;/strong&gt;&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;👕 &lt;a href=&#34;https://academic.threadless.com/&#34;&gt;Wear the &lt;strong&gt;T-shirt&lt;/strong&gt;&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;👩‍💻 &lt;a href=&#34;https://sourcethemes.com/academic/docs/contribute/&#34;&gt;&lt;strong&gt;Contribute&lt;/strong&gt;&lt;/a&gt;&lt;/li&gt;
-&lt;/ul&gt;
-&lt;/li&gt;
-&lt;/ul&gt;
-
-
-
-
-
-
-
-
-
-
-
-
-
-&lt;figure&gt;
-
-
-  &lt;a data-fancybox=&#34;&#34; href=&#34;https://raw.githubusercontent.com/gcushen/hugo-academic/master/academic.png&#34; data-caption=&#34;Academic is mobile first with a responsive design to ensure that your site looks stunning on every device.&#34;&gt;
-&lt;img data-src=&#34;https://raw.githubusercontent.com/gcushen/hugo-academic/master/academic.png&#34; class=&#34;lazyload&#34; alt=&#34;&#34; &gt;&lt;/a&gt;
-
-
-  
-  
-  &lt;figcaption&gt;
-    Academic is mobile first with a responsive design to ensure that your site looks stunning on every device.
-  &lt;/figcaption&gt;
-
-
-&lt;/figure&gt;
-
-&lt;p&gt;&lt;strong&gt;Key features:&lt;/strong&gt;&lt;/p&gt;
-&lt;ul&gt;
-&lt;li&gt;&lt;strong&gt;Page builder&lt;/strong&gt; - Create &lt;em&gt;anything&lt;/em&gt; with &lt;a href=&#34;https://sourcethemes.com/academic/docs/page-builder/&#34;&gt;&lt;strong&gt;widgets&lt;/strong&gt;&lt;/a&gt; and &lt;a href=&#34;https://sourcethemes.com/academic/docs/writing-markdown-latex/&#34;&gt;&lt;strong&gt;elements&lt;/strong&gt;&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;strong&gt;Edit any type of content&lt;/strong&gt; - Blog posts, publications, talks, slides, projects, and more!&lt;/li&gt;
-&lt;li&gt;&lt;strong&gt;Create content&lt;/strong&gt; in &lt;a href=&#34;https://sourcethemes.com/academic/docs/writing-markdown-latex/&#34;&gt;&lt;strong&gt;Markdown&lt;/strong&gt;&lt;/a&gt;, &lt;a href=&#34;https://sourcethemes.com/academic/docs/jupyter/&#34;&gt;&lt;strong&gt;Jupyter&lt;/strong&gt;&lt;/a&gt;, or &lt;a href=&#34;https://sourcethemes.com/academic/docs/install/#install-with-rstudio&#34;&gt;&lt;strong&gt;RStudio&lt;/strong&gt;&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;strong&gt;Plugin System&lt;/strong&gt; - Fully customizable &lt;a href=&#34;https://sourcethemes.com/academic/themes/&#34;&gt;&lt;strong&gt;color&lt;/strong&gt; and &lt;strong&gt;font themes&lt;/strong&gt;&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;strong&gt;Display Code and Math&lt;/strong&gt; - Code highlighting and &lt;a href=&#34;https://en.wikibooks.org/wiki/LaTeX/Mathematics&#34;&gt;LaTeX math&lt;/a&gt; supported&lt;/li&gt;
-&lt;li&gt;&lt;strong&gt;Integrations&lt;/strong&gt; - &lt;a href=&#34;https://analytics.google.com&#34;&gt;Google Analytics&lt;/a&gt;, &lt;a href=&#34;https://disqus.com&#34;&gt;Disqus commenting&lt;/a&gt;, Maps, Contact Forms, and more!&lt;/li&gt;
-&lt;li&gt;&lt;strong&gt;Beautiful Site&lt;/strong&gt; - Simple and refreshing one page design&lt;/li&gt;
-&lt;li&gt;&lt;strong&gt;Industry-Leading SEO&lt;/strong&gt; - Help get your website found on search engines and social media&lt;/li&gt;
-&lt;li&gt;&lt;strong&gt;Media Galleries&lt;/strong&gt; - Display your images and videos with captions in a customizable gallery&lt;/li&gt;
-&lt;li&gt;&lt;strong&gt;Mobile Friendly&lt;/strong&gt; - Look amazing on every screen with a mobile friendly version of your site&lt;/li&gt;
-&lt;li&gt;&lt;strong&gt;Multi-language&lt;/strong&gt; - 15+ language packs including English, 中文, and Português&lt;/li&gt;
-&lt;li&gt;&lt;strong&gt;Multi-user&lt;/strong&gt; - Each author gets their own profile page&lt;/li&gt;
-&lt;li&gt;&lt;strong&gt;Privacy Pack&lt;/strong&gt; - Assists with GDPR&lt;/li&gt;
-&lt;li&gt;&lt;strong&gt;Stand Out&lt;/strong&gt; - Bring your site to life with animation, parallax backgrounds, and scroll effects&lt;/li&gt;
-&lt;li&gt;&lt;strong&gt;One-Click Deployment&lt;/strong&gt; - No servers. No databases. Only files.&lt;/li&gt;
-&lt;/ul&gt;
-&lt;h2 id=&#34;themes&#34;&gt;Themes&lt;/h2&gt;
-&lt;p&gt;Academic comes with &lt;strong&gt;automatic day (light) and night (dark) mode&lt;/strong&gt; built-in. Alternatively, visitors can  choose their preferred mode - click the sun/moon icon in the top right of the &lt;a href=&#34;https://academic-demo.netlify.com/&#34;&gt;Demo&lt;/a&gt; to see it in action! Day/night mode can also be disabled by the site admin in &lt;code&gt;params.toml&lt;/code&gt;.&lt;/p&gt;
-&lt;p&gt;&lt;a href=&#34;https://sourcethemes.com/academic/themes/&#34;&gt;Choose a stunning &lt;strong&gt;theme&lt;/strong&gt; and &lt;strong&gt;font&lt;/strong&gt;&lt;/a&gt; for your site. Themes are fully &lt;a href=&#34;https://sourcethemes.com/academic/docs/customization/#custom-theme&#34;&gt;customizable&lt;/a&gt;.&lt;/p&gt;
-&lt;h2 id=&#34;ecosystem&#34;&gt;Ecosystem&lt;/h2&gt;
-&lt;ul&gt;
-&lt;li&gt;&lt;strong&gt;&lt;a href=&#34;https://github.com/sourcethemes/academic-admin&#34;&gt;Academic Admin&lt;/a&gt;:&lt;/strong&gt; An admin tool to import publications from BibTeX or import assets for an offline site&lt;/li&gt;
-&lt;li&gt;&lt;strong&gt;&lt;a href=&#34;https://github.com/sourcethemes/academic-scripts&#34;&gt;Academic Scripts&lt;/a&gt;:&lt;/strong&gt; Scripts to help migrate content to new versions of Academic&lt;/li&gt;
-&lt;/ul&gt;
-&lt;h2 id=&#34;install&#34;&gt;Install&lt;/h2&gt;
-&lt;p&gt;You can choose from one of the following four methods to install:&lt;/p&gt;
-&lt;ul&gt;
-&lt;li&gt;&lt;a href=&#34;https://sourcethemes.com/academic/docs/install/#install-with-web-browser&#34;&gt;&lt;strong&gt;one-click install using your web browser (recommended)&lt;/strong&gt;&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&#34;https://sourcethemes.com/academic/docs/install/#install-with-git&#34;&gt;install on your computer using &lt;strong&gt;Git&lt;/strong&gt; with the Command Prompt/Terminal app&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&#34;https://sourcethemes.com/academic/docs/install/#install-with-zip&#34;&gt;install on your computer by downloading the &lt;strong&gt;ZIP files&lt;/strong&gt;&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&#34;https://sourcethemes.com/academic/docs/install/#install-with-rstudio&#34;&gt;install on your computer with &lt;strong&gt;RStudio&lt;/strong&gt;&lt;/a&gt;&lt;/li&gt;
-&lt;/ul&gt;
-&lt;p&gt;Then &lt;a href=&#34;https://sourcethemes.com/academic/docs/get-started/&#34;&gt;personalize and deploy your new site&lt;/a&gt;.&lt;/p&gt;
-&lt;h2 id=&#34;updating&#34;&gt;Updating&lt;/h2&gt;
-&lt;p&gt;&lt;a href=&#34;https://sourcethemes.com/academic/docs/update/&#34;&gt;View the Update Guide&lt;/a&gt;.&lt;/p&gt;
-&lt;p&gt;Feel free to &lt;em&gt;star&lt;/em&gt; the project on &lt;a href=&#34;https://github.com/gcushen/hugo-academic/&#34;&gt;Github&lt;/a&gt; to help keep track of &lt;a href=&#34;https://sourcethemes.com/academic/updates&#34;&gt;updates&lt;/a&gt;.&lt;/p&gt;
-&lt;h2 id=&#34;license&#34;&gt;License&lt;/h2&gt;
-&lt;p&gt;Copyright 2016-present &lt;a href=&#34;https://georgecushen.com&#34;&gt;George Cushen&lt;/a&gt;.&lt;/p&gt;
-&lt;p&gt;Released under the &lt;a href=&#34;https://github.com/gcushen/hugo-academic/blob/master/LICENSE.md&#34;&gt;MIT&lt;/a&gt; license.&lt;/p&gt;
 </description>
     </item>
     
