@@ -11,7 +11,7 @@ tags:
 - Others
 title: Multiple Correspondence Analysis
 url_code: ""
-url_pdf: "CDA_Project_Presentation.pdf"
+url_pdf: "https://github.com/soham099/MCA/blob/master/CDA_Project_Presentation.pdf"
 url_slides: ""
 url_video: ""
 ---
