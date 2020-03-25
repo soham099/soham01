@@ -124,11 +124,11 @@ The SIR model is one of the compartmental models in epidemiology which is used t
 
 SIR modelling starts with defining 3 different compartments, of states in which a person can be. The states are as follows:
 
-```mermaid
+{{<diagram align="left">}}
 graph LR;
     S(Susceptible) --> I(Infected);
     I(Infected) --> R(Recovered / Removed);
-```
+{{< /diagram >}}
 
 
 **Susceptibles** are the general population, who is susceptible to get the disease from an infectious person. **Infected** state reperesents the persons who have the symptoms of the infection and is able to spread it. And finally, **Recovered** or **Removed** is the state when a person is recovered from the disease and gain immunity to it, or is dead. Let, $Y_t^S, Y_t^I, Y_t^R$ dentoes the number of people in these states respectively at the time $t$. The corresponding proportions are denoted by $\theta_t^S, \theta_t^I$ and $\theta_t^R$, where the proportion is defined as the number of people in a state divided by the total number of people, i.e. the population count. Note that, since these three states are assumed to be exhaustive, hence $Y_t^S + Y_t^I + Y_t^R = N$, where $N$ is the total population of the particular region under study.

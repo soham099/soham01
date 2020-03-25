@@ -44,6 +44,9 @@
 
   
   
+  
+  <script src="/js/mathjax-config.js"></script>
+  
 
   
   
@@ -167,9 +170,9 @@
 
       
       
-        
-      
 
+      
+        <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js" integrity="" crossorigin="anonymous" async></script>
       
     
       
@@ -773,10 +776,11 @@ ggplot(temp, aes(x = Date, y = Count, color = Variable)) + geom_line(size = 1)
 <h1 id="sir-model-description">SIR Model Description</h1>
 <p>The SIR model is one of the compartmental models in epidemiology which is used to mathematically model the spread of an infectious disease. This model was firstly introduced by William Ogilvy Kermack and A. G. McKendrick, and named as <strong>Kermack-McKendrick Model.</strong> However, with time, this model has obtained several variants, each being better than the one before.</p>
 <p>SIR modelling starts with defining 3 different compartments, of states in which a person can be. The states are as follows:</p>
-<pre><code class="language-mermaid">graph LR;
-    S(Susceptible) --&gt; I(Infected);
-    I(Infected) --&gt; R(Recovered / Removed);
-</code></pre>
+<div class="mermaid">
+graph LR;
+    S(Susceptible) --> I(Infected);
+    I(Infected) --> R(Recovered / Removed);
+</div>
 <p><strong>Susceptibles</strong> are the general population, who is susceptible to get the disease from an infectious person. <strong>Infected</strong> state reperesents the persons who have the symptoms of the infection and is able to spread it. And finally, <strong>Recovered</strong> or <strong>Removed</strong> is the state when a person is recovered from the disease and gain immunity to it, or is dead. Let, $Y_t^S, Y_t^I, Y_t^R$ dentoes the number of people in these states respectively at the time $t$. The corresponding proportions are denoted by $\theta_t^S, \theta_t^I$ and $\theta_t^R$, where the proportion is defined as the number of people in a state divided by the total number of people, i.e. the population count. Note that, since these three states are assumed to be exhaustive, hence $Y_t^S + Y_t^I + Y_t^R = N$, where $N$ is the total population of the particular region under study.</p>
 <p>The mathematical relations between these quantities are defined as follows:</p>
 <p>$$
@@ -1249,6 +1253,8 @@ ggplot( pred.dat , aes(x = Date) ) +
       <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.isotope/3.0.6/isotope.pkgd.min.js" integrity="sha256-CBrpuqrMhXwcLLUd5tvQ4euBHCdh7wGlDfNz8vbu/iI=" crossorigin="anonymous"></script>
       <script src="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.5.7/jquery.fancybox.min.js" integrity="sha256-yt2kYMy0w8AbtF89WXb2P1rfjcP/HTHLT7097U8Y5b8=" crossorigin="anonymous"></script>
 
+      
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/mermaid/8.4.3/mermaid.min.js" integrity="" crossorigin="anonymous" title="mermaid"></script>
       
 
       
