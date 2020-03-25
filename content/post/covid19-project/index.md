@@ -124,7 +124,7 @@ The SIR model is one of the compartmental models in epidemiology which is used t
 
 SIR modelling starts with defining 3 different compartments, of states in which a person can be. The states are as follows:
 
-{{< diagram >}}
+{{< diagram align="left"> >}}
 graph LR;
     S(Susceptible) --> I(Infected);
     I(Infected) --> R(Recovered / Removed);
