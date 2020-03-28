@@ -419,6 +419,15 @@ ggplot( pred.dat , aes(x = Date) ) +
     </item>
     
     <item>
+      <title>Mapping Human QTL usiing Sib-Pair Data</title>
+      <link>/project/haseman-elston-regression/</link>
+      <pubDate>Wed, 13 Mar 2019 00:00:00 +0000</pubDate>
+      <guid>/project/haseman-elston-regression/</guid>
+      <description>&lt;p&gt;Haseman-Elston&#39;s 1970 paper has been a seminal one in the field of Quantitaive Trait Loci (QTL) mapping. In this project, we discuss the methods of the paper, popularly known as &lt;em&gt;Haseman-Elston Regression&lt;/em&gt; in the context of Sibling-Pair data. Find out more in the slides.&lt;/p&gt;
+</description>
+    </item>
+    
+    <item>
       <title>On Mixing Time of  Juggling Markov Chain</title>
       <link>/project/juggling-markov-chain/</link>
       <pubDate>Tue, 31 Jul 2018 00:00:00 +0000</pubDate>
@@ -442,15 +451,6 @@ ggplot( pred.dat , aes(x = Date) ) +
       <pubDate>Thu, 28 Jun 2018 00:00:00 +0100</pubDate>
       <guid>/terms/</guid>
       <description>&lt;p&gt;&amp;hellip;&lt;/p&gt;
-</description>
-    </item>
-    
-    <item>
-      <title>Mapping Human QTL usiing Sib-Pair Data</title>
-      <link>/project/haseman-elston-regression/</link>
-      <pubDate>Tue, 13 Mar 2018 00:00:00 +0000</pubDate>
-      <guid>/project/haseman-elston-regression/</guid>
-      <description>&lt;p&gt;Haseman-Elston&#39;s 1970 paper has been a seminal one in the field of Quantitaive Trait Loci (QTL) mapping. In this project, we discuss the methods of the paper, popularly known as &lt;em&gt;Haseman-Elston Regression&lt;/em&gt; in the context of Sibling-Pair data. Find out more in the slides.&lt;/p&gt;
 </description>
     </item>
     

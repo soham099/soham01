@@ -93,6 +93,16 @@
   </url>
   
   <url>
+    <loc>/tags/bio-statistics/</loc>
+    <lastmod>2019-03-13T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/project/haseman-elston-regression/</loc>
+    <lastmod>2019-03-13T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
     <loc>/project/juggling-markov-chain/</loc>
     <lastmod>2018-07-31T00:00:00+00:00</lastmod>
   </url>
@@ -105,16 +115,6 @@
   <url>
     <loc>/terms/</loc>
     <lastmod>2018-06-28T00:00:00+01:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>/tags/bio-statistics/</loc>
-    <lastmod>2018-03-13T00:00:00+00:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>/project/haseman-elston-regression/</loc>
-    <lastmod>2018-03-13T00:00:00+00:00</lastmod>
   </url>
   
   <url>
