@@ -5,12 +5,531 @@
     <link>/authors/admin/</link>
       <atom:link href="/authors/admin/index.xml" rel="self" type="application/rss+xml" />
     <description>Soham Bonnerjee&#39;s Home Page</description>
-    <generator>Source Themes Academic (https://sourcethemes.com/academic/)</generator><language>en-us</language><lastBuildDate>Wed, 25 Mar 2020 00:00:00 +0000</lastBuildDate>
+    <generator>Source Themes Academic (https://sourcethemes.com/academic/)</generator><language>en-us</language><lastBuildDate>Sat, 28 Mar 2020 00:00:00 +0000</lastBuildDate>
     <image>
       <url>/img/icon-192.png</url>
       <title>Soham Bonnerjee&#39;s Home Page</title>
       <link>/authors/admin/</link>
     </image>
+    
+    <item>
+      <title>eSIR - An Epidemiological Model incoportating quaranting effect</title>
+      <link>/post/esir-modelling/</link>
+      <pubDate>Sat, 28 Mar 2020 00:00:00 +0000</pubDate>
+      <guid>/post/esir-modelling/</guid>
+      <description>&lt;h1 id=&#34;current-scenario-in-india&#34;&gt;Current Scenario in INDIA&lt;/h1&gt;
+&lt;p&gt;Taking cue from global powerhouses failing catastrophically to contain the onslaught on life that&#39;s been lunched by Covid-19, Prime Minister of India Shri Narendra Modi issued instructions for a nationwide &lt;em&gt;Lockdown&lt;/em&gt; starting from 25 March&#39;20 to 14 April&#39;20, wth possible plans for further extension. The decision have been welcomed and lauded by various researchers and scientists alike, esopecially after countries like USA and Italy acted too late to a possibly aggravated situation. But why this praise? In this post, we&#39;ll find out how lockdown and other forms of quarantining helps contain the infection.&lt;/p&gt;
+&lt;p&gt;But before that, a gentle reminder of what we are up against: till date, Covid-19 virus has affected $722$ people in India, and $486702$ people worldwide and has claimed $16$ lives in India till now. We have discussed about the origin of the virus and possible measures to contain infection in our last &lt;a href=&#34;https://soham01.netlify.com/post/covid19-project/&#34;&gt;post&lt;/a&gt;.&lt;/p&gt;
+&lt;h1 id=&#34;introduction&#34;&gt;Introduction&lt;/h1&gt;
+&lt;p&gt;This is a post to show how we can incorporate quarantining effects in statistical modelling of epidemiology. In past few days of Shelter-in-place lockdown situation in Kolkata (and throughout the whole India from today onwards), me and one of my ingenious friend &lt;a href=&#34;https://soham01.netlify.com/&#34;&gt;Soham Bonnerjee&lt;/a&gt; (we were attending the same college before lockdown to purse Masters degree in Statistics), was reading about different epidemiological models available in the literature and using it to generate projections for the number of infected people in India, and this is a result of that reading and further independent developements.&lt;/p&gt;
+&lt;h1 id=&#34;loading-the-packages-and-the-dataset&#34;&gt;Loading the Packages and the Dataset&lt;/h1&gt;
+&lt;p&gt;We are using the same dataset source as before, except that we have updated it to include some of the current observations. Similar to before, we shall be using &lt;code&gt;dplyr&lt;/code&gt; for data manipulation and summarization, &lt;code&gt;lubridate&lt;/code&gt; for handling dates and times, and &lt;code&gt;ggplot2&lt;/code&gt; for plotting.&lt;/p&gt;
+&lt;p&gt;However, due to some Monte Carlo simulation later, we shall be needing &lt;code&gt;rjags&lt;/code&gt; and we shall use &lt;code&gt;gtools&lt;/code&gt; for specification of some useful probability distributions.&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-r&#34;&gt;library(readr)
+library(dplyr)
+library(lubridate)
+library(ggplot2)
+library(rjags)
+library(gtools)
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;Now, finally we load the updated dataset, which I have already downloaded from &lt;a href=&#34;https://github.com/CSSEGISandData/COVID-19&#34;&gt;JHU CSSE&lt;/a&gt;, and manipulated to get the required form of data using the code discussed in my previous post &lt;a href=&#34;https://subroy13.github.io/post/post6/&#34;&gt;here&lt;/a&gt;. We shall take a look at the last few columns to see how much we have updated.&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-r&#34;&gt;dat &amp;lt;- read_csv(&#39;./datasets/covid-19-data.csv&#39;)
+knitr::kable(tail(dat, 3))
+&lt;/code&gt;&lt;/pre&gt;
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;State&lt;/th&gt;
+&lt;th&gt;Country&lt;/th&gt;
+&lt;th&gt;Lat&lt;/th&gt;
+&lt;th&gt;Long&lt;/th&gt;
+&lt;th&gt;Date&lt;/th&gt;
+&lt;th&gt;Confirmed&lt;/th&gt;
+&lt;th&gt;Deaths&lt;/th&gt;
+&lt;th&gt;Recovered&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;Zhejiang&lt;/td&gt;
+&lt;td&gt;China&lt;/td&gt;
+&lt;td&gt;29.1832&lt;/td&gt;
+&lt;td&gt;120.0934&lt;/td&gt;
+&lt;td&gt;2020-03-24&lt;/td&gt;
+&lt;td&gt;1240&lt;/td&gt;
+&lt;td&gt;1&lt;/td&gt;
+&lt;td&gt;1221&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;Zhejiang&lt;/td&gt;
+&lt;td&gt;China&lt;/td&gt;
+&lt;td&gt;29.1832&lt;/td&gt;
+&lt;td&gt;120.0934&lt;/td&gt;
+&lt;td&gt;2020-03-25&lt;/td&gt;
+&lt;td&gt;1241&lt;/td&gt;
+&lt;td&gt;1&lt;/td&gt;
+&lt;td&gt;1221&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;Zhejiang&lt;/td&gt;
+&lt;td&gt;China&lt;/td&gt;
+&lt;td&gt;29.1832&lt;/td&gt;
+&lt;td&gt;120.0934&lt;/td&gt;
+&lt;td&gt;2020-03-26&lt;/td&gt;
+&lt;td&gt;1243&lt;/td&gt;
+&lt;td&gt;1&lt;/td&gt;
+&lt;td&gt;1222&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;h1 id=&#34;description-of-esir-model&#34;&gt;Description of eSIR Model&lt;/h1&gt;
+&lt;p&gt;The eSIR (Extended SIR) model is really similar to the SIR model, except for the fact that it includes  a function that parametrizes the quarantining effects. As with SIR modelling, it has 3 different compartments, of states in which a person can be. This model has been developed very recently by &lt;a href=&#34;https://www.medrxiv.org/content/10.1101/2020.02.29.20029421v1.full.pdf&#34;&gt;Wang et al.&lt;/a&gt; The states are as follows:&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-mermaid&#34;&gt;graph LR
+  A(Susceptible) --&amp;gt;|&amp;quot;&amp;amp;#946&amp;amp;#960(t)&amp;quot;| B(Infected)
+  B --&amp;gt;|&amp;amp;#947| C(Removed)
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;As described in previous &lt;a href=&#34;https://subroy13.github.io/post/post6/&#34;&gt;post&lt;/a&gt;, &lt;strong&gt;Susceptibles&lt;/strong&gt; are the general population, who is susceptible to get the disease from an infectious person. &lt;strong&gt;Infected&lt;/strong&gt; state reperesents the persons who have the symptoms of the infection and is able to spread it. And finally, &lt;strong&gt;Recovered / Removed&lt;/strong&gt; is the state when a person is recovered from the disease and gain immunity to it, or is dead. Let, $Y_t^S, Y_t^I, Y_t^R$ denotes the proportion of people in these states respectively at the time $t$. Note that $Y_t^S + Y_t^I + Y_t^R = 1$.  $\pi(t)$ denotes the proportion of people transiting from &lt;strong&gt;Susceptible&lt;/strong&gt; to &lt;strong&gt;Infected&lt;/strong&gt; state at time $t$, with the &lt;em&gt;proportion&lt;/em&gt; being commensurate to the proportion of people transiting from &lt;strong&gt;Susceptible&lt;/strong&gt; to &lt;strong&gt;Infected&lt;/strong&gt; state at time $t$ in the original SIR modelling. Thus We can vary $\pi(t)$ from time to time to perfectly capture the effect of quarantining. In other words, the rate at which a susceptible person becomes infected is not a time varying proportion, namely $\beta \pi(t)$, where $\beta$ is the usual rate of transmission of the disease, while $\pi(t)$ is the quarantining effect which might restrict movements of general public in order to make the effective transmission rate lower than the usual quantity $\beta$.&lt;/p&gt;
+&lt;p&gt;Let $\theta_t=(\theta_t^S, \theta_t^I, \theta_t^R)^T$ be the vector of underlying prevalence of the population in these three states. Since $Y_t^S, Y_t^I, Y_t^R$ are proportions, we model them via Beta distribution:&lt;/p&gt;
+&lt;p&gt;$$\begin{align}
+Y_t^I \mid \theta_t, \tau \sim \text{Beta}(\lambda^I\theta_t^I,\lambda^I(1-\theta_t^I))\\\&lt;br&gt;
+&amp;amp; \\\&lt;br&gt;
+Y_t^R \mid \theta_t, \tau \sim \text{Beta}(\lambda^R\theta_t^R,\lambda^R(1-\theta_t^R))\\\&lt;br&gt;
+\end{align}$$&lt;/p&gt;
+&lt;p&gt;where $\tau=(\beta, \gamma, \theta_0^T, \kappa, \lambda^I, \lambda^R)^T$, $\beta$, $\gamma$ are as in SIR model; $\kappa$, $\lambda^I, \lambda^R$ are parameters governing the latent process we&#39;ll define soon.&lt;/p&gt;
+&lt;p&gt;Since $\theta_t$ is a probability, we specify a Dirichlet model for it:&lt;/p&gt;
+&lt;p&gt;$$\theta_t \mid \theta_{t-1}, \tau \sim \text{Dirichlet} (k f(\theta_{t-1}, \beta, \gamma))$$&lt;/p&gt;
+&lt;p&gt;These together is called a Beta-Dirichlet State Space Model.&lt;/p&gt;
+&lt;p&gt;Here $f(\cdot)$ is the solution of the system of ODEs:&lt;/p&gt;
+&lt;p&gt;$$\begin{align}
+\dfrac{d\theta_t^S}{dt} &amp;amp; = -\pi(t)\beta \theta_t^S \theta_t^I\\\&lt;br&gt;
+&amp;amp; \\\&lt;br&gt;
+\dfrac{d\theta_t^I}{dt} &amp;amp; = \pi(t)\beta \theta_t^S \theta_t^I - \gamma \theta_t^I\\\&lt;br&gt;
+&amp;amp; \\\&lt;br&gt;
+\dfrac{d\theta_t^R}{dt} &amp;amp; = \gamma \theta_t^I\\\&lt;br&gt;
+\end{align}$$&lt;/p&gt;
+&lt;p&gt;and this is exactly where the SIR modelling takes place. We solve this system of ODEs via &lt;em&gt;Runge-Kutta&lt;/em&gt;(RK4) approximation.&lt;/p&gt;
+&lt;p&gt;To implement the Markov Chain Monte Carlo method, we need to specify prior for the hyperparameters $\tau=(\beta, \gamma, \theta_0^T, \kappa, \lambda^I, \lambda^R)^{\top}$. We do that as follows:&lt;/p&gt;
+&lt;p&gt;We initialize $\theta_0$ via a distribution that uses the observed data:&lt;/p&gt;
+&lt;p&gt;$$\begin{align}
+\theta_0^I \sim \text{Beta}(1, \dfrac{1}{Y_1^I})\\\&lt;br&gt;
+&amp;amp; \\\&lt;br&gt;
+\theta_0^R \sim \text{Beta}(1, \dfrac{1}{Y_1^R})\\\&lt;br&gt;
+&amp;amp; \\\&lt;br&gt;
+\theta_0^S= 1-\theta_0^I-\theta_0^R\\\&lt;br&gt;
+\end{align}$$&lt;/p&gt;
+&lt;p&gt;We specify the other hyperparameters according to the &lt;a href=&#34;https://arxiv.org/pdf/1007.0908.pdf&#34;&gt;SARS data&lt;/a&gt; in Hong-Kong.&lt;/p&gt;
+&lt;p&gt;$$\begin{align}
+R_0= \dfrac{\beta}{\gamma} \sim \text{Log}\mathbb{N}(1.099,0.096) \implies \mathbb{E}(R_0)=3.15, \mathbb{V}(R_0)=1 \\\&lt;br&gt;
+&amp;amp; \\\&lt;br&gt;
+\gamma \sim \text{Log}\mathbb{N}(-2.955,0.910) \implies \mathbb{E}(\gamma)=0.0117, \mathbb{V}(\gamma)=0.01 \\\&lt;br&gt;
+&amp;amp; \\\&lt;br&gt;
+k \sim \text{Gamma}(2, 0.0001)\\\&lt;br&gt;
+&amp;amp;  \\\&lt;br&gt;
+\lambda^I \sim \text{Gamma}(2, 0.0001)\\\&lt;br&gt;
+&amp;amp; \\\&lt;br&gt;
+\lambda^R \sim \text{Gamma}(2, 0.0001)\\\&lt;br&gt;
+\end{align}$$&lt;/p&gt;
+&lt;p&gt;Now suppose , data upto time point $t_0$ are observed: $(Y_1, \cdots Y_{t_0})$. We want to predict upto time point $T$. To this end, we generate $M$ MCMC samples, such that for $m \in {1,\cdots, M}$, $(Y_{t_0+1}^{(m)}, \cdots, Y_T)$ is a draw from $Y_t \mid \theta_t, \tau$. The algorihm is described below:&lt;/p&gt;
+&lt;p&gt;for $m$ in $1, \cdots, M$&lt;/p&gt;
+&lt;p&gt;$\qquad$  for $t$ in $t_0+1,\cdots, T$,&lt;/p&gt;
+&lt;p&gt;$\qquad \qquad$  Draw $\theta_t^{(m)}$ from $[\theta_t \mid \theta_{t-1}^{(m)}, \tau^{(m)}]$.&lt;/p&gt;
+&lt;p&gt;$\qquad \qquad$  Draw $Y_t^{(m)}$ from $[Y_t \mid \theta_{t}^{(m)}, \tau^{(m)} ]$&lt;/p&gt;
+&lt;p&gt;Finally for each time point $t$, $t= t_0+1,\cdots, T$ estimate $Y_t$ by $\hat{Y}_t=\dfrac{1}{M}\displaystyle \sum_{m=1}^M Y_t^{(m)}$.&lt;/p&gt;
+&lt;h1 id=&#34;estimation-of-esir-model&#34;&gt;Estimation of eSIR Model&lt;/h1&gt;
+&lt;h2 id=&#34;initialization&#34;&gt;Initialization&lt;/h2&gt;
+&lt;p&gt;Note that, we wish to have a lognormal distribution $R_0 \sim LogN(\mu, \sigma^2)$, such that, $E(R_0), Var(R_0)$ is at a specified value. The specific reason is that, $R_0 = \beta_0 / \gamma_0$, which is a positive quantity, hence is better modelled by a gamma or lognormal distribution than a normal distribution, which has support as the whole of real line. Therefore, given $E(R_0) = a$, and $Var(R_0) = b$, we wish to figure out $\mu, \sigma$, the parmeters of the lognormal distribution. This can be obtained through the following simple formula and is implemented in the following function.&lt;/p&gt;
+&lt;p&gt;$$\sigma^2 = \log\left( \dfrac{Var(R_0)}{E(R_0)^2} +1 \right) \qquad \qquad \mu = \log(E(R_0)) - \dfrac{\sigma^2}{2}$$&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-r&#34;&gt;lognorm.param&amp;lt;-function(mu0,var0){
+  var &amp;lt;- log(var0/mu0^2+1)
+  mu &amp;lt;- log(mu0)-var/2
+  return(round(c(mu,var),3))
+}
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;Now, we specify some control parameters, which specifies the initial $E(R_0), Var(R_0)$ and some other parameters, as well as the parameters for the markov chain (like the length of the chain, the number of parallel chains to construct in order to speed up the process, number of samples to define burn in period etc.) You may want to skip these technical details for now.&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-r&#34;&gt;init.params &amp;lt;- list(R0 = 3.15, R0_sd = 1, gamma0 = 0.0117, gamma0_sd = 0.1)
+control.params &amp;lt;- list(nchain=4, nadapt=1e4, ndraw=5e2, thin=10, nburnin=2e2)
+control.params$mclen &amp;lt;- round(control.params$ndraw / control.params$thin) * control.params$nchain    #number of MCMC draws in total
+&lt;/code&gt;&lt;/pre&gt;
+&lt;h2 id=&#34;performing-mcmc&#34;&gt;Performing MCMC&lt;/h2&gt;
+&lt;p&gt;Now, we shall be creating a function called &lt;code&gt;do.MCMC&lt;/code&gt; which takes the observed proportion of Infected (I), Removed ( R ), then the value of the function $\pi(t)$ till the observed time period (and the control parameters). Then, it shall perform the MCMC step by generating the posterior sampels, and it shall output that posterior samples, which we shall later use to generate predictions, as well as get estimates.&lt;/p&gt;
+&lt;h3 id=&#34;defining-the-jags-code&#34;&gt;Defining the JAGS Code&lt;/h3&gt;
+&lt;p&gt;The very first thing to implement MCMC or any Bayesian Computation in &lt;code&gt;rjags&lt;/code&gt; is the specification of a JAGS code. JAGS is the acronym for &lt;a href=&#34;http://mcmc-jags.sourceforge.net/&#34;&gt;&lt;strong&gt;Just Another Gibbs Sampler&lt;/strong&gt;&lt;/a&gt;, which is a program for simulation from Bayesian hierarchical models using Markov chain Monte Carlo (MCMC), developed by Martyn Plummer.&lt;/p&gt;
+&lt;p&gt;JAGS code is mainly created based on two simple operations.&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;
+&lt;p&gt;An assignment operator &amp;ldquo;&amp;lt;-&amp;rdquo; is used to denote a deterministic relation.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;A tilde operator &amp;ldquo;~&amp;rdquo; is used to denote a stochastic relation. In this case, we have a probability distribution on right hand side, according to which the left hand side variable is being generated.&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;Based on the above operations, the following JAGS code creates the Bayesian model described above.&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-r&#34;&gt;model.string &amp;lt;- paste0(&amp;quot;
+             model{
+                   for(t in 2:(T_obs+1)){
+                   Km[t-1,1] &amp;lt;- -beta*pi[t-1]*theta[t-1,1]*theta[t-1,2]
+                   Km[t-1,9] &amp;lt;- gamma*theta[t-1,2]
+                   Km[t-1,5] &amp;lt;- -Km[t-1,1]-Km[t-1,9]
+                   Km[t-1,2] &amp;lt;- -beta*pi[t-1]*(theta[t-1,1]+0.5*Km[t-1,1])*(theta[t-1,2]+0.5*Km[t-1,5])
+                   Km[t-1,10] &amp;lt;- gamma*(theta[t-1,2]+0.5*Km[t-1,5])
+                   Km[t-1,6] &amp;lt;- -Km[t-1,2]-Km[t-1,10]
+                   Km[t-1,3] &amp;lt;- -beta*pi[t-1]*(theta[t-1,1]+0.5*Km[t-1,2])*(theta[t-1,2]+0.5*Km[t-1,6])
+                   Km[t-1,11] &amp;lt;- gamma*(theta[t-1,2]+0.5*Km[t-1,6])
+                   Km[t-1,7] &amp;lt;- -Km[t-1,3]-Km[t-1,11]
+                   Km[t-1,4] &amp;lt;- -beta*pi[t-1]*(theta[t-1,1]+Km[t-1,3])*(theta[t-1,2]+Km[t-1,7])
+                   Km[t-1,12] &amp;lt;- gamma*(theta[t-1,2]+Km[t-1,7])
+                   Km[t-1,8] &amp;lt;- -Km[t-1,4]-Km[t-1,12]
+                   alpha[t-1,1] &amp;lt;- theta[t-1,1]+(Km[t-1,1]+2*Km[t-1,2]+2*Km[t-1,3]+Km[t-1,4])/6
+                   alpha[t-1,2] &amp;lt;- theta[t-1,2]+(Km[t-1,5]+2*Km[t-1,6]+2*Km[t-1,7]+Km[t-1,8])/6
+                   alpha[t-1,3] &amp;lt;- theta[t-1,3]+(Km[t-1,9]+2*Km[t-1,10]+2*Km[t-1,11]+Km[t-1,12])/6
+                   theta[t,1:3] ~ ddirch(k*alpha[t-1,1:3])
+                   I[t-1] ~ dbeta(lambdaI*theta[t,2],lambdaI*(1-theta[t,2]))
+                   R[t-1] ~ dbeta(lambdaR*theta[t,3],lambdaR*(1-theta[t,3]))
+                  }
+                  theta[1,1] &amp;lt;-  1- theta[1,2]- theta[1,3]
+                  theta[1,2] ~ dbeta(&amp;quot;,1,&amp;quot;,&amp;quot;,1/I[1],&amp;quot;)
+                  theta[1,3] ~ dbeta(&amp;quot;,1,&amp;quot;,&amp;quot;,1/R[1],&amp;quot;)
+                  gamma ~  dlnorm(&amp;quot;,lognorm_gamma_param[1],&amp;quot;,&amp;quot;,1/lognorm_gamma_param[2],&amp;quot;)
+                  R0 ~ dlnorm(&amp;quot;,lognorm_R0_param[1],&amp;quot;,&amp;quot;,1/lognorm_R0_param[2],&amp;quot;)
+                  beta &amp;lt;- R0*gamma
+                  k ~  dgamma(2,0.0001)
+                  lambdaI ~ dgamma(2,0.0001)
+                  lambdaR ~ dgamma(2,0.0001)
+               }
+            &amp;quot;)
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;Here, &lt;code&gt;init.params&lt;/code&gt; are to be passed accordingly in &lt;code&gt;lognorm.param&lt;/code&gt; function to obtain the &lt;code&gt;lognorm_gamma_param&lt;/code&gt; and &lt;code&gt;lognorm_R0_param&lt;/code&gt; variables.&lt;/p&gt;
+&lt;h3 id=&#34;performing-mcmc-1&#34;&gt;Performing MCMC&lt;/h3&gt;
+&lt;p&gt;Now, once we have the &lt;code&gt;model.string&lt;/code&gt; containing the JAGS code, we need to open a connection object to that string. Because, &lt;code&gt;rjags&lt;/code&gt; expect the JAGS code to be written in a file, a connection object can gimick the behavior of a file, just based on that string. Once we have the JAGS code ready, passing the data nodes in the JAGS model helps us in creating the posterior model.&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-r&#34;&gt;model.spec &amp;lt;- textConnection(model.string)
+posterior &amp;lt;- jags.model(model.spec, data=list(&#39;I&#39;=I,&#39;R&#39;=R,&#39;T_obs&#39;=T_obs,&#39;pi&#39;=pi), 
+                    n.chains =control.params$nchain, n.adapt = control.params$nadapt)
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;Now, we first update the posterior for the burn-in period. In this time, the posterior generates samples are not close to the original sample, and hence we need to discard them. Typically, we set burn-in to be about $2000$ iterations. After that, we pass&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-r&#34;&gt;update(posterior, control.params$nburnin) # update the posterior for burn in times, for this time, do not monitor anything
+jags_sample &amp;lt;- jags.samples(posterior, c(&#39;theta&#39;,&#39;gamma&#39;,&#39;R0&#39;,&#39;beta&#39;,&#39;I&#39;,&#39;lambdaI&#39;,&#39;lambdaR&#39;,&#39;k&#39;),
+                        n.iter = control.params$ndraw * control.params$nchain,
+                        thin = control.params$thin)
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;So, we combine these into a function called &lt;code&gt;do.MCMC&lt;/code&gt; which we shall use later.&lt;/p&gt;
+&lt;h2 id=&#34;forecasting-using-esir-model&#34;&gt;Forecasting using eSIR model&lt;/h2&gt;
+&lt;p&gt;Now, since we have the MCMC samples obtained as the output of &lt;code&gt;do.MCMC&lt;/code&gt; function, we can extend the chain using the exact simulation of the process described by the model above, and then, we can obtain the estimates of the proportion of infected and recovered people, as well as the confidence interval for that proportion.&lt;/p&gt;
+&lt;p&gt;Again, we shall create &lt;code&gt;forecast.SIR&lt;/code&gt; function which takes in the output of &lt;code&gt;do.MCMC&lt;/code&gt;, and then run the simulation chains starting from the MCMC samples. Finally, it computes the estimates and confidence intervals for the estimates of proportion of infected and removed from the samples from all the chains.&lt;/p&gt;
+&lt;h3 id=&#34;extract-components-of-mcmc-samples&#34;&gt;Extract components of MCMC samples&lt;/h3&gt;
+&lt;p&gt;Here, we extract the components of MCMC samples from the output of &lt;code&gt;do.MCMC&lt;/code&gt; function.&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-r&#34;&gt;# extract components from mcmc samples 
+theta_pre &amp;lt;- array(as.mcmc.list(mcmc_sample$theta)[[1]], dim = c(control.params$mclen, T_obs+1, 3))
+R0_pre &amp;lt;- as.mcmc.list(mcmc_sample$R0)[[1]]
+gamma_pre &amp;lt;- as.mcmc.list(mcmc_sample$gamma)[[1]]
+beta_pre &amp;lt;- as.mcmc.list(mcmc_sample$beta)[[1]]
+lambdaI_pre &amp;lt;- as.mcmc.list(mcmc_sample$lambdaI)[[1]]
+lambdaR_pre &amp;lt;- as.mcmc.list(mcmc_sample$lambdaR)[[1]]
+k_pre &amp;lt;- as.mcmc.list(mcmc_sample$k)[[1]]
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;We also initialize blank arrays to store the future forecasts. Here, &lt;code&gt;T_new&lt;/code&gt; is the number of time points for which new forecasting is to be done.&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-r&#34;&gt;theta_post &amp;lt;- array(0, dim=c(control.params$mclen, T_new, 3))
+I_post &amp;lt;- matrix(NA, nrow=control.params$mclen, ncol=T_new)
+R_post &amp;lt;- matrix(NA, nrow=control.params$mclen, ncol=T_new)
+&lt;/code&gt;&lt;/pre&gt;
+&lt;h3 id=&#34;peform-forecasting&#34;&gt;Peform Forecasting&lt;/h3&gt;
+&lt;p&gt;The following piece of code basically performs the forecasting starting from the last obtained posterior samples as obtained by MCMC. Now, let us go through the code step by step.&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-r&#34;&gt;for(l in 1:control.params$mclen){
+    
+    thetalt1 &amp;lt;- theta_pre[l, T_obs+1, 1]
+    thetalt2 &amp;lt;- theta_pre[l, T_obs+1, 2]
+    thetalt3 &amp;lt;- theta_pre[l, T_obs+1, 3]
+    betal &amp;lt;- beta_pre[l]
+    gammal &amp;lt;- gamma_pre[l]
+    kt &amp;lt;- k_pre[l]
+    lambdaIl &amp;lt;- lambdaI_pre[l]
+    lambdaRl &amp;lt;- lambdaR_pre[l]
+    if (betal&amp;lt;0 | gammal&amp;lt;0 | thetalt1&amp;lt;0 | thetalt2&amp;lt;0 |thetalt3&amp;lt;0) { 
+      next 
+    }
+    
+    
+    for(t in 1:T_new ){
+      # perform runge kutta
+      Km &amp;lt;- numeric(12)
+      alpha_post &amp;lt;- numeric(3)
+      
+      Km[1] &amp;lt;- -betal*pi_new[t]*thetalt1*thetalt2
+      Km[9] &amp;lt;- gammal*thetalt2
+      Km[5] &amp;lt;- -Km[1]-Km[9]
+      
+      Km[2] &amp;lt;- -betal*pi_new[t]*(thetalt1+0.5*Km[1])*(thetalt2+0.5*Km[5])
+      Km[10] &amp;lt;- gammal*(thetalt2+0.5*Km[5])
+      Km[6] &amp;lt;- -Km[2]-Km[10]
+      
+      Km[3] &amp;lt;- -betal*pi_new[t]*(thetalt1+0.5*Km[2])*(thetalt2+0.5*Km[6])
+      Km[11] &amp;lt;- gammal*(thetalt2+0.5*Km[6])
+      Km[7] &amp;lt;- -Km[3]-Km[11]
+      
+      Km[4] &amp;lt;- -betal*pi_new[t]*(thetalt1+Km[3])*(thetalt2+Km[7])
+      Km[12] &amp;lt;- gammal*(thetalt2+Km[7])
+      Km[8] &amp;lt;- -Km[4]-Km[12]
+      
+      alpha_post[1] &amp;lt;- thetalt1+(Km[1]+2*Km[2]+2*Km[3]+Km[4])/6
+      alpha_post[2] &amp;lt;- thetalt2+(Km[5]+2*Km[6]+2*Km[7]+Km[8])/6
+      alpha_post[3] &amp;lt;- thetalt3+(Km[9]+2*Km[10]+2*Km[11]+Km[12])/6
+      
+      thetalt_tmp &amp;lt;- rdirichlet(1, kt* abs(alpha_post))
+      thetalt1 &amp;lt;- theta_post[l,t,1] &amp;lt;- thetalt_tmp[1]
+      thetalt2 &amp;lt;- theta_post[l,t,2] &amp;lt;- thetalt_tmp[2]
+      thetalt3 &amp;lt;- theta_post[l,t,3] &amp;lt;- thetalt_tmp[3]
+      
+      I_post[l,t] &amp;lt;- rbeta(1,lambdaIl*thetalt2,lambdaIl*(1-thetalt2))
+      R_post[l,t] &amp;lt;- rbeta(1,lambdaRl*thetalt3,lambdaRl*(1-thetalt3))
+      
+    }
+    
+  }
+&lt;/code&gt;&lt;/pre&gt;
+&lt;ol&gt;
+&lt;li&gt;
+&lt;p&gt;The outer loop runs for each of the MCMC chains generated by &lt;code&gt;mcmc_output&lt;/code&gt;.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;If any of $\beta, \gamma, \theta^S,\theta^I, \theta^R$ turns out to be less than $0$, the chain is stopped and is not proceeded further.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;In the inner loop, for each new timepoint, we perform the &lt;a href=&#34;https://en.wikipedia.org/wiki/Runge%E2%80%93Kutta_methods&#34;&gt;Runge Kutta methods&lt;/a&gt; of numerically solving the differential equations,&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;At the end of the loop, we have all the estimates for proportion of Infected and Removed, as well as the three latent proportion parameters $\theta$ which accords with the underlying mathematical model of SIR.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Here, &lt;code&gt;pi_new[t] = pi[T_obs + t]&lt;/code&gt;.&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ol&gt;
+&lt;h3 id=&#34;derivation-of-3-important-dates&#34;&gt;Derivation of 3 important dates&lt;/h3&gt;
+&lt;p&gt;Associated with the estimation of eSIR model, there are three important dates, which we should output from our algorithm.&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;
+&lt;p&gt;The date when $\dfrac{d^2 \theta^I_t}{dt^2} = 0$. This date is the time, when the rate of change in the proportion of infected people starts to be decreasing, so we are in a hopeful scenario that the number of new infected cases is going to be decreasing over time.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;The date when $\dfrac{d \theta^I_t}{dt} = 0$, i.e. the date from when the number of new recovered cases starts to exceed the number of new infected cases. From this time onwards, the epidemic nature of the disease vanishes.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;The date when $\theta^I_t = 0$. However, it is impossible to have this proportion equal to $0$, in finite times. Therefore, we shall be looking for a date, when $\theta^I_t &amp;lt; \epsilon$, where $\epsilon$ is a very small quantity, which can be treated readily at any time.&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;To simplify the calculation of derivative, we track the quantity $(\beta \pi(t) \theta^S_t\theta^I_t - \gamma \theta^I_t)$ over time, which is equal to the derivative due to SIR modelling.&lt;/p&gt;
+&lt;p&gt;The following picture taken from the &lt;a href=&#34;https://www.medrxiv.org/content/10.1101/2020.02.29.20029421v1.full.pdf&#34;&gt;paper&lt;/a&gt; by Wang et al. shows the concept clearly.&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;./deriv.png&#34; alt=&#34;&#34;&gt;&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-r&#34;&gt;theta_diff_pre &amp;lt;- theta_pre[, 1:T_obs, 2] * sweep(beta_pre %*% t(pi[1:T_obs]) * theta_pre[, 1:T_obs, 1], MARGIN = 1, STATS = gamma_pre)
+theta_diff_post &amp;lt;- theta_post[, , 2] * sweep(beta_pre %*% t(pi[(T_obs+1):(T_obs+T_new)]) * theta_post[, , 1], MARGIN = 1, STATS = gamma_pre)
+theta_diff &amp;lt;- cbind(theta_diff_pre, theta_diff_post)
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;Now, we find the maximum of each row of &lt;code&gt;theta_diff&lt;/code&gt; and locate the timepoints, where &lt;code&gt;theta_diff&lt;/code&gt; is changing its signs. They should give up the required first and second important dates.&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-r&#34;&gt;first_dates &amp;lt;- apply(theta_diff, 1, which.max)
+second_dates &amp;lt;- apply(theta_diff, 1, function(x) { length(x) + 1 - which(cumprod(rev(x &amp;lt;= 0)) == 0)[1] } )    # the first time it becomes negative and stays negative throughout
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;Now, that we have the dates for each chain, let us take the mean, median, and quantiles, which would give us estimates and confidence intervals for such dates.&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-r&#34;&gt;conf.quant &amp;lt;- c(conf.level/2, 0.5, 1-conf.level/2)    # conf.level is the confidence coefficients for the confidence interval
+first_date_summary &amp;lt;- c( mean(first_dates, na.rm = T), quantile(first_dates, probs = conf.quant, na.rm = T) )
+second_date_summary &amp;lt;- c( mean(second_dates, na.rm = T), quantile(second_dates, probs = conf.quant, na.rm = T) )
+&lt;/code&gt;&lt;/pre&gt;
+&lt;h3 id=&#34;summarising-the-forecast-outputs&#34;&gt;Summarising the forecast outputs&lt;/h3&gt;
+&lt;p&gt;Once we have perform forecasting for each and every chain of the MCMC samples, we can aggregated them to obtain the mean, median, and quantiles, which would give us estimates for the proportion of people in state infected and removed, as well as the confidence interval for those estimates.&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-r&#34;&gt;# till the observed time points
+thetaI_band &amp;lt;- t(apply(theta_pre[,-1,2] , 2, quantile, probs=conf.quant, na.rm=T))   
+thetaR_band&amp;lt;- t(apply(theta_pre[,-1,3] , 2, quantile, probs=conf.quant, na.rm=T))
+thetaI_mean &amp;lt;- colMeans(theta_pre[, -1, 2], na.rm = T)
+thetaR_mean &amp;lt;- colMeans(theta_pre[, -1, 3], na.rm = T)
+
+# for the new time points
+YI_band &amp;lt;- t(apply(I_post , 2, quantile, probs=conf.quant, na.rm=T))   
+YR_band&amp;lt;- t(apply(R_post , 2, quantile, probs=conf.quant, na.rm=T))
+YI_mean &amp;lt;- colMeans(I_post, na.rm = T)
+YR_mean &amp;lt;- colMeans(R_post, na.rm = T)
+
+# combine into a data frame
+infected.dat &amp;lt;- data.frame( rbind( cbind(thetaI_mean, thetaI_band, rep(&amp;quot;pre&amp;quot;, T_obs) ), cbind(YI_mean, YI_band, rep(&amp;quot;post&amp;quot;, T_new) ) ) )
+removed.dat &amp;lt;- data.frame( rbind( cbind(thetaR_mean, thetaR_band, rep(&amp;quot;pre&amp;quot;, T_obs) ), cbind(YR_mean, YR_band, rep(&amp;quot;post&amp;quot;, T_new) ) ) )
+
+colnames(infected.dat) &amp;lt;- c(&amp;quot;mean&amp;quot;, &amp;quot;lower&amp;quot;, &amp;quot;median&amp;quot;, &amp;quot;upper&amp;quot;)
+colnames(removed.dat) &amp;lt;- c(&amp;quot;mean&amp;quot;, &amp;quot;lower&amp;quot;, &amp;quot;median&amp;quot;, &amp;quot;upper&amp;quot;)
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;Then, we can return a list comprising of these two datasets, as well as the summary corresponding to the first and second date obtained earlier. This whole piece of code, is compressed into a function called &lt;code&gt;forecast.SIR&lt;/code&gt;, which we shall call later.&lt;/p&gt;
+&lt;h1 id=&#34;checking-performance-of-esir&#34;&gt;Checking Performance of eSIR&lt;/h1&gt;
+&lt;p&gt;Now, we shall be using the data for &lt;code&gt;Italy&lt;/code&gt;, in order to figure out how our &lt;code&gt;eSIR&lt;/code&gt; model performs for this data.&lt;/p&gt;
+&lt;h2 id=&#34;performance-for-italy&#34;&gt;Performance for Italy&lt;/h2&gt;
+&lt;p&gt;According to &lt;a href=&#34;https://www.worldometers.info/world-population/italy-population/&#34;&gt;Worldometers&lt;/a&gt; sources, the projected population for Italy is about 6 crores. Based on that, we compute the observed proportion of the infected and removed (including deaths and recovered), and fit the eSIR model. The following code calls the &lt;code&gt;do.MCMC&lt;/code&gt; function and performs the MCMC fitting. Here, we use 4 weeks of data, of the available 5 weeks of data, and we shall try to forecast for the last week, to see how the model performed.&lt;/p&gt;
+&lt;p&gt;Also, the $\pi(t)$ function choosen for Italy is as follows;&lt;/p&gt;
+&lt;p&gt;$$\pi(t) = \begin{cases}
+1 &amp;amp; \text{ if } t &amp;lt; \text{4th March, 2020}\\\&lt;br&gt;
+0.25 &amp;amp; \text{ if } t &amp;gt; \text{9th March, 2020}\\\&lt;br&gt;
+0.5 &amp;amp; \text{ otherwise }\\\&lt;br&gt;
+\end{cases}$$&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-r&#34;&gt;subdat &amp;lt;- dat %&amp;gt;% mutate(Removed = Deaths + Recovered) %&amp;gt;% filter(Country == &amp;quot;Italy&amp;quot; &amp;amp; Removed &amp;gt; 0)
+
+N &amp;lt;- 60550075
+R &amp;lt;- subdat$Removed / N
+I &amp;lt;- subdat$Confirmed/N - R
+pi0 &amp;lt;- ifelse(subdat$Date &amp;lt; as.Date(&#39;2020-03-04&#39;), 1, 
+              ifelse(subdat$Date &amp;gt; as.Date(&#39;2020-03-09&#39;), 0.25, 0.5))
+
+init.params &amp;lt;- list(R0 = 3.15, R0_sd = 1, gamma0 = 0.0117, gamma0_sd = 0.1)
+control.params &amp;lt;- list(nchain=4, nadapt=1e4, ndraw=5e2, thin=10, nburnin=2e2)
+control.params$mclen &amp;lt;- round(control.params$ndraw / control.params$thin) * control.params$nchain 
+
+mcmc_samples &amp;lt;- do.MCMC(I[1:28], R[1:28], pi0[1:28], init.params, control.params)
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;You should see something like this, which tells you that the JAGS code for MCMC is running properly.&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;Compiling model graph
+   Resolving undeclared variables
+   Allocating nodes
+Graph information:
+   Observed stochastic nodes: 56
+   Unobserved stochastic nodes: 35
+   Total graph size: 1591
+
+Initializing model
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;As we see from the following plot, the predictions for the last week is underestimating the true proportions. However, the observed proportions lie within the bound of $95%$ confidence band.&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-r&#34;&gt;preds &amp;lt;- forecast.SIR(7, 28, mcmc_samples, pi = pi0, control.params = control.params, start.date = &amp;quot;2020-02-21&amp;quot;)
+ggplot(preds$infected, aes(x = date)) + 
+    geom_ribbon(aes(ymin = lower, ymax = upper, fill = phase), alpha = 0.25) +
+    geom_line(aes(y = mean, color = phase), size = 1) +
+    labs(x = &amp;quot;Date&amp;quot;, y = &amp;quot;P(Infected)&amp;quot;) +
+    geom_point(data = subdat, aes(x = Date, y = (Confirmed - Removed)/N), color = &amp;quot;black&amp;quot;)
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;&lt;img src=&#34;./unnamed-chunk-20-1.png&#34; alt=&#34;&#34;&gt;&lt;/p&gt;
+&lt;p&gt;However, if we assume that, the Italy government maintains the current lockdown indefinitely, then $\pi(t) = 0.25$ will continue to remain. In such case, the important dates (as mentioned above) for change in the rate of newly infected can be obtained, as shown in the following plot.&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-r&#34;&gt;pi0 &amp;lt;- c(pi0, rep(0.25, 200))
+preds &amp;lt;- forecast.SIR(7+200, 28, mcmc_samples, pi = pi0, control.params = control.params, start.date = &amp;quot;2020-02-21&amp;quot;)
+ggplot(preds$infected, aes(x = date)) + 
+    geom_ribbon(aes(ymin = lower, ymax = upper, fill = phase), alpha = 0.25) +
+    geom_line(aes(y = mean, color = phase), size = 1) +
+    geom_vline(xintercept = preds$first.date[1], color = &amp;quot;brown&amp;quot;) + 
+    geom_vline(xintercept = preds$second.date[1], color = &amp;quot;blue4&amp;quot;) +
+    labs(x = &amp;quot;Date&amp;quot;, y = &amp;quot;P(Infected)&amp;quot;) +
+    geom_point(data = subdat, aes(x = Date, y = (Confirmed - Removed)/N), color = &amp;quot;black&amp;quot;) +
+    geom_text(x = preds$first.date[1] - 1, y = 0, label = format(preds$first.date[1], &amp;quot;%b %d&amp;quot;), size = 4 ) +
+    geom_text(x = preds$second.date[1] - 1, y = 0, label = format(preds$second.date[1], &amp;quot;%b %d&amp;quot;), size = 4 )
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;&lt;img src=&#34;./unnamed-chunk-21-1.png&#34; alt=&#34;&#34;&gt;&lt;/p&gt;
+&lt;p&gt;Therefore, in Italy, at about June 14, we should see decreasing increments of newly infected persons, and from August 2 onwards, the proportion of infected people should decline.&lt;/p&gt;
+&lt;h2 id=&#34;estimation-for-india&#34;&gt;Estimation for India&lt;/h2&gt;
+&lt;p&gt;However, our main concern is to find out the situation of India based on this eSIR modelling. Here, we shall use the $\pi(t)$ function as follows, as per various decision taken by the Government, like restriction on international flights, Janta Curfew and full scale lockdowns etc.&lt;/p&gt;
+&lt;p&gt;$$\pi(t) = \begin{cases}
+1 &amp;amp; \text{ if } t &amp;lt; \text{15th March, 2020}\\\&lt;br&gt;
+0.95 &amp;amp; \text{ if } \text{15th March, 2020} &amp;lt; t &amp;lt; \text{19th March, 2020}\\\&lt;br&gt;
+0.9 &amp;amp; \text{ if } \text{19th March, 2020} &amp;lt; t &amp;lt; \text{22th March, 2020}\\\&lt;br&gt;
+0.5 &amp;amp; \text{ if } \text{22th March, 2020} &amp;lt; t &amp;lt; \text{25th March, 2020}\\\&lt;br&gt;
+0.1 &amp;amp; \text{ if } t &amp;gt; \text{25th March, 2020}\\\&lt;br&gt;
+\end{cases}$$&lt;/p&gt;
+&lt;p&gt;Also, note that in India, many places are rural in nature, while most of the urban population and neighbourhood areas are more susceptible to get the disease than others, due to availablity of metro cities and international airports. So, rather than using the whole population size i.e. $131$ crores as $N$, we shall use about $350$ lakhs as the adjusted population size.&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-r&#34;&gt;subdat &amp;lt;- dat %&amp;gt;% mutate(Removed = Deaths + Recovered, Infected = Confirmed - Removed) %&amp;gt;%
+    filter(Country == &amp;quot;India&amp;quot; &amp;amp; Removed &amp;gt; 0 &amp;amp; Infected &amp;gt; 0)
+
+N &amp;lt;- 350e5   # adjusted population for metro cities and neighbourhood areas
+
+R &amp;lt;- subdat$Removed / N
+I &amp;lt;- subdat$Infected/N
+
+pi0 &amp;lt;- ifelse(subdat$Date &amp;lt; as.Date(&#39;2020-03-15&#39;), 1, 
+              ifelse(subdat$Date &amp;lt; as.Date(&#39;2020-03-19&#39;), 0.9, 
+                     ifelse(subdat$Date &amp;lt; as.Date(&#39;2020-03-22&#39;), 0.8, 
+                            ifelse(subdat$Date &amp;lt; as.Date(&#39;2020-03-25&#39;), 0.5, 0.1)) ))
+
+init.params &amp;lt;- list(R0 = 12.48, R0_sd = 1, gamma0 = 0.117, gamma0_sd = 1)
+control.params &amp;lt;- list(nchain=4, nadapt=1e4, ndraw=5e2, thin=5, nburnin=2e2)
+control.params$mclen &amp;lt;- round(control.params$ndraw / control.params$thin) * control.params$nchain 
+
+mcmc_samples &amp;lt;- do.MCMC(I, R, pi0, init.params, control.params)
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;And finally, we perform the prediction till the end of the lockdown, i.e. till $14$-th April, to see the effect of quaranting.&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-r&#34;&gt;pi1 &amp;lt;- c(pi0, rep(0.1, 19))   # from 27th March, it is 19 days of lockdown left 
+preds &amp;lt;- forecast.SIR(19, 25, mcmc_samples, pi = pi1, control.params = control.params, start.date = &amp;quot;2020-03-02&amp;quot;)
+ggplot(preds$infected, aes(x = date)) + 
+    geom_ribbon(aes(ymin = lower, ymax = upper, fill = phase), alpha = 0.25) +
+    geom_line(aes(y = mean, color = phase), size = 1) +
+    labs(x = &amp;quot;Date&amp;quot;, y = &amp;quot;P(Infected)&amp;quot;) +
+    geom_point(data = subdat, aes(x = Date, y = Infected/N), color = &amp;quot;black&amp;quot;)
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;&lt;img src=&#34;./unnamed-chunk-23-1.png&#34; alt=&#34;&#34;&gt;&lt;/p&gt;
+&lt;p&gt;Although it seems that the mean proportion is overestimated during the ovserved period, however the effect of quanting seems to work to a moderate extent, as the estimated proportion stays more or less at the same level. The exact count of the infected people at the end of lockdown, provided that it is maintained properly, should be about $1317$ many infected persons, and about $2114$ confirmed cases of COVID-19.&lt;/p&gt;
+&lt;p&gt;Similar to Italy, if we extend its forecast for some more days, and keep the same level of quaranting, the model predictions are given in the following plot.&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-r&#34;&gt;pi2 &amp;lt;- c(pi0, rep(0.1, 200)) 
+preds &amp;lt;- forecast.SIR(200, 25, mcmc_samples, pi = pi2, control.params = control.params, start.date = &amp;quot;2020-03-02&amp;quot;)
+ggplot(preds$infected, aes(x = date)) + 
+    geom_ribbon(aes(ymin = lower, ymax = upper, fill = phase), alpha = 0.25) +
+    geom_line(aes(y = mean, color = phase), size = 1) +
+    geom_vline(xintercept = preds$first.date[1], color = &amp;quot;brown&amp;quot;, size = 1, linetype = &amp;quot;dashed&amp;quot;) + 
+    geom_vline(xintercept = preds$second.date[1], color = &amp;quot;blue4&amp;quot;, size = 1, linetype = &amp;quot;dashed&amp;quot;) +
+    labs(x = &amp;quot;Date&amp;quot;, y = &amp;quot;P(Infected)&amp;quot;) +
+    geom_point(data = subdat, aes(x = Date, y = (Confirmed - Removed)/N), color = &amp;quot;black&amp;quot;) +
+    geom_text(x = preds$first.date[1] - 7, y = 2e-4, label = format(preds$first.date[1], &amp;quot;%b %d&amp;quot;), size = 4 ) +
+    geom_text(x = preds$second.date[1] + 7, y = 3e-4, label = format(preds$second.date[1], &amp;quot;%b %d&amp;quot;), size = 4 )
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;&lt;img src=&#34;./unnamed-chunk-25-1.png&#34; alt=&#34;&#34;&gt;&lt;/p&gt;
+&lt;p&gt;Therefore, as it seems, if we keep the lockdown (as it is now), based on the data, it might take till October to have the proportion of infected people becoming insignificant, provided we keep the same level of quanranting effect. However, from March 18, we should see a decrease in the rate of increment in the number of infected, and from March 30 onwards, we should be at a position from where the number of newly infected persons per day starts to decrease.&lt;/p&gt;
+&lt;p&gt;Since, it is very economically and physically dissatisfying to be in a lockdown (or state of home quarantine till October, where Durga Puja festival is going to occur), we might want to go outside. In that case, assuming $\pi(t)$ increases to $0.5$, which is indeed less than 1, due to our increasing awareness of the scenario, then, the predicted situation would look like this.&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-r&#34;&gt;pi3 &amp;lt;- c(pi0, rep(0.1, 19), rep(0.5, 2 * 365)) 
+preds &amp;lt;- forecast.SIR(2 * 365 + 19, 25, mcmc_samples, pi = pi3, control.params = control.params, start.date = &amp;quot;2020-03-02&amp;quot;)
+preds$infected$upper_new &amp;lt;- pmin(preds$infected$upper, 0.05)   # just for visual purpose
+ggplot(preds$infected, aes(x = date)) + 
+    geom_ribbon(aes(ymin = lower, ymax = upper_new, fill = phase), alpha = 0.25) +
+    geom_line(aes(y = mean, color = phase), size = 1) +
+    geom_vline(xintercept = preds$first.date[1], color = &amp;quot;brown&amp;quot;, size = 1, linetype = &amp;quot;dashed&amp;quot;) + 
+    geom_vline(xintercept = preds$second.date[1], color = &amp;quot;blue4&amp;quot;, size = 1, linetype = &amp;quot;dashed&amp;quot;) +
+    labs(x = &amp;quot;Date&amp;quot;, y = &amp;quot;P(Infected)&amp;quot;) +
+    geom_point(data = subdat, aes(x = Date, y = (Confirmed - Removed)/N), color = &amp;quot;black&amp;quot;) +
+    geom_text(x = preds$first.date[1] - 7, y = 2e-4, label = format(preds$first.date[1], &amp;quot;%b %d&amp;quot;), size = 4 ) +
+    geom_text(x = preds$second.date[1] + 7, y = 3e-4, label = format(preds$second.date[1], &amp;quot;%b %d&amp;quot;), size = 4 )
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;&lt;img src=&#34;./unnamed-chunk-26-1.png&#34; alt=&#34;&#34;&gt;&lt;/p&gt;
+&lt;p&gt;This scenario would be very severe for us, since it would affect about $4%$ of the urban population, on about June 28, and then it would start to decrease gradually. However, it would take almost 2 years, to make this epidemic insignificant, provided there will be no generally accepted antiviral medicine for COVID-19 till then.&lt;/p&gt;
+&lt;p&gt;Hence, we must avoid such situation at all costs, and to counter it, we must stay home, at a shelter in place home quaranting atmosphere.&lt;/p&gt;
+&lt;h1 id=&#34;conclusion&#34;&gt;Conclusion&lt;/h1&gt;
+&lt;p&gt;This &lt;strong&gt;eSIR model is not perfect.&lt;/strong&gt; No statistical model is. But the main idea and examples that we are seeing currently all over the world, should give us a hint about what is to come.&lt;/p&gt;
+&lt;p&gt;There are several backdrops in &lt;strong&gt;eSIR&lt;/strong&gt; model.&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;
+&lt;p&gt;It does not talk about underreporting. When you are in a place like India, underreporting is a major issue, as there might be some people who are affected by coronavirus, but lightly takes their symptoms as seasonal cold.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;In the basis of SIR model, we assume the existence of only 3 states. To incorporate the effect of quaranting, we only considering the people in Infected state. However, there might be people who are infected, and can spread the disease, yet they do not have the symptoms, and hence does not fall under the effect of quaranting.&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;We shall try to deal with these shortcomings in our next post, where we shall consider building more out of this particular model.&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;WHO Guidelines to STAY SAFE:&lt;/strong&gt;&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;The best way to prevent and slow down transmission is be well informed about the COVID-19 virus, the disease it causes and how it spreads.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Wash your hands frequently with an alcohol based rub or soap.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Maintain social distancing.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Avoid touching eyes, nose and mouth.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Practice respiratory hygiene.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;If you have fever, cough and difficulty breathing, seek medical care early.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Stay informed and follow advice given by your healthcare provider.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Protect yourselves and protect others.&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;&lt;strong&gt;Signing Off&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;$\qquad &amp;mdash;$ Subhrajyoty Roy &amp;amp; Soham Bonnerjee&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;Stay home, Stay safe, Keep safe your friends, families and neighbours.&lt;/p&gt;
+&lt;/blockquote&gt;
+</description>
+    </item>
     
     <item>
       <title>SIR Modelling of COVID-19 Pandemic situation</title>

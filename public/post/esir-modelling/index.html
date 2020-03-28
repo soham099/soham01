@@ -1,0 +1,1567 @@
+<!DOCTYPE html>
+<html lang="en-us">
+
+<head>
+
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="generator" content="Source Themes Academic 4.6.3">
+
+  
+
+  
+  
+  
+  
+  
+    
+    
+    
+  
+  
+
+  <meta name="author" content="Soham Bonnerjee">
+
+  
+  
+  
+    
+  
+  <meta name="description" content="This is the second post in a series of posts to give a basic understanding of statistical modelling of epidemiology. In this post, we shall explore the performance of stochastic eSIR model. Then, we shall use it to generate projections for the epidemic situation in India.">
+
+  
+  <link rel="alternate" hreflang="en-us" href="/post/esir-modelling/">
+
+  
+
+
+  
+  
+  
+  <meta name="theme-color" content="#2962ff">
+  
+
+  
+  
+  
+  <script src="/js/mathjax-config.js"></script>
+  
+
+  
+  
+  
+  
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/academicons/1.8.6/css/academicons.min.css" integrity="sha256-uFVgMKfistnJAfoCUQigIl+JfUaP47GrRKjf6CTPVmw=" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.11.2/css/all.min.css" integrity="sha256-+N4/V/SbAFiW1MPBCXnfnP9QSN3+Keu+NlB+0ev/YKQ=" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.5.7/jquery.fancybox.min.css" integrity="sha256-Vzbj7sDDS/woiFS3uNKo8eIuni59rjyNGtXfstRzStA=" crossorigin="anonymous">
+
+    
+    
+    
+      
+    
+    
+      
+      
+        
+          <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.10/styles/github.min.css" crossorigin="anonymous" title="hl-light">
+          <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.10/styles/dracula.min.css" crossorigin="anonymous" title="hl-dark" disabled>
+        
+      
+    
+
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.5.1/leaflet.css" integrity="sha256-SHMGCYmST46SoyGgo4YR/9AlK1vf3ff84Aq9yK4hdqM=" crossorigin="anonymous">
+    
+
+    
+
+    
+    
+      
+
+      
+      
+
+      
+    
+      
+
+      
+      
+
+      
+    
+      
+
+      
+      
+
+      
+    
+      
+
+      
+      
+
+      
+    
+      
+
+      
+      
+
+      
+    
+      
+
+      
+      
+
+      
+    
+      
+
+      
+      
+
+      
+    
+      
+
+      
+      
+
+      
+    
+      
+
+      
+      
+
+      
+    
+      
+
+      
+      
+
+      
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/lazysizes/5.1.2/lazysizes.min.js" integrity="sha256-Md1qLToewPeKjfAHU1zyPwOutccPAm5tahnaw7Osw0A=" crossorigin="anonymous" async></script>
+      
+    
+      
+
+      
+      
+
+      
+    
+      
+
+      
+      
+
+      
+    
+      
+
+      
+      
+
+      
+        <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js" integrity="" crossorigin="anonymous" async></script>
+      
+    
+      
+
+      
+      
+
+      
+    
+
+  
+
+  
+  
+  
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Montserrat:400,700%7CRoboto:400,400italic,700%7CRoboto+Mono&display=swap">
+  
+
+  
+  
+  
+  
+  <link rel="stylesheet" href="/css/academic.css">
+
+  
+
+
+
+
+  
+
+
+  
+
+  <link rel="manifest" href="/index.webmanifest">
+  <link rel="icon" type="image/png" href="/img/icon-32.png">
+  <link rel="apple-touch-icon" type="image/png" href="/img/icon-192.png">
+
+  <link rel="canonical" href="/post/esir-modelling/">
+
+  
+  
+  
+  
+    
+  
+  
+  <meta property="twitter:card" content="summary_large_image">
+  
+  <meta property="og:site_name" content="Soham Bonnerjee&#39;s Home Page">
+  <meta property="og:url" content="/post/esir-modelling/">
+  <meta property="og:title" content="eSIR - An Epidemiological Model incoportating quaranting effect | Soham Bonnerjee&#39;s Home Page">
+  <meta property="og:description" content="This is the second post in a series of posts to give a basic understanding of statistical modelling of epidemiology. In this post, we shall explore the performance of stochastic eSIR model. Then, we shall use it to generate projections for the epidemic situation in India."><meta property="og:image" content="/post/esir-modelling/featured.jpg">
+  <meta property="twitter:image" content="/post/esir-modelling/featured.jpg"><meta property="og:locale" content="en-us">
+  
+    
+      <meta property="article:published_time" content="2020-03-28T00:00:00&#43;00:00">
+    
+    <meta property="article:modified_time" content="2020-03-28T00:00:00&#43;00:00">
+  
+
+  
+
+
+    
+
+
+
+
+
+
+  
+
+
+
+
+
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "mainEntityOfPage": {
+    "@type": "WebPage",
+    "@id": "/post/esir-modelling/"
+  },
+  "headline": "eSIR - An Epidemiological Model incoportating quaranting effect",
+  
+  "image": [
+    "/post/esir-modelling/featured.jpg"
+  ],
+  
+  "datePublished": "2020-03-28T00:00:00Z",
+  "dateModified": "2020-03-28T00:00:00Z",
+  
+  "author": {
+    "@type": "Person",
+    "name": "Soham Bonnerjee"
+  },
+  
+  "publisher": {
+    "@type": "Organization",
+    "name": "Soham Bonnerjee's Home Page",
+    "logo": {
+      "@type": "ImageObject",
+      "url": "/img/icon-512.png"
+    }
+  },
+  "description": "This is the second post in a series of posts to give a basic understanding of statistical modelling of epidemiology. In this post, we shall explore the performance of stochastic eSIR model. Then, we shall use it to generate projections for the epidemic situation in India."
+}
+</script>
+
+  
+
+  
+
+
+  
+
+
+  
+
+
+
+
+
+  <title>eSIR - An Epidemiological Model incoportating quaranting effect | Soham Bonnerjee&#39;s Home Page</title>
+
+</head>
+
+<body id="top" data-spy="scroll" data-offset="70" data-target="#TableOfContents" >
+
+  <aside class="search-results" id="search">
+  <div class="container">
+    <section class="search-header">
+
+      <div class="row no-gutters justify-content-between mb-3">
+        <div class="col-6">
+          <h1>Search</h1>
+        </div>
+        <div class="col-6 col-search-close">
+          <a class="js-search" href="#"><i class="fas fa-times-circle text-muted" aria-hidden="true"></i></a>
+        </div>
+      </div>
+
+      <div id="search-box">
+        
+        <input name="q" id="search-query" placeholder="Search..." autocapitalize="off"
+        autocomplete="off" autocorrect="off" spellcheck="false" type="search">
+        
+      </div>
+
+    </section>
+    <section class="section-search-results">
+
+      <div id="search-hits">
+        
+      </div>
+
+    </section>
+  </div>
+</aside>
+
+
+  
+
+<nav class="navbar navbar-expand-lg navbar-light compensate-for-scrollbar" id="navbar-main">
+  <div class="container">
+
+    
+    <div class="d-none d-lg-inline-flex">
+      <a class="navbar-brand" href="/">Soham Bonnerjee&#39;s Home Page</a>
+    </div>
+    
+
+    
+    <button type="button" class="navbar-toggler" data-toggle="collapse"
+            data-target="#navbar-content" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
+    <span><i class="fas fa-bars"></i></span>
+    </button>
+    
+
+    
+    <div class="navbar-brand-mobile-wrapper d-inline-flex d-lg-none">
+      <a class="navbar-brand" href="/">Soham Bonnerjee&#39;s Home Page</a>
+    </div>
+    
+
+    
+    
+    <div class="navbar-collapse main-menu-item collapse justify-content-start" id="navbar-content">
+
+      
+      <ul class="navbar-nav d-md-inline-flex">
+        
+
+        
+
+        
+        
+        
+          
+        
+
+        
+        
+        
+        
+        
+        
+          
+          
+          
+            
+          
+          
+        
+
+        <li class="nav-item">
+          <a class="nav-link " href="/#Gallery"><span>Gallery</span></a>
+        </li>
+
+        
+        
+
+        
+
+        
+        
+        
+          
+        
+
+        
+        
+        
+        
+        
+        
+          
+          
+          
+            
+          
+          
+        
+
+        <li class="nav-item">
+          <a class="nav-link " href="/#posts"><span>Posts</span></a>
+        </li>
+
+        
+        
+
+        
+
+        
+        
+        
+          
+        
+
+        
+        
+        
+        
+        
+        
+          
+          
+          
+            
+          
+          
+        
+
+        <li class="nav-item">
+          <a class="nav-link " href="/#projects"><span>Projects</span></a>
+        </li>
+
+        
+        
+
+        
+
+        
+        
+        
+          
+        
+
+        
+        
+        
+        
+        
+        
+          
+          
+          
+            
+          
+          
+        
+
+        <li class="nav-item">
+          <a class="nav-link " href="/#featured"><span>Publications</span></a>
+        </li>
+
+        
+        
+
+        
+
+        
+        
+        
+          
+        
+
+        
+        
+        
+        
+        
+        
+          
+          
+          
+            
+          
+          
+        
+
+        <li class="nav-item">
+          <a class="nav-link " href="/#contact"><span>Contact</span></a>
+        </li>
+
+        
+        
+
+        
+
+        
+        
+        
+          
+        
+
+        
+        
+        
+        
+        
+        
+
+        <li class="nav-item">
+          <a class="nav-link " href="/files/Soham_Bonnerjee_CV%20%282%29.pdf"><span>CV</span></a>
+        </li>
+
+        
+        
+
+      
+
+        
+      </ul>
+    </div>
+
+    <ul class="nav-icons navbar-nav flex-row ml-auto d-flex pl-md-2">
+      
+      <li class="nav-item">
+        <a class="nav-link js-search" href="#"><i class="fas fa-search" aria-hidden="true"></i></a>
+      </li>
+      
+
+      
+      <li class="nav-item">
+        <a class="nav-link js-dark-toggle" href="#"><i class="fas fa-moon" aria-hidden="true"></i></a>
+      </li>
+      
+
+      
+
+    </ul>
+
+  </div>
+</nav>
+
+
+  <article class="article">
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+
+<div class="article-container pt-3">
+  <h1>eSIR - An Epidemiological Model incoportating quaranting effect</h1>
+
+  
+  <p class="page-subtitle">During the time of shelter-in-place lockdown due to global pandemic of COVID-19</p>
+  
+
+  
+
+
+<div class="article-metadata">
+
+  
+  
+  
+  
+  <div>
+    
+
+
+
+  
+  <span><a href="/authors/admin/">Soham Bonnerjee</a></span>, <span><a href="/authors/subhrajyoty-roy/">Subhrajyoty Roy</a></span>
+
+  </div>
+  
+  
+
+  
+  <span class="article-date">
+    
+    
+      
+    
+    Mar 28, 2020
+  </span>
+  
+
+  
+
+  
+  <span class="middot-divider"></span>
+  <span class="article-reading-time">
+    22 min read
+  </span>
+  
+
+  
+  
+  
+
+  
+  
+
+</div>
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</div>
+
+
+<div class="article-header article-container featured-image-wrapper mt-4 mb-4" style="max-width: 720px; max-height: 405px;">
+  <div style="position: relative">
+    <img src="/post/esir-modelling/featured_hu18a794b5657252051e3c90aa258d47f3_54381_720x0_resize_q90_lanczos.jpg" alt="" class="featured-image">
+    <span class="article-header-caption"><a href="https://edition.cnn.com/2020/03/24/world/coronavirus-newsletter-03-24-20/index.html">CNN.com</a></span>
+  </div>
+</div>
+
+
+
+  <div class="article-container">
+
+    <div class="article-style">
+      <h1 id="current-scenario-in-india">Current Scenario in INDIA</h1>
+<p>Taking cue from global powerhouses failing catastrophically to contain the onslaught on life that's been lunched by Covid-19, Prime Minister of India Shri Narendra Modi issued instructions for a nationwide <em>Lockdown</em> starting from 25 March'20 to 14 April'20, wth possible plans for further extension. The decision have been welcomed and lauded by various researchers and scientists alike, esopecially after countries like USA and Italy acted too late to a possibly aggravated situation. But why this praise? In this post, we'll find out how lockdown and other forms of quarantining helps contain the infection.</p>
+<p>But before that, a gentle reminder of what we are up against: till date, Covid-19 virus has affected $722$ people in India, and $486702$ people worldwide and has claimed $16$ lives in India till now. We have discussed about the origin of the virus and possible measures to contain infection in our last <a href="https://soham01.netlify.com/post/covid19-project/">post</a>.</p>
+<h1 id="introduction">Introduction</h1>
+<p>This is a post to show how we can incorporate quarantining effects in statistical modelling of epidemiology. In past few days of Shelter-in-place lockdown situation in Kolkata (and throughout the whole India from today onwards), me and one of my ingenious friend <a href="https://soham01.netlify.com/">Soham Bonnerjee</a> (we were attending the same college before lockdown to purse Masters degree in Statistics), was reading about different epidemiological models available in the literature and using it to generate projections for the number of infected people in India, and this is a result of that reading and further independent developements.</p>
+<h1 id="loading-the-packages-and-the-dataset">Loading the Packages and the Dataset</h1>
+<p>We are using the same dataset source as before, except that we have updated it to include some of the current observations. Similar to before, we shall be using <code>dplyr</code> for data manipulation and summarization, <code>lubridate</code> for handling dates and times, and <code>ggplot2</code> for plotting.</p>
+<p>However, due to some Monte Carlo simulation later, we shall be needing <code>rjags</code> and we shall use <code>gtools</code> for specification of some useful probability distributions.</p>
+<pre><code class="language-r">library(readr)
+library(dplyr)
+library(lubridate)
+library(ggplot2)
+library(rjags)
+library(gtools)
+</code></pre>
+<p>Now, finally we load the updated dataset, which I have already downloaded from <a href="https://github.com/CSSEGISandData/COVID-19">JHU CSSE</a>, and manipulated to get the required form of data using the code discussed in my previous post <a href="https://subroy13.github.io/post/post6/">here</a>. We shall take a look at the last few columns to see how much we have updated.</p>
+<pre><code class="language-r">dat &lt;- read_csv('./datasets/covid-19-data.csv')
+knitr::kable(tail(dat, 3))
+</code></pre>
+<table>
+<thead>
+<tr>
+<th>State</th>
+<th>Country</th>
+<th>Lat</th>
+<th>Long</th>
+<th>Date</th>
+<th>Confirmed</th>
+<th>Deaths</th>
+<th>Recovered</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Zhejiang</td>
+<td>China</td>
+<td>29.1832</td>
+<td>120.0934</td>
+<td>2020-03-24</td>
+<td>1240</td>
+<td>1</td>
+<td>1221</td>
+</tr>
+<tr>
+<td>Zhejiang</td>
+<td>China</td>
+<td>29.1832</td>
+<td>120.0934</td>
+<td>2020-03-25</td>
+<td>1241</td>
+<td>1</td>
+<td>1221</td>
+</tr>
+<tr>
+<td>Zhejiang</td>
+<td>China</td>
+<td>29.1832</td>
+<td>120.0934</td>
+<td>2020-03-26</td>
+<td>1243</td>
+<td>1</td>
+<td>1222</td>
+</tr>
+</tbody>
+</table>
+<h1 id="description-of-esir-model">Description of eSIR Model</h1>
+<p>The eSIR (Extended SIR) model is really similar to the SIR model, except for the fact that it includes  a function that parametrizes the quarantining effects. As with SIR modelling, it has 3 different compartments, of states in which a person can be. This model has been developed very recently by <a href="https://www.medrxiv.org/content/10.1101/2020.02.29.20029421v1.full.pdf">Wang et al.</a> The states are as follows:</p>
+<pre><code class="language-mermaid">graph LR
+  A(Susceptible) --&gt;|&quot;&amp;#946&amp;#960(t)&quot;| B(Infected)
+  B --&gt;|&amp;#947| C(Removed)
+</code></pre>
+<p>As described in previous <a href="https://subroy13.github.io/post/post6/">post</a>, <strong>Susceptibles</strong> are the general population, who is susceptible to get the disease from an infectious person. <strong>Infected</strong> state reperesents the persons who have the symptoms of the infection and is able to spread it. And finally, <strong>Recovered / Removed</strong> is the state when a person is recovered from the disease and gain immunity to it, or is dead. Let, $Y_t^S, Y_t^I, Y_t^R$ denotes the proportion of people in these states respectively at the time $t$. Note that $Y_t^S + Y_t^I + Y_t^R = 1$.  $\pi(t)$ denotes the proportion of people transiting from <strong>Susceptible</strong> to <strong>Infected</strong> state at time $t$, with the <em>proportion</em> being commensurate to the proportion of people transiting from <strong>Susceptible</strong> to <strong>Infected</strong> state at time $t$ in the original SIR modelling. Thus We can vary $\pi(t)$ from time to time to perfectly capture the effect of quarantining. In other words, the rate at which a susceptible person becomes infected is not a time varying proportion, namely $\beta \pi(t)$, where $\beta$ is the usual rate of transmission of the disease, while $\pi(t)$ is the quarantining effect which might restrict movements of general public in order to make the effective transmission rate lower than the usual quantity $\beta$.</p>
+<p>Let $\theta_t=(\theta_t^S, \theta_t^I, \theta_t^R)^T$ be the vector of underlying prevalence of the population in these three states. Since $Y_t^S, Y_t^I, Y_t^R$ are proportions, we model them via Beta distribution:</p>
+<p>$$\begin{align}
+Y_t^I \mid \theta_t, \tau \sim \text{Beta}(\lambda^I\theta_t^I,\lambda^I(1-\theta_t^I))\\\<br>
+&amp; \\\<br>
+Y_t^R \mid \theta_t, \tau \sim \text{Beta}(\lambda^R\theta_t^R,\lambda^R(1-\theta_t^R))\\\<br>
+\end{align}$$</p>
+<p>where $\tau=(\beta, \gamma, \theta_0^T, \kappa, \lambda^I, \lambda^R)^T$, $\beta$, $\gamma$ are as in SIR model; $\kappa$, $\lambda^I, \lambda^R$ are parameters governing the latent process we'll define soon.</p>
+<p>Since $\theta_t$ is a probability, we specify a Dirichlet model for it:</p>
+<p>$$\theta_t \mid \theta_{t-1}, \tau \sim \text{Dirichlet} (k f(\theta_{t-1}, \beta, \gamma))$$</p>
+<p>These together is called a Beta-Dirichlet State Space Model.</p>
+<p>Here $f(\cdot)$ is the solution of the system of ODEs:</p>
+<p>$$\begin{align}
+\dfrac{d\theta_t^S}{dt} &amp; = -\pi(t)\beta \theta_t^S \theta_t^I\\\<br>
+&amp; \\\<br>
+\dfrac{d\theta_t^I}{dt} &amp; = \pi(t)\beta \theta_t^S \theta_t^I - \gamma \theta_t^I\\\<br>
+&amp; \\\<br>
+\dfrac{d\theta_t^R}{dt} &amp; = \gamma \theta_t^I\\\<br>
+\end{align}$$</p>
+<p>and this is exactly where the SIR modelling takes place. We solve this system of ODEs via <em>Runge-Kutta</em>(RK4) approximation.</p>
+<p>To implement the Markov Chain Monte Carlo method, we need to specify prior for the hyperparameters $\tau=(\beta, \gamma, \theta_0^T, \kappa, \lambda^I, \lambda^R)^{\top}$. We do that as follows:</p>
+<p>We initialize $\theta_0$ via a distribution that uses the observed data:</p>
+<p>$$\begin{align}
+\theta_0^I \sim \text{Beta}(1, \dfrac{1}{Y_1^I})\\\<br>
+&amp; \\\<br>
+\theta_0^R \sim \text{Beta}(1, \dfrac{1}{Y_1^R})\\\<br>
+&amp; \\\<br>
+\theta_0^S= 1-\theta_0^I-\theta_0^R\\\<br>
+\end{align}$$</p>
+<p>We specify the other hyperparameters according to the <a href="https://arxiv.org/pdf/1007.0908.pdf">SARS data</a> in Hong-Kong.</p>
+<p>$$\begin{align}
+R_0= \dfrac{\beta}{\gamma} \sim \text{Log}\mathbb{N}(1.099,0.096) \implies \mathbb{E}(R_0)=3.15, \mathbb{V}(R_0)=1 \\\<br>
+&amp; \\\<br>
+\gamma \sim \text{Log}\mathbb{N}(-2.955,0.910) \implies \mathbb{E}(\gamma)=0.0117, \mathbb{V}(\gamma)=0.01 \\\<br>
+&amp; \\\<br>
+k \sim \text{Gamma}(2, 0.0001)\\\<br>
+&amp;  \\\<br>
+\lambda^I \sim \text{Gamma}(2, 0.0001)\\\<br>
+&amp; \\\<br>
+\lambda^R \sim \text{Gamma}(2, 0.0001)\\\<br>
+\end{align}$$</p>
+<p>Now suppose , data upto time point $t_0$ are observed: $(Y_1, \cdots Y_{t_0})$. We want to predict upto time point $T$. To this end, we generate $M$ MCMC samples, such that for $m \in {1,\cdots, M}$, $(Y_{t_0+1}^{(m)}, \cdots, Y_T)$ is a draw from $Y_t \mid \theta_t, \tau$. The algorihm is described below:</p>
+<p>for $m$ in $1, \cdots, M$</p>
+<p>$\qquad$  for $t$ in $t_0+1,\cdots, T$,</p>
+<p>$\qquad \qquad$  Draw $\theta_t^{(m)}$ from $[\theta_t \mid \theta_{t-1}^{(m)}, \tau^{(m)}]$.</p>
+<p>$\qquad \qquad$  Draw $Y_t^{(m)}$ from $[Y_t \mid \theta_{t}^{(m)}, \tau^{(m)} ]$</p>
+<p>Finally for each time point $t$, $t= t_0+1,\cdots, T$ estimate $Y_t$ by $\hat{Y}_t=\dfrac{1}{M}\displaystyle \sum_{m=1}^M Y_t^{(m)}$.</p>
+<h1 id="estimation-of-esir-model">Estimation of eSIR Model</h1>
+<h2 id="initialization">Initialization</h2>
+<p>Note that, we wish to have a lognormal distribution $R_0 \sim LogN(\mu, \sigma^2)$, such that, $E(R_0), Var(R_0)$ is at a specified value. The specific reason is that, $R_0 = \beta_0 / \gamma_0$, which is a positive quantity, hence is better modelled by a gamma or lognormal distribution than a normal distribution, which has support as the whole of real line. Therefore, given $E(R_0) = a$, and $Var(R_0) = b$, we wish to figure out $\mu, \sigma$, the parmeters of the lognormal distribution. This can be obtained through the following simple formula and is implemented in the following function.</p>
+<p>$$\sigma^2 = \log\left( \dfrac{Var(R_0)}{E(R_0)^2} +1 \right) \qquad \qquad \mu = \log(E(R_0)) - \dfrac{\sigma^2}{2}$$</p>
+<pre><code class="language-r">lognorm.param&lt;-function(mu0,var0){
+  var &lt;- log(var0/mu0^2+1)
+  mu &lt;- log(mu0)-var/2
+  return(round(c(mu,var),3))
+}
+</code></pre>
+<p>Now, we specify some control parameters, which specifies the initial $E(R_0), Var(R_0)$ and some other parameters, as well as the parameters for the markov chain (like the length of the chain, the number of parallel chains to construct in order to speed up the process, number of samples to define burn in period etc.) You may want to skip these technical details for now.</p>
+<pre><code class="language-r">init.params &lt;- list(R0 = 3.15, R0_sd = 1, gamma0 = 0.0117, gamma0_sd = 0.1)
+control.params &lt;- list(nchain=4, nadapt=1e4, ndraw=5e2, thin=10, nburnin=2e2)
+control.params$mclen &lt;- round(control.params$ndraw / control.params$thin) * control.params$nchain    #number of MCMC draws in total
+</code></pre>
+<h2 id="performing-mcmc">Performing MCMC</h2>
+<p>Now, we shall be creating a function called <code>do.MCMC</code> which takes the observed proportion of Infected (I), Removed ( R ), then the value of the function $\pi(t)$ till the observed time period (and the control parameters). Then, it shall perform the MCMC step by generating the posterior sampels, and it shall output that posterior samples, which we shall later use to generate predictions, as well as get estimates.</p>
+<h3 id="defining-the-jags-code">Defining the JAGS Code</h3>
+<p>The very first thing to implement MCMC or any Bayesian Computation in <code>rjags</code> is the specification of a JAGS code. JAGS is the acronym for <a href="http://mcmc-jags.sourceforge.net/"><strong>Just Another Gibbs Sampler</strong></a>, which is a program for simulation from Bayesian hierarchical models using Markov chain Monte Carlo (MCMC), developed by Martyn Plummer.</p>
+<p>JAGS code is mainly created based on two simple operations.</p>
+<ol>
+<li>
+<p>An assignment operator &ldquo;&lt;-&rdquo; is used to denote a deterministic relation.</p>
+</li>
+<li>
+<p>A tilde operator &ldquo;~&rdquo; is used to denote a stochastic relation. In this case, we have a probability distribution on right hand side, according to which the left hand side variable is being generated.</p>
+</li>
+</ol>
+<p>Based on the above operations, the following JAGS code creates the Bayesian model described above.</p>
+<pre><code class="language-r">model.string &lt;- paste0(&quot;
+             model{
+                   for(t in 2:(T_obs+1)){
+                   Km[t-1,1] &lt;- -beta*pi[t-1]*theta[t-1,1]*theta[t-1,2]
+                   Km[t-1,9] &lt;- gamma*theta[t-1,2]
+                   Km[t-1,5] &lt;- -Km[t-1,1]-Km[t-1,9]
+                   Km[t-1,2] &lt;- -beta*pi[t-1]*(theta[t-1,1]+0.5*Km[t-1,1])*(theta[t-1,2]+0.5*Km[t-1,5])
+                   Km[t-1,10] &lt;- gamma*(theta[t-1,2]+0.5*Km[t-1,5])
+                   Km[t-1,6] &lt;- -Km[t-1,2]-Km[t-1,10]
+                   Km[t-1,3] &lt;- -beta*pi[t-1]*(theta[t-1,1]+0.5*Km[t-1,2])*(theta[t-1,2]+0.5*Km[t-1,6])
+                   Km[t-1,11] &lt;- gamma*(theta[t-1,2]+0.5*Km[t-1,6])
+                   Km[t-1,7] &lt;- -Km[t-1,3]-Km[t-1,11]
+                   Km[t-1,4] &lt;- -beta*pi[t-1]*(theta[t-1,1]+Km[t-1,3])*(theta[t-1,2]+Km[t-1,7])
+                   Km[t-1,12] &lt;- gamma*(theta[t-1,2]+Km[t-1,7])
+                   Km[t-1,8] &lt;- -Km[t-1,4]-Km[t-1,12]
+                   alpha[t-1,1] &lt;- theta[t-1,1]+(Km[t-1,1]+2*Km[t-1,2]+2*Km[t-1,3]+Km[t-1,4])/6
+                   alpha[t-1,2] &lt;- theta[t-1,2]+(Km[t-1,5]+2*Km[t-1,6]+2*Km[t-1,7]+Km[t-1,8])/6
+                   alpha[t-1,3] &lt;- theta[t-1,3]+(Km[t-1,9]+2*Km[t-1,10]+2*Km[t-1,11]+Km[t-1,12])/6
+                   theta[t,1:3] ~ ddirch(k*alpha[t-1,1:3])
+                   I[t-1] ~ dbeta(lambdaI*theta[t,2],lambdaI*(1-theta[t,2]))
+                   R[t-1] ~ dbeta(lambdaR*theta[t,3],lambdaR*(1-theta[t,3]))
+                  }
+                  theta[1,1] &lt;-  1- theta[1,2]- theta[1,3]
+                  theta[1,2] ~ dbeta(&quot;,1,&quot;,&quot;,1/I[1],&quot;)
+                  theta[1,3] ~ dbeta(&quot;,1,&quot;,&quot;,1/R[1],&quot;)
+                  gamma ~  dlnorm(&quot;,lognorm_gamma_param[1],&quot;,&quot;,1/lognorm_gamma_param[2],&quot;)
+                  R0 ~ dlnorm(&quot;,lognorm_R0_param[1],&quot;,&quot;,1/lognorm_R0_param[2],&quot;)
+                  beta &lt;- R0*gamma
+                  k ~  dgamma(2,0.0001)
+                  lambdaI ~ dgamma(2,0.0001)
+                  lambdaR ~ dgamma(2,0.0001)
+               }
+            &quot;)
+</code></pre>
+<p>Here, <code>init.params</code> are to be passed accordingly in <code>lognorm.param</code> function to obtain the <code>lognorm_gamma_param</code> and <code>lognorm_R0_param</code> variables.</p>
+<h3 id="performing-mcmc-1">Performing MCMC</h3>
+<p>Now, once we have the <code>model.string</code> containing the JAGS code, we need to open a connection object to that string. Because, <code>rjags</code> expect the JAGS code to be written in a file, a connection object can gimick the behavior of a file, just based on that string. Once we have the JAGS code ready, passing the data nodes in the JAGS model helps us in creating the posterior model.</p>
+<pre><code class="language-r">model.spec &lt;- textConnection(model.string)
+posterior &lt;- jags.model(model.spec, data=list('I'=I,'R'=R,'T_obs'=T_obs,'pi'=pi), 
+                    n.chains =control.params$nchain, n.adapt = control.params$nadapt)
+</code></pre>
+<p>Now, we first update the posterior for the burn-in period. In this time, the posterior generates samples are not close to the original sample, and hence we need to discard them. Typically, we set burn-in to be about $2000$ iterations. After that, we pass</p>
+<pre><code class="language-r">update(posterior, control.params$nburnin) # update the posterior for burn in times, for this time, do not monitor anything
+jags_sample &lt;- jags.samples(posterior, c('theta','gamma','R0','beta','I','lambdaI','lambdaR','k'),
+                        n.iter = control.params$ndraw * control.params$nchain,
+                        thin = control.params$thin)
+</code></pre>
+<p>So, we combine these into a function called <code>do.MCMC</code> which we shall use later.</p>
+<h2 id="forecasting-using-esir-model">Forecasting using eSIR model</h2>
+<p>Now, since we have the MCMC samples obtained as the output of <code>do.MCMC</code> function, we can extend the chain using the exact simulation of the process described by the model above, and then, we can obtain the estimates of the proportion of infected and recovered people, as well as the confidence interval for that proportion.</p>
+<p>Again, we shall create <code>forecast.SIR</code> function which takes in the output of <code>do.MCMC</code>, and then run the simulation chains starting from the MCMC samples. Finally, it computes the estimates and confidence intervals for the estimates of proportion of infected and removed from the samples from all the chains.</p>
+<h3 id="extract-components-of-mcmc-samples">Extract components of MCMC samples</h3>
+<p>Here, we extract the components of MCMC samples from the output of <code>do.MCMC</code> function.</p>
+<pre><code class="language-r"># extract components from mcmc samples 
+theta_pre &lt;- array(as.mcmc.list(mcmc_sample$theta)[[1]], dim = c(control.params$mclen, T_obs+1, 3))
+R0_pre &lt;- as.mcmc.list(mcmc_sample$R0)[[1]]
+gamma_pre &lt;- as.mcmc.list(mcmc_sample$gamma)[[1]]
+beta_pre &lt;- as.mcmc.list(mcmc_sample$beta)[[1]]
+lambdaI_pre &lt;- as.mcmc.list(mcmc_sample$lambdaI)[[1]]
+lambdaR_pre &lt;- as.mcmc.list(mcmc_sample$lambdaR)[[1]]
+k_pre &lt;- as.mcmc.list(mcmc_sample$k)[[1]]
+</code></pre>
+<p>We also initialize blank arrays to store the future forecasts. Here, <code>T_new</code> is the number of time points for which new forecasting is to be done.</p>
+<pre><code class="language-r">theta_post &lt;- array(0, dim=c(control.params$mclen, T_new, 3))
+I_post &lt;- matrix(NA, nrow=control.params$mclen, ncol=T_new)
+R_post &lt;- matrix(NA, nrow=control.params$mclen, ncol=T_new)
+</code></pre>
+<h3 id="peform-forecasting">Peform Forecasting</h3>
+<p>The following piece of code basically performs the forecasting starting from the last obtained posterior samples as obtained by MCMC. Now, let us go through the code step by step.</p>
+<pre><code class="language-r">for(l in 1:control.params$mclen){
+    
+    thetalt1 &lt;- theta_pre[l, T_obs+1, 1]
+    thetalt2 &lt;- theta_pre[l, T_obs+1, 2]
+    thetalt3 &lt;- theta_pre[l, T_obs+1, 3]
+    betal &lt;- beta_pre[l]
+    gammal &lt;- gamma_pre[l]
+    kt &lt;- k_pre[l]
+    lambdaIl &lt;- lambdaI_pre[l]
+    lambdaRl &lt;- lambdaR_pre[l]
+    if (betal&lt;0 | gammal&lt;0 | thetalt1&lt;0 | thetalt2&lt;0 |thetalt3&lt;0) { 
+      next 
+    }
+    
+    
+    for(t in 1:T_new ){
+      # perform runge kutta
+      Km &lt;- numeric(12)
+      alpha_post &lt;- numeric(3)
+      
+      Km[1] &lt;- -betal*pi_new[t]*thetalt1*thetalt2
+      Km[9] &lt;- gammal*thetalt2
+      Km[5] &lt;- -Km[1]-Km[9]
+      
+      Km[2] &lt;- -betal*pi_new[t]*(thetalt1+0.5*Km[1])*(thetalt2+0.5*Km[5])
+      Km[10] &lt;- gammal*(thetalt2+0.5*Km[5])
+      Km[6] &lt;- -Km[2]-Km[10]
+      
+      Km[3] &lt;- -betal*pi_new[t]*(thetalt1+0.5*Km[2])*(thetalt2+0.5*Km[6])
+      Km[11] &lt;- gammal*(thetalt2+0.5*Km[6])
+      Km[7] &lt;- -Km[3]-Km[11]
+      
+      Km[4] &lt;- -betal*pi_new[t]*(thetalt1+Km[3])*(thetalt2+Km[7])
+      Km[12] &lt;- gammal*(thetalt2+Km[7])
+      Km[8] &lt;- -Km[4]-Km[12]
+      
+      alpha_post[1] &lt;- thetalt1+(Km[1]+2*Km[2]+2*Km[3]+Km[4])/6
+      alpha_post[2] &lt;- thetalt2+(Km[5]+2*Km[6]+2*Km[7]+Km[8])/6
+      alpha_post[3] &lt;- thetalt3+(Km[9]+2*Km[10]+2*Km[11]+Km[12])/6
+      
+      thetalt_tmp &lt;- rdirichlet(1, kt* abs(alpha_post))
+      thetalt1 &lt;- theta_post[l,t,1] &lt;- thetalt_tmp[1]
+      thetalt2 &lt;- theta_post[l,t,2] &lt;- thetalt_tmp[2]
+      thetalt3 &lt;- theta_post[l,t,3] &lt;- thetalt_tmp[3]
+      
+      I_post[l,t] &lt;- rbeta(1,lambdaIl*thetalt2,lambdaIl*(1-thetalt2))
+      R_post[l,t] &lt;- rbeta(1,lambdaRl*thetalt3,lambdaRl*(1-thetalt3))
+      
+    }
+    
+  }
+</code></pre>
+<ol>
+<li>
+<p>The outer loop runs for each of the MCMC chains generated by <code>mcmc_output</code>.</p>
+</li>
+<li>
+<p>If any of $\beta, \gamma, \theta^S,\theta^I, \theta^R$ turns out to be less than $0$, the chain is stopped and is not proceeded further.</p>
+</li>
+<li>
+<p>In the inner loop, for each new timepoint, we perform the <a href="https://en.wikipedia.org/wiki/Runge%E2%80%93Kutta_methods">Runge Kutta methods</a> of numerically solving the differential equations,</p>
+</li>
+<li>
+<p>At the end of the loop, we have all the estimates for proportion of Infected and Removed, as well as the three latent proportion parameters $\theta$ which accords with the underlying mathematical model of SIR.</p>
+</li>
+<li>
+<p>Here, <code>pi_new[t] = pi[T_obs + t]</code>.</p>
+</li>
+</ol>
+<h3 id="derivation-of-3-important-dates">Derivation of 3 important dates</h3>
+<p>Associated with the estimation of eSIR model, there are three important dates, which we should output from our algorithm.</p>
+<ol>
+<li>
+<p>The date when $\dfrac{d^2 \theta^I_t}{dt^2} = 0$. This date is the time, when the rate of change in the proportion of infected people starts to be decreasing, so we are in a hopeful scenario that the number of new infected cases is going to be decreasing over time.</p>
+</li>
+<li>
+<p>The date when $\dfrac{d \theta^I_t}{dt} = 0$, i.e. the date from when the number of new recovered cases starts to exceed the number of new infected cases. From this time onwards, the epidemic nature of the disease vanishes.</p>
+</li>
+<li>
+<p>The date when $\theta^I_t = 0$. However, it is impossible to have this proportion equal to $0$, in finite times. Therefore, we shall be looking for a date, when $\theta^I_t &lt; \epsilon$, where $\epsilon$ is a very small quantity, which can be treated readily at any time.</p>
+</li>
+</ol>
+<p>To simplify the calculation of derivative, we track the quantity $(\beta \pi(t) \theta^S_t\theta^I_t - \gamma \theta^I_t)$ over time, which is equal to the derivative due to SIR modelling.</p>
+<p>The following picture taken from the <a href="https://www.medrxiv.org/content/10.1101/2020.02.29.20029421v1.full.pdf">paper</a> by Wang et al. shows the concept clearly.</p>
+<p><img src="./deriv.png" alt=""></p>
+<pre><code class="language-r">theta_diff_pre &lt;- theta_pre[, 1:T_obs, 2] * sweep(beta_pre %*% t(pi[1:T_obs]) * theta_pre[, 1:T_obs, 1], MARGIN = 1, STATS = gamma_pre)
+theta_diff_post &lt;- theta_post[, , 2] * sweep(beta_pre %*% t(pi[(T_obs+1):(T_obs+T_new)]) * theta_post[, , 1], MARGIN = 1, STATS = gamma_pre)
+theta_diff &lt;- cbind(theta_diff_pre, theta_diff_post)
+</code></pre>
+<p>Now, we find the maximum of each row of <code>theta_diff</code> and locate the timepoints, where <code>theta_diff</code> is changing its signs. They should give up the required first and second important dates.</p>
+<pre><code class="language-r">first_dates &lt;- apply(theta_diff, 1, which.max)
+second_dates &lt;- apply(theta_diff, 1, function(x) { length(x) + 1 - which(cumprod(rev(x &lt;= 0)) == 0)[1] } )    # the first time it becomes negative and stays negative throughout
+</code></pre>
+<p>Now, that we have the dates for each chain, let us take the mean, median, and quantiles, which would give us estimates and confidence intervals for such dates.</p>
+<pre><code class="language-r">conf.quant &lt;- c(conf.level/2, 0.5, 1-conf.level/2)    # conf.level is the confidence coefficients for the confidence interval
+first_date_summary &lt;- c( mean(first_dates, na.rm = T), quantile(first_dates, probs = conf.quant, na.rm = T) )
+second_date_summary &lt;- c( mean(second_dates, na.rm = T), quantile(second_dates, probs = conf.quant, na.rm = T) )
+</code></pre>
+<h3 id="summarising-the-forecast-outputs">Summarising the forecast outputs</h3>
+<p>Once we have perform forecasting for each and every chain of the MCMC samples, we can aggregated them to obtain the mean, median, and quantiles, which would give us estimates for the proportion of people in state infected and removed, as well as the confidence interval for those estimates.</p>
+<pre><code class="language-r"># till the observed time points
+thetaI_band &lt;- t(apply(theta_pre[,-1,2] , 2, quantile, probs=conf.quant, na.rm=T))   
+thetaR_band&lt;- t(apply(theta_pre[,-1,3] , 2, quantile, probs=conf.quant, na.rm=T))
+thetaI_mean &lt;- colMeans(theta_pre[, -1, 2], na.rm = T)
+thetaR_mean &lt;- colMeans(theta_pre[, -1, 3], na.rm = T)
+
+# for the new time points
+YI_band &lt;- t(apply(I_post , 2, quantile, probs=conf.quant, na.rm=T))   
+YR_band&lt;- t(apply(R_post , 2, quantile, probs=conf.quant, na.rm=T))
+YI_mean &lt;- colMeans(I_post, na.rm = T)
+YR_mean &lt;- colMeans(R_post, na.rm = T)
+
+# combine into a data frame
+infected.dat &lt;- data.frame( rbind( cbind(thetaI_mean, thetaI_band, rep(&quot;pre&quot;, T_obs) ), cbind(YI_mean, YI_band, rep(&quot;post&quot;, T_new) ) ) )
+removed.dat &lt;- data.frame( rbind( cbind(thetaR_mean, thetaR_band, rep(&quot;pre&quot;, T_obs) ), cbind(YR_mean, YR_band, rep(&quot;post&quot;, T_new) ) ) )
+
+colnames(infected.dat) &lt;- c(&quot;mean&quot;, &quot;lower&quot;, &quot;median&quot;, &quot;upper&quot;)
+colnames(removed.dat) &lt;- c(&quot;mean&quot;, &quot;lower&quot;, &quot;median&quot;, &quot;upper&quot;)
+</code></pre>
+<p>Then, we can return a list comprising of these two datasets, as well as the summary corresponding to the first and second date obtained earlier. This whole piece of code, is compressed into a function called <code>forecast.SIR</code>, which we shall call later.</p>
+<h1 id="checking-performance-of-esir">Checking Performance of eSIR</h1>
+<p>Now, we shall be using the data for <code>Italy</code>, in order to figure out how our <code>eSIR</code> model performs for this data.</p>
+<h2 id="performance-for-italy">Performance for Italy</h2>
+<p>According to <a href="https://www.worldometers.info/world-population/italy-population/">Worldometers</a> sources, the projected population for Italy is about 6 crores. Based on that, we compute the observed proportion of the infected and removed (including deaths and recovered), and fit the eSIR model. The following code calls the <code>do.MCMC</code> function and performs the MCMC fitting. Here, we use 4 weeks of data, of the available 5 weeks of data, and we shall try to forecast for the last week, to see how the model performed.</p>
+<p>Also, the $\pi(t)$ function choosen for Italy is as follows;</p>
+<p>$$\pi(t) = \begin{cases}
+1 &amp; \text{ if } t &lt; \text{4th March, 2020}\\\<br>
+0.25 &amp; \text{ if } t &gt; \text{9th March, 2020}\\\<br>
+0.5 &amp; \text{ otherwise }\\\<br>
+\end{cases}$$</p>
+<pre><code class="language-r">subdat &lt;- dat %&gt;% mutate(Removed = Deaths + Recovered) %&gt;% filter(Country == &quot;Italy&quot; &amp; Removed &gt; 0)
+
+N &lt;- 60550075
+R &lt;- subdat$Removed / N
+I &lt;- subdat$Confirmed/N - R
+pi0 &lt;- ifelse(subdat$Date &lt; as.Date('2020-03-04'), 1, 
+              ifelse(subdat$Date &gt; as.Date('2020-03-09'), 0.25, 0.5))
+
+init.params &lt;- list(R0 = 3.15, R0_sd = 1, gamma0 = 0.0117, gamma0_sd = 0.1)
+control.params &lt;- list(nchain=4, nadapt=1e4, ndraw=5e2, thin=10, nburnin=2e2)
+control.params$mclen &lt;- round(control.params$ndraw / control.params$thin) * control.params$nchain 
+
+mcmc_samples &lt;- do.MCMC(I[1:28], R[1:28], pi0[1:28], init.params, control.params)
+</code></pre>
+<p>You should see something like this, which tells you that the JAGS code for MCMC is running properly.</p>
+<pre><code>Compiling model graph
+   Resolving undeclared variables
+   Allocating nodes
+Graph information:
+   Observed stochastic nodes: 56
+   Unobserved stochastic nodes: 35
+   Total graph size: 1591
+
+Initializing model
+</code></pre>
+<p>As we see from the following plot, the predictions for the last week is underestimating the true proportions. However, the observed proportions lie within the bound of $95%$ confidence band.</p>
+<pre><code class="language-r">preds &lt;- forecast.SIR(7, 28, mcmc_samples, pi = pi0, control.params = control.params, start.date = &quot;2020-02-21&quot;)
+ggplot(preds$infected, aes(x = date)) + 
+    geom_ribbon(aes(ymin = lower, ymax = upper, fill = phase), alpha = 0.25) +
+    geom_line(aes(y = mean, color = phase), size = 1) +
+    labs(x = &quot;Date&quot;, y = &quot;P(Infected)&quot;) +
+    geom_point(data = subdat, aes(x = Date, y = (Confirmed - Removed)/N), color = &quot;black&quot;)
+</code></pre>
+<p><img src="./unnamed-chunk-20-1.png" alt=""></p>
+<p>However, if we assume that, the Italy government maintains the current lockdown indefinitely, then $\pi(t) = 0.25$ will continue to remain. In such case, the important dates (as mentioned above) for change in the rate of newly infected can be obtained, as shown in the following plot.</p>
+<pre><code class="language-r">pi0 &lt;- c(pi0, rep(0.25, 200))
+preds &lt;- forecast.SIR(7+200, 28, mcmc_samples, pi = pi0, control.params = control.params, start.date = &quot;2020-02-21&quot;)
+ggplot(preds$infected, aes(x = date)) + 
+    geom_ribbon(aes(ymin = lower, ymax = upper, fill = phase), alpha = 0.25) +
+    geom_line(aes(y = mean, color = phase), size = 1) +
+    geom_vline(xintercept = preds$first.date[1], color = &quot;brown&quot;) + 
+    geom_vline(xintercept = preds$second.date[1], color = &quot;blue4&quot;) +
+    labs(x = &quot;Date&quot;, y = &quot;P(Infected)&quot;) +
+    geom_point(data = subdat, aes(x = Date, y = (Confirmed - Removed)/N), color = &quot;black&quot;) +
+    geom_text(x = preds$first.date[1] - 1, y = 0, label = format(preds$first.date[1], &quot;%b %d&quot;), size = 4 ) +
+    geom_text(x = preds$second.date[1] - 1, y = 0, label = format(preds$second.date[1], &quot;%b %d&quot;), size = 4 )
+</code></pre>
+<p><img src="./unnamed-chunk-21-1.png" alt=""></p>
+<p>Therefore, in Italy, at about June 14, we should see decreasing increments of newly infected persons, and from August 2 onwards, the proportion of infected people should decline.</p>
+<h2 id="estimation-for-india">Estimation for India</h2>
+<p>However, our main concern is to find out the situation of India based on this eSIR modelling. Here, we shall use the $\pi(t)$ function as follows, as per various decision taken by the Government, like restriction on international flights, Janta Curfew and full scale lockdowns etc.</p>
+<p>$$\pi(t) = \begin{cases}
+1 &amp; \text{ if } t &lt; \text{15th March, 2020}\\\<br>
+0.95 &amp; \text{ if } \text{15th March, 2020} &lt; t &lt; \text{19th March, 2020}\\\<br>
+0.9 &amp; \text{ if } \text{19th March, 2020} &lt; t &lt; \text{22th March, 2020}\\\<br>
+0.5 &amp; \text{ if } \text{22th March, 2020} &lt; t &lt; \text{25th March, 2020}\\\<br>
+0.1 &amp; \text{ if } t &gt; \text{25th March, 2020}\\\<br>
+\end{cases}$$</p>
+<p>Also, note that in India, many places are rural in nature, while most of the urban population and neighbourhood areas are more susceptible to get the disease than others, due to availablity of metro cities and international airports. So, rather than using the whole population size i.e. $131$ crores as $N$, we shall use about $350$ lakhs as the adjusted population size.</p>
+<pre><code class="language-r">subdat &lt;- dat %&gt;% mutate(Removed = Deaths + Recovered, Infected = Confirmed - Removed) %&gt;%
+    filter(Country == &quot;India&quot; &amp; Removed &gt; 0 &amp; Infected &gt; 0)
+
+N &lt;- 350e5   # adjusted population for metro cities and neighbourhood areas
+
+R &lt;- subdat$Removed / N
+I &lt;- subdat$Infected/N
+
+pi0 &lt;- ifelse(subdat$Date &lt; as.Date('2020-03-15'), 1, 
+              ifelse(subdat$Date &lt; as.Date('2020-03-19'), 0.9, 
+                     ifelse(subdat$Date &lt; as.Date('2020-03-22'), 0.8, 
+                            ifelse(subdat$Date &lt; as.Date('2020-03-25'), 0.5, 0.1)) ))
+
+init.params &lt;- list(R0 = 12.48, R0_sd = 1, gamma0 = 0.117, gamma0_sd = 1)
+control.params &lt;- list(nchain=4, nadapt=1e4, ndraw=5e2, thin=5, nburnin=2e2)
+control.params$mclen &lt;- round(control.params$ndraw / control.params$thin) * control.params$nchain 
+
+mcmc_samples &lt;- do.MCMC(I, R, pi0, init.params, control.params)
+</code></pre>
+<p>And finally, we perform the prediction till the end of the lockdown, i.e. till $14$-th April, to see the effect of quaranting.</p>
+<pre><code class="language-r">pi1 &lt;- c(pi0, rep(0.1, 19))   # from 27th March, it is 19 days of lockdown left 
+preds &lt;- forecast.SIR(19, 25, mcmc_samples, pi = pi1, control.params = control.params, start.date = &quot;2020-03-02&quot;)
+ggplot(preds$infected, aes(x = date)) + 
+    geom_ribbon(aes(ymin = lower, ymax = upper, fill = phase), alpha = 0.25) +
+    geom_line(aes(y = mean, color = phase), size = 1) +
+    labs(x = &quot;Date&quot;, y = &quot;P(Infected)&quot;) +
+    geom_point(data = subdat, aes(x = Date, y = Infected/N), color = &quot;black&quot;)
+</code></pre>
+<p><img src="./unnamed-chunk-23-1.png" alt=""></p>
+<p>Although it seems that the mean proportion is overestimated during the ovserved period, however the effect of quanting seems to work to a moderate extent, as the estimated proportion stays more or less at the same level. The exact count of the infected people at the end of lockdown, provided that it is maintained properly, should be about $1317$ many infected persons, and about $2114$ confirmed cases of COVID-19.</p>
+<p>Similar to Italy, if we extend its forecast for some more days, and keep the same level of quaranting, the model predictions are given in the following plot.</p>
+<pre><code class="language-r">pi2 &lt;- c(pi0, rep(0.1, 200)) 
+preds &lt;- forecast.SIR(200, 25, mcmc_samples, pi = pi2, control.params = control.params, start.date = &quot;2020-03-02&quot;)
+ggplot(preds$infected, aes(x = date)) + 
+    geom_ribbon(aes(ymin = lower, ymax = upper, fill = phase), alpha = 0.25) +
+    geom_line(aes(y = mean, color = phase), size = 1) +
+    geom_vline(xintercept = preds$first.date[1], color = &quot;brown&quot;, size = 1, linetype = &quot;dashed&quot;) + 
+    geom_vline(xintercept = preds$second.date[1], color = &quot;blue4&quot;, size = 1, linetype = &quot;dashed&quot;) +
+    labs(x = &quot;Date&quot;, y = &quot;P(Infected)&quot;) +
+    geom_point(data = subdat, aes(x = Date, y = (Confirmed - Removed)/N), color = &quot;black&quot;) +
+    geom_text(x = preds$first.date[1] - 7, y = 2e-4, label = format(preds$first.date[1], &quot;%b %d&quot;), size = 4 ) +
+    geom_text(x = preds$second.date[1] + 7, y = 3e-4, label = format(preds$second.date[1], &quot;%b %d&quot;), size = 4 )
+</code></pre>
+<p><img src="./unnamed-chunk-25-1.png" alt=""></p>
+<p>Therefore, as it seems, if we keep the lockdown (as it is now), based on the data, it might take till October to have the proportion of infected people becoming insignificant, provided we keep the same level of quanranting effect. However, from March 18, we should see a decrease in the rate of increment in the number of infected, and from March 30 onwards, we should be at a position from where the number of newly infected persons per day starts to decrease.</p>
+<p>Since, it is very economically and physically dissatisfying to be in a lockdown (or state of home quarantine till October, where Durga Puja festival is going to occur), we might want to go outside. In that case, assuming $\pi(t)$ increases to $0.5$, which is indeed less than 1, due to our increasing awareness of the scenario, then, the predicted situation would look like this.</p>
+<pre><code class="language-r">pi3 &lt;- c(pi0, rep(0.1, 19), rep(0.5, 2 * 365)) 
+preds &lt;- forecast.SIR(2 * 365 + 19, 25, mcmc_samples, pi = pi3, control.params = control.params, start.date = &quot;2020-03-02&quot;)
+preds$infected$upper_new &lt;- pmin(preds$infected$upper, 0.05)   # just for visual purpose
+ggplot(preds$infected, aes(x = date)) + 
+    geom_ribbon(aes(ymin = lower, ymax = upper_new, fill = phase), alpha = 0.25) +
+    geom_line(aes(y = mean, color = phase), size = 1) +
+    geom_vline(xintercept = preds$first.date[1], color = &quot;brown&quot;, size = 1, linetype = &quot;dashed&quot;) + 
+    geom_vline(xintercept = preds$second.date[1], color = &quot;blue4&quot;, size = 1, linetype = &quot;dashed&quot;) +
+    labs(x = &quot;Date&quot;, y = &quot;P(Infected)&quot;) +
+    geom_point(data = subdat, aes(x = Date, y = (Confirmed - Removed)/N), color = &quot;black&quot;) +
+    geom_text(x = preds$first.date[1] - 7, y = 2e-4, label = format(preds$first.date[1], &quot;%b %d&quot;), size = 4 ) +
+    geom_text(x = preds$second.date[1] + 7, y = 3e-4, label = format(preds$second.date[1], &quot;%b %d&quot;), size = 4 )
+</code></pre>
+<p><img src="./unnamed-chunk-26-1.png" alt=""></p>
+<p>This scenario would be very severe for us, since it would affect about $4%$ of the urban population, on about June 28, and then it would start to decrease gradually. However, it would take almost 2 years, to make this epidemic insignificant, provided there will be no generally accepted antiviral medicine for COVID-19 till then.</p>
+<p>Hence, we must avoid such situation at all costs, and to counter it, we must stay home, at a shelter in place home quaranting atmosphere.</p>
+<h1 id="conclusion">Conclusion</h1>
+<p>This <strong>eSIR model is not perfect.</strong> No statistical model is. But the main idea and examples that we are seeing currently all over the world, should give us a hint about what is to come.</p>
+<p>There are several backdrops in <strong>eSIR</strong> model.</p>
+<ol>
+<li>
+<p>It does not talk about underreporting. When you are in a place like India, underreporting is a major issue, as there might be some people who are affected by coronavirus, but lightly takes their symptoms as seasonal cold.</p>
+</li>
+<li>
+<p>In the basis of SIR model, we assume the existence of only 3 states. To incorporate the effect of quaranting, we only considering the people in Infected state. However, there might be people who are infected, and can spread the disease, yet they do not have the symptoms, and hence does not fall under the effect of quaranting.</p>
+</li>
+</ol>
+<p>We shall try to deal with these shortcomings in our next post, where we shall consider building more out of this particular model.</p>
+<p><strong>WHO Guidelines to STAY SAFE:</strong></p>
+<ul>
+<li>
+<p>The best way to prevent and slow down transmission is be well informed about the COVID-19 virus, the disease it causes and how it spreads.</p>
+</li>
+<li>
+<p>Wash your hands frequently with an alcohol based rub or soap.</p>
+</li>
+<li>
+<p>Maintain social distancing.</p>
+</li>
+<li>
+<p>Avoid touching eyes, nose and mouth.</p>
+</li>
+<li>
+<p>Practice respiratory hygiene.</p>
+</li>
+<li>
+<p>If you have fever, cough and difficulty breathing, seek medical care early.</p>
+</li>
+<li>
+<p>Stay informed and follow advice given by your healthcare provider.</p>
+</li>
+<li>
+<p>Protect yourselves and protect others.</p>
+</li>
+</ul>
+<p><strong>Signing Off</strong></p>
+<p>$\qquad &mdash;$ Subhrajyoty Roy &amp; Soham Bonnerjee</p>
+<blockquote>
+<p>Stay home, Stay safe, Keep safe your friends, families and neighbours.</p>
+</blockquote>
+
+    </div>
+
+    
+
+
+
+
+
+<div class="share-box" aria-hidden="true">
+  <ul class="share">
+    
+      
+      
+      
+        
+      
+      
+      
+      <li>
+        <a href="https://twitter.com/intent/tweet?url=/post/esir-modelling/&amp;text=eSIR%20-%20An%20Epidemiological%20Model%20incoportating%20quaranting%20effect" target="_blank" rel="noopener" class="share-btn-twitter">
+          <i class="fab fa-twitter"></i>
+        </a>
+      </li>
+    
+      
+      
+      
+        
+      
+      
+      
+      <li>
+        <a href="https://www.facebook.com/sharer.php?u=/post/esir-modelling/&amp;t=eSIR%20-%20An%20Epidemiological%20Model%20incoportating%20quaranting%20effect" target="_blank" rel="noopener" class="share-btn-facebook">
+          <i class="fab fa-facebook"></i>
+        </a>
+      </li>
+    
+      
+      
+      
+        
+      
+      
+      
+      <li>
+        <a href="mailto:?subject=eSIR%20-%20An%20Epidemiological%20Model%20incoportating%20quaranting%20effect&amp;body=/post/esir-modelling/" target="_blank" rel="noopener" class="share-btn-email">
+          <i class="fas fa-envelope"></i>
+        </a>
+      </li>
+    
+      
+      
+      
+        
+      
+      
+      
+      <li>
+        <a href="https://www.linkedin.com/shareArticle?url=/post/esir-modelling/&amp;title=eSIR%20-%20An%20Epidemiological%20Model%20incoportating%20quaranting%20effect" target="_blank" rel="noopener" class="share-btn-linkedin">
+          <i class="fab fa-linkedin-in"></i>
+        </a>
+      </li>
+    
+      
+      
+      
+        
+      
+      
+      
+      <li>
+        <a href="https://web.whatsapp.com/send?text=eSIR%20-%20An%20Epidemiological%20Model%20incoportating%20quaranting%20effect%20/post/esir-modelling/" target="_blank" rel="noopener" class="share-btn-whatsapp">
+          <i class="fab fa-whatsapp"></i>
+        </a>
+      </li>
+    
+      
+      
+      
+        
+      
+      
+      
+      <li>
+        <a href="https://service.weibo.com/share/share.php?url=/post/esir-modelling/&amp;title=eSIR%20-%20An%20Epidemiological%20Model%20incoportating%20quaranting%20effect" target="_blank" rel="noopener" class="share-btn-weibo">
+          <i class="fab fa-weibo"></i>
+        </a>
+      </li>
+    
+  </ul>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+  
+
+
+
+
+
+
+  
+  
+  
+    
+  
+  
+  <div class="media author-card content-widget-hr">
+    
+      
+      <img class="portrait mr-3" src="/authors/admin/avatar_hu2e04bc443a4410ec563608206c63699b_76774_250x250_fill_q90_lanczos_center.jpg" alt="Avatar">
+    
+
+    <div class="media-body">
+      <h5 class="card-title"><a href="/">Soham Bonnerjee</a></h5>
+      <h6 class="card-subtitle">M.Stat 1st Year Student</h6>
+      <p class="card-text">I do not know what I may appear to the world but to myself I seem to have been only like a boy playing on the seashore and diverting myself in now and then finding a smoother pebble or a prettier shell than the ordinary, whilst the great ocean of truth lay all undiscoveed before me.</p>
+      <ul class="network-icon" aria-hidden="true">
+  
+    
+    
+    
+      
+    
+    
+    
+    
+    
+      
+    
+    <li>
+      <a href="/#contact" >
+        <i class="fas fa-envelope"></i>
+      </a>
+    </li>
+  
+    
+    
+    
+      
+    
+    
+    
+    
+    
+      
+    
+    <li>
+      <a href="https://www.facebook.com/sohambonnerjee1" target="_blank" rel="noopener">
+        <i class="fab fa-facebook"></i>
+      </a>
+    </li>
+  
+    
+    
+    
+      
+    
+    
+    
+    
+    
+      
+    
+    <li>
+      <a href="https://github.com/soham099" target="_blank" rel="noopener">
+        <i class="fab fa-github"></i>
+      </a>
+    </li>
+  
+</ul>
+
+    </div>
+  </div>
+
+
+
+
+
+
+
+
+
+  
+  
+
+
+
+  </div>
+</article>
+
+      
+
+    
+    
+    
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.imagesloaded/4.1.4/imagesloaded.pkgd.min.js" integrity="sha256-lqvxZrPLtfffUl2G/e7szqSvPBILGbwmsGE1MKlOi0Q=" crossorigin="anonymous"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.isotope/3.0.6/isotope.pkgd.min.js" integrity="sha256-CBrpuqrMhXwcLLUd5tvQ4euBHCdh7wGlDfNz8vbu/iI=" crossorigin="anonymous"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.5.7/jquery.fancybox.min.js" integrity="sha256-yt2kYMy0w8AbtF89WXb2P1rfjcP/HTHLT7097U8Y5b8=" crossorigin="anonymous"></script>
+
+      
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/mermaid/8.4.3/mermaid.min.js" integrity="" crossorigin="anonymous" title="mermaid"></script>
+      
+
+      
+        
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.10/highlight.min.js" integrity="sha256-1zu+3BnLYV9LdiY85uXMzii3bdrkelyp37e0ZyTAQh0=" crossorigin="anonymous"></script>
+        
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.10/languages/r.min.js"></script>
+        
+      
+
+    
+
+    
+    
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.5.1/leaflet.js" integrity="sha256-EErZamuLefUnbMBQbsEqu1USa+btR2oIlCpBJbyD4/g=" crossorigin="anonymous"></script>
+    
+
+    
+    
+    <script>const code_highlighting = true;</script>
+    
+
+    
+    
+    
+    
+    
+    
+    <script>
+      const search_config = {"indexURI":"/index.json","minLength":1,"threshold":0.3};
+      const i18n = {"no_results":"No results found","placeholder":"Search...","results":"results found"};
+      const content_type = {
+        'post': "Posts",
+        'project': "Projects",
+        'publication' : "Publications",
+        'talk' : "Talks"
+        };
+    </script>
+    
+
+    
+    
+
+    
+    
+    <script id="search-hit-fuse-template" type="text/x-template">
+      <div class="search-hit" id="summary-{{key}}">
+      <div class="search-hit-content">
+        <div class="search-hit-name">
+          <a href="{{relpermalink}}">{{title}}</a>
+          <div class="article-metadata search-hit-type">{{type}}</div>
+          <p class="search-hit-description">{{snippet}}</p>
+        </div>
+      </div>
+      </div>
+    </script>
+    
+
+    
+    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/fuse.js/3.2.1/fuse.min.js" integrity="sha256-VzgmKYmhsGNNN4Ph1kMW+BjoYJM2jV5i4IlFoeZA9XI=" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.1/jquery.mark.min.js" integrity="sha256-4HLtjeVgH0eIB3aZ9mLYF6E8oU5chNdjU6p6rrXpl9U=" crossorigin="anonymous"></script>
+    
+
+    
+    
+
+    
+    
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+      
+    
+    
+    
+    
+    <script src="/js/academic.min.600a2e440c16093e23e26e90951c4d4b.js"></script>
+
+    
+
+
+
+
+
+
+  
+  
+  <div class="container">
+    <footer class="site-footer">
+  
+  <p class="powered-by">
+    
+      <a href="/privacy/">Privacy Policy</a>
+    
+    
+       &middot; 
+      <a href="/terms/">Terms</a>
+    
+  </p>
+  
+
+  <p class="powered-by">
+    
+
+    Powered by the
+    <a href="https://sourcethemes.com/academic/" target="_blank" rel="noopener">Academic theme</a> for
+    <a href="https://gohugo.io" target="_blank" rel="noopener">Hugo</a>.
+
+    
+    <span class="float-right" aria-hidden="true">
+      <a href="#" class="back-to-top">
+        <span class="button_icon">
+          <i class="fas fa-chevron-up fa-2x"></i>
+        </span>
+      </a>
+    </span>
+    
+  </p>
+</footer>
+
+  </div>
+  
+
+  
+<div id="modal" class="modal fade" role="dialog">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Cite</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <pre><code class="tex hljs"></code></pre>
+      </div>
+      <div class="modal-footer">
+        <a class="btn btn-outline-primary my-1 js-copy-cite" href="#" target="_blank">
+          <i class="fas fa-copy"></i> Copy
+        </a>
+        <a class="btn btn-outline-primary my-1 js-download-cite" href="#" target="_blank">
+          <i class="fas fa-download"></i> Download
+        </a>
+        <div id="modal-error"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+</body>
+</html>
