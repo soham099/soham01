@@ -16,4 +16,4 @@ url_slides: ""
 url_video: ""
 ---
 
-We introduce the Juggling Markov Chain and discuss its various properties, and try to find the order of its Mixing Time.
+We introduce the Juggling Markov Chain and discuss its various properties, and try to find the order of its Mixing Time. Find more in the pdf. 
