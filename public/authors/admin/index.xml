@@ -524,7 +524,7 @@ ggplot(preds$infected, aes(x = date)) +
 &lt;/li&gt;
 &lt;/ul&gt;
 &lt;p&gt;&lt;strong&gt;Signing Off&lt;/strong&gt;&lt;/p&gt;
-&lt;p&gt;$\qquad &amp;mdash;$ Subhrajyoty Roy &amp;amp; Soham Bonnerjee&lt;/p&gt;
+&lt;p&gt;$\qquad &amp;mdash;$ Soham Bonnerjee &amp;amp; Subhrajyoty Roy&lt;/p&gt;
 &lt;blockquote&gt;
 &lt;p&gt;Stay home, Stay safe, Keep safe your friends, families and neighbours.&lt;/p&gt;
 &lt;/blockquote&gt;

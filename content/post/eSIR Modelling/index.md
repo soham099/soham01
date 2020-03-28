@@ -654,7 +654,7 @@ We shall try to deal with these shortcomings in our next post, where we shall co
 
 **Signing Off**
 
-$\qquad ---$ Subhrajyoty Roy \& Soham Bonnerjee
+$\qquad ---$ Soham Bonnerjee \& Subhrajyoty Roy  
 
 
 > Stay home, Stay safe, Keep safe your friends, families and neighbours.
