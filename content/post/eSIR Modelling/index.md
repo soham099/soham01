@@ -1,5 +1,5 @@
 ---
-title: "eSIR - An Epidemiological Model incoportating quaranting effect"
+title: "eSIR - An Epidemiological Model incoportating Quarantining Effect"
 authors: 
     - admin
     - Subhrajyoty Roy

@@ -9,10 +9,6 @@
   url = "#posts"
   weight = 20
 
-[[main]]
-  name = "Gallery"
-  url = "#Gallery"
-  weight = 20
 
 [[main]]
   name = "Projects"
