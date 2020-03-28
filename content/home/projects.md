@@ -26,10 +26,6 @@ subtitle = ""
     tag = "*"
   
   [[content.filter_button]]
-    name = "Machine Learning"
-    tag = "Machine Learning"
-  
-  [[content.filter_button]]
     name = "Bio-Statistics"
     tag = "Bio-Statistics"
 

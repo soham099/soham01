@@ -16,4 +16,4 @@ url_slides: "files/CDA_Project_Presentation.pdf"
 url_video: ""
 ---
 
-We first discuss the theories behind Multiple Correspondence Analysis, and then proceed to discuss some applications.
+We first discuss the theories behind Multiple Correspondence Analysis, and then proceed to discuss some applications. Find out more in the PDF and Slides. 
