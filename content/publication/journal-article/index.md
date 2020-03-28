@@ -8,7 +8,7 @@ date: "2019-09-01T00:00:00Z"
 doi: ""
 featured: false
 image:
-  caption: 'Image credit: [**Unsplash**](https://unsplash.com/photos/jdD8gXaTZsc)'
+  caption: 'Image credit: [**Freepik**](onset.jpg)'
   focal_point: ""
   preview_only: false
 projects: []
@@ -31,4 +31,3 @@ url_source: ""
 url_video: ""
 ---
 
-Supplementary notes can be added here, including [code and math](https://sourcethemes.com/academic/docs/writing-markdown-latex/).

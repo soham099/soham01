@@ -5,7 +5,7 @@
     <link>/project/</link>
       <atom:link href="/project/index.xml" rel="self" type="application/rss+xml" />
     <description>Projects</description>
-    <generator>Source Themes Academic (https://sourcethemes.com/academic/)</generator><language>en-us</language><lastBuildDate>Wed, 27 Apr 2016 00:00:00 +0000</lastBuildDate>
+    <generator>Source Themes Academic (https://sourcethemes.com/academic/)</generator><language>en-us</language><lastBuildDate>Fri, 20 Dec 2019 00:00:00 +0000</lastBuildDate>
     <image>
       <url>/img/icon-192.png</url>
       <title>Projects</title>
@@ -15,9 +15,27 @@
     <item>
       <title>Multiple Correspondence Analysis</title>
       <link>/project/multiple-correspondence-analysis/</link>
-      <pubDate>Wed, 27 Apr 2016 00:00:00 +0000</pubDate>
+      <pubDate>Fri, 20 Dec 2019 00:00:00 +0000</pubDate>
       <guid>/project/multiple-correspondence-analysis/</guid>
       <description>&lt;p&gt;We first discuss the theories behind Multiple Correspondence Analysis, and then proceed to discuss some applications.&lt;/p&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>Exoplanet Hunting- A Statistical Approach</title>
+      <link>/project/exoplanet-hunting/</link>
+      <pubDate>Mon, 21 Oct 2019 00:00:00 +0000</pubDate>
+      <guid>/project/exoplanet-hunting/</guid>
+      <description>&lt;p&gt;An Exoplanet or Extrasolar planet is an earth-like planet outside the Solar System. The Kepler Space Observatory has analyzed 10000 odd &lt;em&gt;Kepler Object of Interests&lt;/em&gt;, and designated them either &lt;em&gt;Exoplanet&lt;/em&gt;, or &lt;em&gt;False Positive&lt;/em&gt;. This designation follows complex mathematical formulae that&#39;s not open to public. We try to emulate Kepler&#39;s analysis using simple statistical tools that also gives us interpretability. Find out more in the slides.&lt;/p&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>On Mixing Time of  Juggling Markov Chain</title>
+      <link>/project/juggling-markov-chain/</link>
+      <pubDate>Tue, 31 Jul 2018 00:00:00 +0000</pubDate>
+      <guid>/project/juggling-markov-chain/</guid>
+      <description>&lt;p&gt;We introduce the Juggling Markov Chain and discuss its various properties, and try to find the order of its Mixing Time.&lt;/p&gt;
 </description>
     </item>
     

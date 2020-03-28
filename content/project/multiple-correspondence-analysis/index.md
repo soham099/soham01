@@ -1,5 +1,5 @@
 ---
-date: "2016-04-27T00:00:00Z"
+date: "2019-12-20T00:00:00Z"
 external_link: ""
 image:
   caption: a Typical Biplot
@@ -11,8 +11,8 @@ tags:
 - Others
 title: Multiple Correspondence Analysis
 url_code: ""
-url_pdf: "files/CDA_Project_Presentation.pdf"
-url_slides: ""
+url_pdf: "files/CDA_Project.pdf"
+url_slides: "files/CDA_Project_Presentation.pdf"
 url_video: ""
 ---
 
