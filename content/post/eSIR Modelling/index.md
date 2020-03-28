@@ -515,7 +515,7 @@ ggplot(preds$infected, aes(x = date)) +
 
 ![](./unnamed-chunk-21-1.png)
 
-Therefore, in Italy, at about June 14, we should see decreasing increments of newly infected persons, and from August 2 onwards, the proportion of infected people should decline.
+Therefore, in Italy, at about June 22, we should see decreasing increments of newly infected persons, and from August 1 onwards, the proportion of infected people should decline.
 
 
 ## Estimation for India
@@ -594,7 +594,7 @@ ggplot(preds$infected, aes(x = date)) +
 ![](./unnamed-chunk-25-1.png)
 
 
-Therefore, as it seems, if we keep the lockdown (as it is now), based on the data, it might take till October to have the proportion of infected people becoming insignificant, provided we keep the same level of quanranting effect. However, from March 18, we should see a decrease in the rate of increment in the number of infected, and from March 30 onwards, we should be at a position from where the number of newly infected persons per day starts to decrease.
+Therefore, as it seems, if we keep the lockdown (as it is now), based on the data, it might take till October to have the proportion of infected people becoming insignificant, provided we keep the same level of quanranting effect. However, from March 17, we should see a decrease in the rate of increment in the number of infected, and from March 29 onwards, we should be at a position from where the number of newly infected persons per day starts to decrease.
 
 Since, it is very economically and physically dissatisfying to be in a lockdown (or state of home quarantine till October, where Durga Puja festival is going to occur), we might want to go outside. In that case, assuming $\pi(t)$ increases to $0.5$, which is indeed less than 1, due to our increasing awareness of the scenario, then, the predicted situation would look like this.
 
@@ -616,7 +616,7 @@ ggplot(preds$infected, aes(x = date)) +
 
 ![](./unnamed-chunk-26-1.png)
 
-This scenario would be very severe for us, since it would affect about $4\%$ of the urban population, on about June 28, and then it would start to decrease gradually. However, it would take almost 2 years, to make this epidemic insignificant, provided there will be no generally accepted antiviral medicine for COVID-19 till then.
+This scenario would be very severe for us, since it would affect about $4\%$ of the urban population, on about June 13, and then it would start to decrease gradually. However, it would take almost 2 years, to make this epidemic insignificant, provided there will be no generally accepted antiviral medicine for COVID-19 till then.
 
 Hence, we must avoid such situation at all costs, and to counter it, we must stay home, at a shelter in place home quaranting atmosphere.
 
