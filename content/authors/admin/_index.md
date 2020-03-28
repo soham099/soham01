@@ -8,7 +8,7 @@ education:
     institution:  Indian Statistical Institute, Kolkata 
     year: 2019
   
-email: ""
+email: "sohambonnerjee01@gmail.com"
 interests:
 - Theoretical Statistics
 - Biostatistics
@@ -16,21 +16,18 @@ interests:
 name: Soham Bonnerjee
 organizations:
 - name: Indian Statistical Institute, Kolkata
-  url: ""
+  url: "www.isical.ac.in"
 role: M.Stat 1st Year Student
 social:
 - icon: envelope
   icon_pack: fas
   link: '#contact'
-- icon: twitter
+- icon: facebook
   icon_pack: fab
-  link: https://twitter.com/GeorgeCushen
-- icon: google-scholar
-  icon_pack: ai
-  link: https://scholar.google.co.uk/citations?user=sIwtMXoAAAAJ
+  link: https://www.facebook.com/sohambonnerjee1
 - icon: github
   icon_pack: fab
-  link: https://github.com/gcushen
+  link: https://github.com/soham099
 superuser: true
 user_groups:
 - Researchers

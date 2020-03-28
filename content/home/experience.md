@@ -18,5 +18,29 @@ date_format = "Jan 2006"
 #   Leave `date_end` empty if it's your current employer.
 #   Begin/end multi-line descriptions with 3 quotes `"""`.
 
+ [[experience]]
+ title = "Summer Research Scholar"
+ company = "Duke University"
+ location = "Durham, NC, USA"
+ date_start = "May 2019"
+ date_end = "July 2019"
+  description = """
+  Responsibilities include:
+  
+  * Learning about Adaptive Confidence Intervals and their uses.
+  * Proving a Conjecture how Adaptive CI is an improvement over usual CIs. 
+  """
+
+[[experience]]
+ title = "Summer Research Scholar"
+ company = "Indian Institute of Science"
+ location = "Bangalore, India"
+ date_start = "May 2018"
+ date_end = "July 2018"
+  description = """
+  Responsibilities include:
+  
+  * Investigating about Mixing Time and other properties of the Juggling Chain 
+  """
 
 +++

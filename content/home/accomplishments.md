@@ -18,5 +18,13 @@ date_format = "Jan 2006"
 #   Leave other parameters empty if not required.
 #   Begin/end multi-line descriptions with 3 quotes `"""`.
 
-
+[[item]]
+  organization = "Coursera"
+  organization_url = "https://coursera.org"
+  title = "Neural Networks and Deep Learning"
+  url = "https://www.coursera.org/learn/neural-networks-deep-learning/home/welcome"
+  certificate_url = "https://coursera.org/share/65b195f23023f14c5fd940f129656cc4"
+  date_start = "2020-01-13"
+  date_end = ""
+  description = "Learnt about Deep Neural Network and their implelementation in Python"
 +++
