@@ -515,7 +515,7 @@ ggplot(preds$infected, aes(x = date)) +
 
 ![](./unnamed-chunk-21-1.png)
 
-Therefore, in Italy, at about June 22, we should see decreasing increments of newly infected persons, and from August 1 onwards, the proportion of infected people should decline.
+Therefore, in Italy, at about June 24, we should see decreasing increments of newly infected persons, and from August 17 onwards, the proportion of infected people should decline.
 
 
 ## Estimation for India
@@ -573,7 +573,7 @@ ggplot(preds$infected, aes(x = date)) +
 ![](./unnamed-chunk-23-1.png)
 
 
-Although it seems that the mean proportion is overestimated during the ovserved period, however the effect of quanting seems to work to a moderate extent, as the estimated proportion stays more or less at the same level. The exact count of the infected people at the end of lockdown, provided that it is maintained properly, should be about $1317$ many infected persons, and about $2114$ confirmed cases of COVID-19.
+Although it seems that the mean proportion is overestimated during the ovserved period, however the effect of quanting seems to work to a moderate extent, as the estimated proportion stays more or less at the same level. The exact count of the infected people at the end of lockdown, provided that it is maintained properly, should be about $1571$ many infected persons, and about $2114$ confirmed cases of COVID-19.
 
 Similar to Italy, if we extend its forecast for some more days, and keep the same level of quaranting, the model predictions are given in the following plot.
 
@@ -617,7 +617,7 @@ ggplot(preds$infected, aes(x = date)) +
 
 ![](./unnamed-chunk-26-1.png)
 
-This scenario would be very severe for us, since it would affect about $4\%$ of the urban population, on about June 13, and then it would start to decrease gradually. However, it would take almost 2 years, to make this epidemic insignificant, provided there will be no generally accepted antiviral medicine for COVID-19 till then.
+This scenario would be very severe for us, since it would affect about $6\%$ of the urban population, on about June 27, and then it would start to decrease gradually. However, it would take almost 2 years, to make this epidemic insignificant, provided there will be no generally accepted antiviral medicine for COVID-19 till then.
 
 Hence, we must avoid such situation at all costs, and to counter it, we must stay home, at a shelter in place home quaranting atmosphere.
 
