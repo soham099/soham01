@@ -32,7 +32,7 @@ In this post, we shall explore the performance of deterministic SIR model which 
 
 # Exploratory Analysis
 
-Before proceeding with introducing the SIR model, let us first read the data into `R` (which is what we are going to use through out), and perform some exploratory analysis. We shall be using the [tidyverse](https://www.tidyverse.org/) library, which is a collection of some very useful packages for data proprocessing and exploratory analysis.
+Before proceeding with introducing the SIR model, let us first read the data into `R` (which is what we are going to use through out), and perform some exploratory analysis. We shall be using the [tidyverse](https://www.tidyverse.org/) library, which is a collection of some very useful packages for data preprocessing and exploratory analysis.
 
 
 
@@ -44,7 +44,7 @@ library(lubridate)
 library(ggplot2)
 ```
 
-For the related coronavirus, there are may different sources available. Many international organizations like WHO (World Health Organization), ECDC (European Centre for Disease Prevention and Control) and many national governments are releasing day to day basis publicly available data. As well as different news agencies are also collecting and compileing data from the hospitals and different other sources on a regular basis. John Hopkins University (JHU) CSSE department has also released a dataset compiled from the collection of these sources in a github repository [here](https://github.com/CSSEGISandData/COVID-19).
+For the related coronavirus, there are may different sources available. Many international organizations like WHO (World Health Organization), ECDC (European Centre for Disease Prevention and Control) and many national governments are releasing day to day basis publicly available data. As well as different news agencies are also collecting and compiling data from the hospitals and various other sources on a regular basis. John Hopkins University (JHU) CSSE department has also released a dataset compiled from the collection of these sources in a github repository [here](https://github.com/CSSEGISandData/COVID-19).
 
 The datasets are being updated on a daily basis. We shall use this data provided by [JHU CSSE](https://github.com/CSSEGISandData/COVID-19).
 
