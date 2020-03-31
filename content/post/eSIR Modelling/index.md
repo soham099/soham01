@@ -513,7 +513,7 @@ ggplot(preds$infected, aes(x = date)) +
     geom_text(x = preds$second.date[1] - 1, y = 0, label = format(preds$second.date[1], "%b %d"), size = 4 )
 ```
 
-![](./unnamed-chunk-21-1.png)
+![](./unnamed-chunk-21-1.jpg)
 
 Therefore, in Italy, at about June 24, we should see decreasing increments of newly infected persons, and from August 17 onwards, the proportion of infected people should decline.
 
@@ -615,7 +615,7 @@ ggplot(preds$infected, aes(x = date)) +
     geom_text(x = preds$second.date[1] + 7, y = 3e-4, label = format(preds$second.date[1], "%b %d"), size = 4 )
 ```
 
-![](./unnamed-chunk-26-1.png)
+![](./unnamed-chunk-26-1.jpg)
 
 This scenario would be very severe for us, since it would affect about $6\%$ of the urban population, on about June 27, and then it would start to decrease gradually. However, it would take almost 2 years, to make this epidemic insignificant, provided there will be no generally accepted antiviral medicine for COVID-19 till then.
 
