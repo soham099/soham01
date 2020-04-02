@@ -17,7 +17,7 @@ publication_short: ""
 publication_types:
 - "2"
 publishDate: ""
-summary: tfdfhgc
+summary: We solve the QBH problem by Onset Detection methods.
 tags:
 - Source Themes
 title: Onset Detection- A New Approach to QBH System 
