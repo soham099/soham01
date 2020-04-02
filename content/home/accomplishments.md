@@ -26,5 +26,5 @@ date_format = "Jan 2006"
   certificate_url = "https://coursera.org/share/65b195f23023f14c5fd940f129656cc4"
   date_start = "2020-01-13"
   date_end = ""
-  description = "Learnt about Deep Neural Network and their implelementation in Python"
+  description = "Learnt about Deep Neural Network and their implementation in Python"
 +++
