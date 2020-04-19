@@ -9,7 +9,7 @@ slides:
 summary: We discuss the Haseman-Elston Regression in the context of QTL Mapping.
 tags:
 - Bio-Statistics
-title: Mapping Human QTL usiing Sib-Pair Data
+title: Mapping Human QTL using Sib-Pair Data
 url_code: ""
 url_pdf: ""
 url_slides: "files/Stat_Compre_Presentation_BS1609.pdf"
