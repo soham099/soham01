@@ -17,7 +17,7 @@ name: Soham Bonnerjee
 organizations:
 - name: Indian Statistical Institute, Kolkata
   url: "www.isical.ac.in"
-role: M.Stat 1st Year Student
+role: M.Stat 2nt Year Student
 social:
 - icon: envelope
   icon_pack: fas
