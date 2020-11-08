@@ -36,7 +36,7 @@ We start with a nice problem that appeared on **Regional Mathematics Olympiad, I
 
 The solution to this is easy and well-known. Consider the square $v$ with the smallest number (which exists, thanks to Well-Ordering Principle) $i$ on it, and since this is an average of the numbers on its neighbors, the squares in $N(v)$ also have $i$ on it. This way, we can reach all the squares on the chessboard, all of whom have $i$ on it, and this completes the proof. \hfill $\blacksquare$
 
-Now, we see a simple generalization of this problem :
+Next, we see a simple generalization of this problem :
 
 **Problem 2**: *Let* $f:\Z^2 \to R$ *be a function satisfying* $f(x)=\frac{1}{4}\sum_{y \sim x} f(y)$, *where $y \sim x$ means there is an edge between $x$ and $y$ . Prove that, if $f$ is bounded, then $f$ is constant on $\Z^2$*.
 
