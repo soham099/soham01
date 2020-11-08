@@ -28,10 +28,10 @@
   
     
   
-  <meta name="description" content="M.Stat 2nd Year Student">
+  <meta name="description" content="Snippets from a riveting course on Martingale">
 
   
-  <link rel="alternate" hreflang="en-us" href="/tags/">
+  <link rel="alternate" hreflang="en-us" href="/post/martingale/">
 
   
 
@@ -206,14 +206,12 @@
 
 
   
-  <link rel="alternate" href="/tags/index.xml" type="application/rss+xml" title="Soham Bonnerjee&#39;s Home Page">
-  
 
   <link rel="manifest" href="/index.webmanifest">
   <link rel="icon" type="image/png" href="/img/icon-32.png">
   <link rel="apple-touch-icon" type="image/png" href="/img/icon-192.png">
 
-  <link rel="canonical" href="/tags/">
+  <link rel="canonical" href="/post/martingale/">
 
   
   
@@ -226,18 +224,65 @@
   <meta property="twitter:card" content="summary">
   
   <meta property="og:site_name" content="Soham Bonnerjee&#39;s Home Page">
-  <meta property="og:url" content="/tags/">
-  <meta property="og:title" content="Tags | Soham Bonnerjee&#39;s Home Page">
-  <meta property="og:description" content="M.Stat 2nd Year Student"><meta property="og:image" content="/img/icon-192.png">
+  <meta property="og:url" content="/post/martingale/">
+  <meta property="og:title" content="Two Beautiful Results concerning Discrete Harmonic Functions | Soham Bonnerjee&#39;s Home Page">
+  <meta property="og:description" content="Snippets from a riveting course on Martingale"><meta property="og:image" content="/img/icon-192.png">
   <meta property="twitter:image" content="/img/icon-192.png"><meta property="og:locale" content="en-us">
   
-    <meta property="og:updated_time" content="2019-12-20T00:00:00&#43;00:00">
+    
+      <meta property="article:published_time" content="2020-11-09T00:00:00&#43;00:00">
+    
+    <meta property="article:modified_time" content="2020-11-09T00:00:00&#43;00:00">
   
 
   
 
 
+    
 
+
+
+
+
+
+  
+
+
+
+
+
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "mainEntityOfPage": {
+    "@type": "WebPage",
+    "@id": "/post/martingale/"
+  },
+  "headline": "Two Beautiful Results concerning Discrete Harmonic Functions",
+  
+  "datePublished": "2020-11-09T00:00:00Z",
+  "dateModified": "2020-11-09T00:00:00Z",
+  
+  "author": {
+    "@type": "Person",
+    "name": "Soham Bonnerjee"
+  },
+  
+  "publisher": {
+    "@type": "Organization",
+    "name": "Soham Bonnerjee's Home Page",
+    "logo": {
+      "@type": "ImageObject",
+      "url": "/img/icon-512.png"
+    }
+  },
+  "description": "Snippets from a riveting course on Martingale"
+}
+</script>
+
+  
 
   
 
@@ -245,10 +290,13 @@
   
 
 
+  
 
 
 
-  <title>Tags | Soham Bonnerjee&#39;s Home Page</title>
+
+
+  <title>Two Beautiful Results concerning Discrete Harmonic Functions | Soham Bonnerjee&#39;s Home Page</title>
 
 </head>
 
@@ -512,66 +560,331 @@
 </nav>
 
 
+  <article class="article">
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+  
+  
+<div class="article-container pt-3">
+  <h1>Two Beautiful Results concerning Discrete Harmonic Functions</h1>
+
+  
+  <p class="page-subtitle">During the time of shelter-in-place lockdown due to global pandemic of COVID-19</p>
+  
+
+  
+    
+
+
+<div class="article-metadata">
+
+  
+  
+  
+  
+  <div>
+    
+
+
+
+  
+  <span><a href="/authors/admin/">Soham Bonnerjee</a></span>
+
+  </div>
+  
+  
+
+  
+  <span class="article-date">
+    
+    
+      
+    
+    Nov 9, 2020
+  </span>
+  
+
+  
+
+  
+  <span class="middot-divider"></span>
+  <span class="article-reading-time">
+    4 min read
+  </span>
+  
+
+  
+  
+  
+
+  
+  
+
+</div>
+
+    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+</div>
+
+
+
+  <div class="article-container">
+
+    <div class="article-style">
+      <p>We start with a nice problem that appeared on <strong>Regional Mathematics Olympiad, India, 1991</strong> :</p>
+<p><strong>Problem 1</strong>: <em>The $64$ squares of an $8 \times 8$ chessboard are filled with positive integers in such a way that each integer is the average of the integers on the neighbouring squares. Show that in fact all the $64$ entries are equal.</em></p>
+<p>The solution to this is easy and well-known. Consider the square $v$ with the smallest number (which exists, thanks to Well-Ordering Principle) $i$ on it, and since this is an average of the numbers on its neighbors, the squares in $N(v)$ also have $i$ on it. This way, we can reach all the squares on the chessboard, all of whom have $i$ on it, and this completes the proof. \hfill $\blacksquare$</p>
+<p>Now, we see a simple generalization of this problem :</p>
+<p><strong>Problem 2</strong>: <em>Let</em> $f:\Z^2 \to R$ <em>be a function satisfying</em> $f(x)=\frac{1}{4}\sum_{y \sim x} f(y)$, *where $y \sim x$ means there is an edge between $x$ and $y$ . Prove that, if $f$ is bounded, then $f$ is constant on $\Z^2$*.</p>
+<p>Before looking into the solution of this problem, we take the time to notice that <strong>Problem 2</strong> is a generalization on <strong>Problem 1</strong> in two ways: firstly, we have moved to a unbounded set-up $Z^2$ from the initial set-up of a finite chessboard; and secondly, we are  allowing the function to take any real values, not just positive integers. These two generalizations simply implies that we cannot look for the node with the smallest number in it, as we did with the <strong>Problem 1</strong>. Nevertheless, the solution to the first problem was simple. How hard can the solution to this standard generalization be?</p>
+<p>Turns out, the multitude of solutions that exist to the <strong>Problem 2</strong>, is not at all elementary, and definitely out-of-scope of a high-school student, sharply in contrast to the <strong>Problem 1</strong>. This is a popular problem (we will come to this later), and some of its solutions are by virtue of Complex Analysis and Functional Analysis. But perhaps, the most popular solution to this problem is also the most beautiful one, for it draws from the elegant realm of Probability and Stochastic Processes (which, although a standard technique in Stochastic Calculus, strikes me everytime I encounter, for nothing &ldquo;random&rdquo; is mentioned in such problems for you to apply Probabilistic machinery). With this preface, let's delve into the solution:</p>
+<p><strong>Solution to Problem 2</strong> :</p>
+<p>Consider a Simple Symmetric Random Walk ${X_n}<em>{n \geq 1}$ on $\Z^2$, starting from any fixed point $x \in \Z^2$.  Consider the stochastic process ${f(X_n)}</em>{n \geq 1}$. We claim that ${f(X_n)}$ is a Martingale with respect to the increasing filtration $\F_n$, where $\F_n=\sigma(X_t : t\leq n )$. The probability measure is that induced by $X_n$ . For simplicity we will denote any probability measure by $\prob$.</p>
+<p>First we prove the claim. Clearly, there are only finitely many choices for $X_n$, and thus finitely many choices for $f(X_n)$, and thus $f(X_n)$ is integrable. Finally, 
+\begin{align*}
+\E_x\left(f(X_{n+1}) | \F_n  \right)&amp;= \E_x \left(f(X_{n+1}) | X_n \right) \quad \text{(Using Markov Property of SRW)} \<br>
+&amp;= \frac{1}{4}  \sum_{y \sim X_n} f(y) \quad \text{(As the RW is Symmetric, it can jump to any of the $4$ equiprobable neighbors)}\<br>
+&amp;= f(X_n) \quad \text{(by definition of $f$)}\<br>
+\end{align*}
+This proves the claim.</p>
+<p>Now note that $f$ is bounded. This implies that the martingale $f(X_n)$ is Uniformly Bounded, and thus, Uniformly Integrable. This paves the way for <strong>Levy's Upward Theorem</strong>, which is as follows:</p>
+<p><strong>Levy's Upward Theorem</strong> :
+<em>If $(X_n, \F_n)$ are Uniformly Integrable Martingales, then there exists an integrable Random Variable $X$ such that $X_n \to X$ almost surely and in $L^1$, and further $X_n=\E(X | \F_n)$</em></p>
+<p>Using this , we get an integrable random variable $M_{\infty}$ such that $f(X_n) \to M_{\infty}$ almost surely.</p>
+<p>Now, time for our coup de grâce. Let $f$ be non-constant. Since the simple symmetric random walk on $\Z^2$ is Irreducible and Recurrent, ${X_n}$ visits all the lattices infintely often with probability 1. That is, with probability 1, ${f(X_n)}$ takes all the distinct values of Range$(f)$ infinitely many times. Clearly this is a contradiction, for ${f(X_n)}$ cannot take distinct values infinitely many times and still converge to $M_{\infty}$. \hfill $\blacksquare$</p>
+
+    </div>
+
+    
+
+
+
+
+
+<div class="share-box" aria-hidden="true">
+  <ul class="share">
+    
+      
+      
+      
+        
+      
+      
+      
+      <li>
+        <a href="https://twitter.com/intent/tweet?url=/post/martingale/&amp;text=Two%20Beautiful%20Results%20concerning%20Discrete%20Harmonic%20Functions" target="_blank" rel="noopener" class="share-btn-twitter">
+          <i class="fab fa-twitter"></i>
+        </a>
+      </li>
+    
+      
+      
+      
+        
+      
+      
+      
+      <li>
+        <a href="https://www.facebook.com/sharer.php?u=/post/martingale/&amp;t=Two%20Beautiful%20Results%20concerning%20Discrete%20Harmonic%20Functions" target="_blank" rel="noopener" class="share-btn-facebook">
+          <i class="fab fa-facebook"></i>
+        </a>
+      </li>
+    
+      
+      
+      
+        
+      
+      
+      
+      <li>
+        <a href="mailto:?subject=Two%20Beautiful%20Results%20concerning%20Discrete%20Harmonic%20Functions&amp;body=/post/martingale/" target="_blank" rel="noopener" class="share-btn-email">
+          <i class="fas fa-envelope"></i>
+        </a>
+      </li>
+    
+      
+      
+      
+        
+      
+      
+      
+      <li>
+        <a href="https://www.linkedin.com/shareArticle?url=/post/martingale/&amp;title=Two%20Beautiful%20Results%20concerning%20Discrete%20Harmonic%20Functions" target="_blank" rel="noopener" class="share-btn-linkedin">
+          <i class="fab fa-linkedin-in"></i>
+        </a>
+      </li>
+    
+      
+      
+      
+        
+      
+      
+      
+      <li>
+        <a href="https://web.whatsapp.com/send?text=Two%20Beautiful%20Results%20concerning%20Discrete%20Harmonic%20Functions%20/post/martingale/" target="_blank" rel="noopener" class="share-btn-whatsapp">
+          <i class="fab fa-whatsapp"></i>
+        </a>
+      </li>
+    
+      
+      
+      
+        
+      
+      
+      
+      <li>
+        <a href="https://service.weibo.com/share/share.php?url=/post/martingale/&amp;title=Two%20Beautiful%20Results%20concerning%20Discrete%20Harmonic%20Functions" target="_blank" rel="noopener" class="share-btn-weibo">
+          <i class="fab fa-weibo"></i>
+        </a>
+      </li>
+    
+  </ul>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
   
 
 
 
 
 
-
-
-
-
-
-
-
-  
 
   
   
   
     
   
-<div class="universal-wrapper pt-3">
-  <h1>Tags</h1>
-
   
-
-  
-</div>
-
-
-
-<div class="universal-wrapper">
-  
-
-  
-  
-  <div>
-    <h2><a href="/tags/others/">Others</a></h2>
-    <div class="article-style">
+  <div class="media author-card content-widget-hr">
+    
       
+      <img class="portrait mr-3" src="/authors/admin/avatar_hu2e04bc443a4410ec563608206c63699b_76774_250x250_fill_q90_lanczos_center.jpg" alt="Avatar">
+    
+
+    <div class="media-body">
+      <h5 class="card-title"><a href="/">Soham Bonnerjee</a></h5>
+      <h6 class="card-subtitle">M.Stat 2nd Year Student</h6>
+      
+      <ul class="network-icon" aria-hidden="true">
+  
+    
+    
+    
+      
+    
+    
+    
+    
+    
+      
+    
+    <li>
+      <a href="/#contact" >
+        <i class="fas fa-envelope"></i>
+      </a>
+    </li>
+  
+    
+    
+    
+      
+    
+    
+    
+    
+    
+      
+    
+    <li>
+      <a href="https://www.facebook.com/sohambonnerjee1" target="_blank" rel="noopener">
+        <i class="fab fa-facebook"></i>
+      </a>
+    </li>
+  
+    
+    
+    
+      
+    
+    
+    
+    
+    
+      
+    
+    <li>
+      <a href="https://github.com/soham099" target="_blank" rel="noopener">
+        <i class="fab fa-github"></i>
+      </a>
+    </li>
+  
+</ul>
+
     </div>
   </div>
-  
-  <div>
-    <h2><a href="/tags/source-themes/">Source Themes</a></h2>
-    <div class="article-style">
-      
-    </div>
-  </div>
-  
-  <div>
-    <h2><a href="/tags/bio-statistics/">Bio-Statistics</a></h2>
-    <div class="article-style">
-      
-    </div>
-  </div>
-  
+
+
+
+
+
+
+
+
 
   
+  
 
-</div>
+
+
+  </div>
+</article>
 
       
 

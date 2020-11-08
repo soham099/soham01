@@ -4,26 +4,31 @@
   
   <url>
     <loc>/authors/admin/</loc>
-    <lastmod>2020-03-28T00:00:00+00:00</lastmod>
+    <lastmod>2020-11-09T00:00:00+00:00</lastmod>
   </url>
   
   <url>
     <loc>/authors/</loc>
-    <lastmod>2020-03-28T00:00:00+00:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>/post/esir-modelling/</loc>
-    <lastmod>2020-03-28T00:00:00+00:00</lastmod>
+    <lastmod>2020-11-09T00:00:00+00:00</lastmod>
   </url>
   
   <url>
     <loc>/post/</loc>
-    <lastmod>2020-03-28T00:00:00+00:00</lastmod>
+    <lastmod>2020-11-09T00:00:00+00:00</lastmod>
   </url>
   
   <url>
     <loc>/</loc>
+    <lastmod>2020-11-09T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/post/martingale/</loc>
+    <lastmod>2020-11-09T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/post/esir-modelling/</loc>
     <lastmod>2020-03-28T00:00:00+00:00</lastmod>
   </url>
   
@@ -33,7 +38,7 @@
   </url>
   
   <url>
-    <loc>/post/covid19-project/</loc>
+    <loc>/post/sir-modelling/</loc>
     <lastmod>2020-03-25T00:00:00+00:00</lastmod>
   </url>
   
@@ -89,11 +94,6 @@
   
   <url>
     <loc>/tags/source-themes/</loc>
-    <lastmod>2019-09-01T00:00:00+00:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>/authors/subhrajyot-roy/</loc>
     <lastmod>2019-09-01T00:00:00+00:00</lastmod>
   </url>
   

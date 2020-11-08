@@ -421,35 +421,6 @@
         
 
         <li class="nav-item">
-          <a class="nav-link " href="/#posts"><span>Posts</span></a>
-        </li>
-
-        
-        
-
-        
-
-        
-        
-        
-          
-        
-
-        
-        
-        
-        
-        
-        
-          
-          
-          
-            
-          
-          
-        
-
-        <li class="nav-item">
           <a class="nav-link " href="/#projects"><span>Projects</span></a>
         </li>
 
@@ -479,7 +450,36 @@
         
 
         <li class="nav-item">
-          <a class="nav-link " href="/#featured"><span>Publications</span></a>
+          <a class="nav-link " href="/#posts"><span>Posts</span></a>
+        </li>
+
+        
+        
+
+        
+
+        
+        
+        
+          
+        
+
+        
+        
+        
+        
+        
+        
+          
+          
+          
+            
+          
+          
+        
+
+        <li class="nav-item">
+          <a class="nav-link " href="/#publications"><span>Publications</span></a>
         </li>
 
         
@@ -1071,8 +1071,8 @@ ggplot(preds$infected, aes(x = date)) +
     geom_text(x = preds$first.date[1] - 1, y = 0, label = format(preds$first.date[1], &quot;%b %d&quot;), size = 4 ) +
     geom_text(x = preds$second.date[1] - 1, y = 0, label = format(preds$second.date[1], &quot;%b %d&quot;), size = 4 )
 </code></pre>
-<p><img src="./unnamed-chunk-21-1.png" alt=""></p>
-<p>Therefore, in Italy, at about June 22, we should see decreasing increments of newly infected persons, and from August 1 onwards, the proportion of infected people should decline.</p>
+<p><img src="./unnamed-chunk-21-1.jpg" alt=""></p>
+<p>Therefore, in Italy, at about June 24, we should see decreasing increments of newly infected persons, and from August 17 onwards, the proportion of infected people should decline.</p>
 <h2 id="estimation-for-india">Estimation for India</h2>
 <p>However, our main concern is to find out the situation of India based on this eSIR modelling. Here, we shall use the $\pi(t)$ function as follows, as per various decision taken by the Government, like restriction on international flights, Janta Curfew and full scale lockdowns etc.</p>
 <p>$$\pi(t) = \begin{cases}
@@ -1082,7 +1082,7 @@ ggplot(preds$infected, aes(x = date)) +
 0.5 &amp; \text{ if } \text{22th March, 2020} &lt; t &lt; \text{25th March, 2020}\\\<br>
 0.1 &amp; \text{ if } t &gt; \text{25th March, 2020}\\\<br>
 \end{cases}$$</p>
-<p>Also, note that in India, many places are rural in nature, while most of the urban population and neighbourhood areas are more susceptible to get the disease than others, due to availablity of metro cities and international airports. So, rather than using the whole population size i.e. $131$ crores as $N$, we shall use about $350$ lakhs as the adjusted population size.</p>
+<p>Also, note that in India, many places are rural in nature, while most of the urban population and neighbourhood areas are more susceptible to get the disease than others, due to availablity of metro cities and international airports. So, rather than using the whole population size i.e. $131$ crores as $N$, we shall use about $350$ lakhs as the adjusted population size. The other parameters and hyperparameters are mentioned when we wre discussing the model, except that we estimated $R_0$ to be $12.48$ in our last <a href="https://soham01.netlify.com/post/covid19-project/">post</a>, and we use that value as the hyperparameter for the initial mean of $R_0$.</p>
 <pre><code class="language-r">subdat &lt;- dat %&gt;% mutate(Removed = Deaths + Recovered, Infected = Confirmed - Removed) %&gt;%
     filter(Country == &quot;India&quot; &amp; Removed &gt; 0 &amp; Infected &gt; 0)
 
@@ -1112,7 +1112,7 @@ ggplot(preds$infected, aes(x = date)) +
     geom_point(data = subdat, aes(x = Date, y = Infected/N), color = &quot;black&quot;)
 </code></pre>
 <p><img src="./unnamed-chunk-23-1.png" alt=""></p>
-<p>Although it seems that the mean proportion is overestimated during the ovserved period, however the effect of quanting seems to work to a moderate extent, as the estimated proportion stays more or less at the same level. The exact count of the infected people at the end of lockdown, provided that it is maintained properly, should be about $1317$ many infected persons, and about $2114$ confirmed cases of COVID-19.</p>
+<p>Although it seems that the mean proportion is overestimated during the ovserved period, however the effect of quanting seems to work to a moderate extent, as the estimated proportion stays more or less at the same level. The exact count of the infected people at the end of lockdown, provided that it is maintained properly, should be about $1571$ many infected persons, and about $2114$ confirmed cases of COVID-19.</p>
 <p>Similar to Italy, if we extend its forecast for some more days, and keep the same level of quaranting, the model predictions are given in the following plot.</p>
 <pre><code class="language-r">pi2 &lt;- c(pi0, rep(0.1, 200)) 
 preds &lt;- forecast.SIR(200, 25, mcmc_samples, pi = pi2, control.params = control.params, start.date = &quot;2020-03-02&quot;)
@@ -1127,7 +1127,7 @@ ggplot(preds$infected, aes(x = date)) +
     geom_text(x = preds$second.date[1] + 7, y = 3e-4, label = format(preds$second.date[1], &quot;%b %d&quot;), size = 4 )
 </code></pre>
 <p><img src="./unnamed-chunk-25-1.png" alt=""></p>
-<p>Therefore, as it seems, if we keep the lockdown (as it is now), based on the data, it might take till October to have the proportion of infected people becoming insignificant, provided we keep the same level of quanranting effect. However, from March 17, we should see a decrease in the rate of increment in the number of infected, and from March 29 onwards, we should be at a position from where the number of newly infected persons per day starts to decrease.</p>
+<p>Therefore, as it seems, if we keep the lockdown (as it is now), based on the data, it might take till October to have the proportion of infected people becoming insignificant, provided we keep the same level of quanranting effect. However, from March 17, we should see a decrease in the rate of increment in the number of infected, and from March 29 onwards, we should be at a position from where the number of newly infected persons per day starts to marginally decrease, or at least remain more or less constant.</p>
 <p>Since, it is very economically and physically dissatisfying to be in a lockdown (or state of home quarantine till October, where Durga Puja festival is going to occur), we might want to go outside. In that case, assuming $\pi(t)$ increases to $0.5$, which is indeed less than 1, due to our increasing awareness of the scenario, then, the predicted situation would look like this.</p>
 <pre><code class="language-r">pi3 &lt;- c(pi0, rep(0.1, 19), rep(0.5, 2 * 365)) 
 preds &lt;- forecast.SIR(2 * 365 + 19, 25, mcmc_samples, pi = pi3, control.params = control.params, start.date = &quot;2020-03-02&quot;)
@@ -1142,8 +1142,8 @@ ggplot(preds$infected, aes(x = date)) +
     geom_text(x = preds$first.date[1] - 7, y = 2e-4, label = format(preds$first.date[1], &quot;%b %d&quot;), size = 4 ) +
     geom_text(x = preds$second.date[1] + 7, y = 3e-4, label = format(preds$second.date[1], &quot;%b %d&quot;), size = 4 )
 </code></pre>
-<p><img src="./unnamed-chunk-26-1.png" alt=""></p>
-<p>This scenario would be very severe for us, since it would affect about $4%$ of the urban population, on about June 13, and then it would start to decrease gradually. However, it would take almost 2 years, to make this epidemic insignificant, provided there will be no generally accepted antiviral medicine for COVID-19 till then.</p>
+<p><img src="./unnamed-chunk-26-1.jpg" alt=""></p>
+<p>This scenario would be very severe for us, since it would affect about $6%$ of the urban population, on about June 27, and then it would start to decrease gradually. However, it would take almost 2 years, to make this epidemic insignificant, provided there will be no generally accepted antiviral medicine for COVID-19 till then.</p>
 <p>Hence, we must avoid such situation at all costs, and to counter it, we must stay home, at a shelter in place home quaranting atmosphere.</p>
 <h1 id="conclusion">Conclusion</h1>
 <p>This <strong>eSIR model is not perfect.</strong> No statistical model is. But the main idea and examples that we are seeing currently all over the world, should give us a hint about what is to come.</p>
@@ -1318,7 +1318,7 @@ ggplot(preds$infected, aes(x = date)) +
 
     <div class="media-body">
       <h5 class="card-title"><a href="/">Soham Bonnerjee</a></h5>
-      <h6 class="card-subtitle">M.Stat 1st Year Student</h6>
+      <h6 class="card-subtitle">M.Stat 2nd Year Student</h6>
       
       <ul class="network-icon" aria-hidden="true">
   

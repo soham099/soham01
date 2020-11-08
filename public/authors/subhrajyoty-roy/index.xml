@@ -410,8 +410,8 @@ ggplot(preds$infected, aes(x = date)) +
     geom_text(x = preds$first.date[1] - 1, y = 0, label = format(preds$first.date[1], &amp;quot;%b %d&amp;quot;), size = 4 ) +
     geom_text(x = preds$second.date[1] - 1, y = 0, label = format(preds$second.date[1], &amp;quot;%b %d&amp;quot;), size = 4 )
 &lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;&lt;img src=&#34;./unnamed-chunk-21-1.png&#34; alt=&#34;&#34;&gt;&lt;/p&gt;
-&lt;p&gt;Therefore, in Italy, at about June 22, we should see decreasing increments of newly infected persons, and from August 1 onwards, the proportion of infected people should decline.&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;./unnamed-chunk-21-1.jpg&#34; alt=&#34;&#34;&gt;&lt;/p&gt;
+&lt;p&gt;Therefore, in Italy, at about June 24, we should see decreasing increments of newly infected persons, and from August 17 onwards, the proportion of infected people should decline.&lt;/p&gt;
 &lt;h2 id=&#34;estimation-for-india&#34;&gt;Estimation for India&lt;/h2&gt;
 &lt;p&gt;However, our main concern is to find out the situation of India based on this eSIR modelling. Here, we shall use the $\pi(t)$ function as follows, as per various decision taken by the Government, like restriction on international flights, Janta Curfew and full scale lockdowns etc.&lt;/p&gt;
 &lt;p&gt;$$\pi(t) = \begin{cases}
@@ -421,7 +421,7 @@ ggplot(preds$infected, aes(x = date)) +
 0.5 &amp;amp; \text{ if } \text{22th March, 2020} &amp;lt; t &amp;lt; \text{25th March, 2020}\\\&lt;br&gt;
 0.1 &amp;amp; \text{ if } t &amp;gt; \text{25th March, 2020}\\\&lt;br&gt;
 \end{cases}$$&lt;/p&gt;
-&lt;p&gt;Also, note that in India, many places are rural in nature, while most of the urban population and neighbourhood areas are more susceptible to get the disease than others, due to availablity of metro cities and international airports. So, rather than using the whole population size i.e. $131$ crores as $N$, we shall use about $350$ lakhs as the adjusted population size.&lt;/p&gt;
+&lt;p&gt;Also, note that in India, many places are rural in nature, while most of the urban population and neighbourhood areas are more susceptible to get the disease than others, due to availablity of metro cities and international airports. So, rather than using the whole population size i.e. $131$ crores as $N$, we shall use about $350$ lakhs as the adjusted population size. The other parameters and hyperparameters are mentioned when we wre discussing the model, except that we estimated $R_0$ to be $12.48$ in our last &lt;a href=&#34;https://soham01.netlify.com/post/covid19-project/&#34;&gt;post&lt;/a&gt;, and we use that value as the hyperparameter for the initial mean of $R_0$.&lt;/p&gt;
 &lt;pre&gt;&lt;code class=&#34;language-r&#34;&gt;subdat &amp;lt;- dat %&amp;gt;% mutate(Removed = Deaths + Recovered, Infected = Confirmed - Removed) %&amp;gt;%
     filter(Country == &amp;quot;India&amp;quot; &amp;amp; Removed &amp;gt; 0 &amp;amp; Infected &amp;gt; 0)
 
@@ -451,7 +451,7 @@ ggplot(preds$infected, aes(x = date)) +
     geom_point(data = subdat, aes(x = Date, y = Infected/N), color = &amp;quot;black&amp;quot;)
 &lt;/code&gt;&lt;/pre&gt;
 &lt;p&gt;&lt;img src=&#34;./unnamed-chunk-23-1.png&#34; alt=&#34;&#34;&gt;&lt;/p&gt;
-&lt;p&gt;Although it seems that the mean proportion is overestimated during the ovserved period, however the effect of quanting seems to work to a moderate extent, as the estimated proportion stays more or less at the same level. The exact count of the infected people at the end of lockdown, provided that it is maintained properly, should be about $1317$ many infected persons, and about $2114$ confirmed cases of COVID-19.&lt;/p&gt;
+&lt;p&gt;Although it seems that the mean proportion is overestimated during the ovserved period, however the effect of quanting seems to work to a moderate extent, as the estimated proportion stays more or less at the same level. The exact count of the infected people at the end of lockdown, provided that it is maintained properly, should be about $1571$ many infected persons, and about $2114$ confirmed cases of COVID-19.&lt;/p&gt;
 &lt;p&gt;Similar to Italy, if we extend its forecast for some more days, and keep the same level of quaranting, the model predictions are given in the following plot.&lt;/p&gt;
 &lt;pre&gt;&lt;code class=&#34;language-r&#34;&gt;pi2 &amp;lt;- c(pi0, rep(0.1, 200)) 
 preds &amp;lt;- forecast.SIR(200, 25, mcmc_samples, pi = pi2, control.params = control.params, start.date = &amp;quot;2020-03-02&amp;quot;)
@@ -466,7 +466,7 @@ ggplot(preds$infected, aes(x = date)) +
     geom_text(x = preds$second.date[1] + 7, y = 3e-4, label = format(preds$second.date[1], &amp;quot;%b %d&amp;quot;), size = 4 )
 &lt;/code&gt;&lt;/pre&gt;
 &lt;p&gt;&lt;img src=&#34;./unnamed-chunk-25-1.png&#34; alt=&#34;&#34;&gt;&lt;/p&gt;
-&lt;p&gt;Therefore, as it seems, if we keep the lockdown (as it is now), based on the data, it might take till October to have the proportion of infected people becoming insignificant, provided we keep the same level of quanranting effect. However, from March 17, we should see a decrease in the rate of increment in the number of infected, and from March 29 onwards, we should be at a position from where the number of newly infected persons per day starts to decrease.&lt;/p&gt;
+&lt;p&gt;Therefore, as it seems, if we keep the lockdown (as it is now), based on the data, it might take till October to have the proportion of infected people becoming insignificant, provided we keep the same level of quanranting effect. However, from March 17, we should see a decrease in the rate of increment in the number of infected, and from March 29 onwards, we should be at a position from where the number of newly infected persons per day starts to marginally decrease, or at least remain more or less constant.&lt;/p&gt;
 &lt;p&gt;Since, it is very economically and physically dissatisfying to be in a lockdown (or state of home quarantine till October, where Durga Puja festival is going to occur), we might want to go outside. In that case, assuming $\pi(t)$ increases to $0.5$, which is indeed less than 1, due to our increasing awareness of the scenario, then, the predicted situation would look like this.&lt;/p&gt;
 &lt;pre&gt;&lt;code class=&#34;language-r&#34;&gt;pi3 &amp;lt;- c(pi0, rep(0.1, 19), rep(0.5, 2 * 365)) 
 preds &amp;lt;- forecast.SIR(2 * 365 + 19, 25, mcmc_samples, pi = pi3, control.params = control.params, start.date = &amp;quot;2020-03-02&amp;quot;)
@@ -481,8 +481,8 @@ ggplot(preds$infected, aes(x = date)) +
     geom_text(x = preds$first.date[1] - 7, y = 2e-4, label = format(preds$first.date[1], &amp;quot;%b %d&amp;quot;), size = 4 ) +
     geom_text(x = preds$second.date[1] + 7, y = 3e-4, label = format(preds$second.date[1], &amp;quot;%b %d&amp;quot;), size = 4 )
 &lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;&lt;img src=&#34;./unnamed-chunk-26-1.png&#34; alt=&#34;&#34;&gt;&lt;/p&gt;
-&lt;p&gt;This scenario would be very severe for us, since it would affect about $4%$ of the urban population, on about June 13, and then it would start to decrease gradually. However, it would take almost 2 years, to make this epidemic insignificant, provided there will be no generally accepted antiviral medicine for COVID-19 till then.&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;./unnamed-chunk-26-1.jpg&#34; alt=&#34;&#34;&gt;&lt;/p&gt;
+&lt;p&gt;This scenario would be very severe for us, since it would affect about $6%$ of the urban population, on about June 27, and then it would start to decrease gradually. However, it would take almost 2 years, to make this epidemic insignificant, provided there will be no generally accepted antiviral medicine for COVID-19 till then.&lt;/p&gt;
 &lt;p&gt;Hence, we must avoid such situation at all costs, and to counter it, we must stay home, at a shelter in place home quaranting atmosphere.&lt;/p&gt;
 &lt;h1 id=&#34;conclusion&#34;&gt;Conclusion&lt;/h1&gt;
 &lt;p&gt;This &lt;strong&gt;eSIR model is not perfect.&lt;/strong&gt; No statistical model is. But the main idea and examples that we are seeing currently all over the world, should give us a hint about what is to come.&lt;/p&gt;
@@ -533,9 +533,9 @@ ggplot(preds$infected, aes(x = date)) +
     
     <item>
       <title>SIR Modelling of COVID-19 Pandemic situation</title>
-      <link>/post/covid19-project/</link>
+      <link>/post/sir-modelling/</link>
       <pubDate>Wed, 25 Mar 2020 00:00:00 +0000</pubDate>
-      <guid>/post/covid19-project/</guid>
+      <guid>/post/sir-modelling/</guid>
       <description>&lt;h1 id=&#34;the-current-global-scenario&#34;&gt;The Current Global Scenario&lt;/h1&gt;
 &lt;p&gt;At the end of December 2019, a cluster of an unknown pneumonia like cases were reported in Wuhan, a city in the Hubei province, China. They quickly identified that the source of the infection was a novel coronavirus belonging to the coronavirus family, which includes the virus related to the outbreaks of  Severe Acute Respiratory Syndrome (SARS) from 2002-2004 and Middle East Respiratory Syndrome (MERS) in 2012. It  spread through and outside of Wuhan, resulting in an rapidly escalating and deadly contagious epidemic throughout China, followed by an increasing number of cases in other countries throughout the world.&lt;br&gt;
 On January 30, the WHO declared coronavirus a global emergency  as the death toll in China jumped to 170, with 7,711 cases reported in the country, where the virus had spread to all 31 provinces.  In mid-February WHO announced that the new coronavirus would be called &amp;ldquo;COVID-19&amp;rdquo;.&lt;/p&gt;
@@ -545,14 +545,14 @@ The COVID-19 virus spreads primarily through droplets of saliva or discharge fro
 &lt;p&gt;This is a post to give a basic understanding of statistical modelling of epidemiology. In past few days of Shelter-in-place lockdown situation in Kolkata (and throughout the whole India from today onwards), me and one of my friend &lt;a href=&#34;https://subroy13.github.io/&#34;&gt;Subhrajyoty Roy&lt;/a&gt; (we were attending the same college before lockdown to purse Masters degree in Statistics), was reading about different epidemiological models available in the literature and using it to generate projections for the number of infected people in India.&lt;/p&gt;
 &lt;p&gt;In this post, we shall explore the performance of deterministic SIR model which to be fitted using a least squares procedure. Then, we shall use it to generate projections for the epidemic situation in India, till the end of this lockdown, which is currently annouced to be remain till April 14, 2020, about 3 weeks from today.&lt;/p&gt;
 &lt;h1 id=&#34;exploratory-analysis&#34;&gt;Exploratory Analysis&lt;/h1&gt;
-&lt;p&gt;Before proceeding with introducing the SIR model, let us first read the data into &lt;code&gt;R&lt;/code&gt; (which is what we are going to use through out), and perform some exploratory analysis. We shall be using the &lt;a href=&#34;https://www.tidyverse.org/&#34;&gt;tidyverse&lt;/a&gt; library, which is a collection of some very useful packages for data proprocessing and exploratory analysis.&lt;/p&gt;
+&lt;p&gt;Before proceeding with introducing the SIR model, let us first read the data into &lt;code&gt;R&lt;/code&gt; (which is what we are going to use through out), and perform some exploratory analysis. We shall be using the &lt;a href=&#34;https://www.tidyverse.org/&#34;&gt;tidyverse&lt;/a&gt; library, which is a collection of some very useful packages for data preprocessing and exploratory analysis.&lt;/p&gt;
 &lt;pre&gt;&lt;code class=&#34;language-r&#34;&gt;library(readr)
 library(dplyr)
 library(tidyr)
 library(lubridate)
 library(ggplot2)
 &lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;For the related coronavirus, there are may different sources available. Many international organizations like WHO (World Health Organization), ECDC (European Centre for Disease Prevention and Control) and many national governments are releasing day to day basis publicly available data. As well as different news agencies are also collecting and compileing data from the hospitals and different other sources on a regular basis. John Hopkins University (JHU) CSSE department has also released a dataset compiled from the collection of these sources in a github repository &lt;a href=&#34;https://github.com/CSSEGISandData/COVID-19&#34;&gt;here&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;For the related coronavirus, there are may different sources available. Many international organizations like WHO (World Health Organization), ECDC (European Centre for Disease Prevention and Control) and many national governments are releasing day to day basis publicly available data. As well as different news agencies are also collecting and compiling data from the hospitals and various other sources on a regular basis. John Hopkins University (JHU) CSSE department has also released a dataset compiled from the collection of these sources in a github repository &lt;a href=&#34;https://github.com/CSSEGISandData/COVID-19&#34;&gt;here&lt;/a&gt;.&lt;/p&gt;
 &lt;p&gt;The datasets are being updated on a daily basis. We shall use this data provided by &lt;a href=&#34;https://github.com/CSSEGISandData/COVID-19&#34;&gt;JHU CSSE&lt;/a&gt;.&lt;/p&gt;
 &lt;pre&gt;&lt;code class=&#34;language-r&#34;&gt;confirmed.dat &amp;lt;- read_csv(&#39;./datasets/time_series_19-covid-Confirmed.csv&#39;)
 deaths.dat &amp;lt;- read_csv(&#39;./datasets/time_series_19-covid-Deaths.csv&#39;)
@@ -909,6 +909,14 @@ ggplot( pred.dat , aes(x = Date) ) +
 &lt;p&gt;Stay informed, Stay home, Stay safe.&lt;/p&gt;
 &lt;/blockquote&gt;
 </description>
+    </item>
+    
+    <item>
+      <title>Onset Detection- A New Approach to QBH System</title>
+      <link>/publication/journal-article/</link>
+      <pubDate>Sun, 01 Sep 2019 00:00:00 +0000</pubDate>
+      <guid>/publication/journal-article/</guid>
+      <description></description>
     </item>
     
   </channel>
