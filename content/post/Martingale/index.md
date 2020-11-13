@@ -25,12 +25,20 @@ Turns out, the multitude of solutions that exist to the **Problem 2**, is not at
 
 **Solution to Problem 2** :
 
-Consider a Simple Symmetric Random Walk $( X_n)\_{n \geq 1}$  on  $\mathbb{Z}^2$, starting from any fixed point $x \in \mathbb{Z}^2$.  Consider the stochastic process $(f(X_n))\_{n \geq 1}$. We claim that $(f(X_n))\_{n \geq 1}$ is a Martingale with respect to the increasing filtration $\mathbb{F}_n$, where $\mathbb{F}\_n=\sigma(X_t : t\leq n )$. 
+Consider a Simple Symmetric Random Walk $( X_n)\_{n \geq 1}$  on  $\mathbb{Z}^2$, starting from any fixed point $x \in \mathbb{Z}^2$.  Consider the stochastic process $(f(X_n))\_{n \geq 1}$. We claim that $(f(X_n))\_{n \geq 1}$ is a Martingale with respect to the increasing filtration $\mathbf{F}_n$, where $\mathbf{F}\_n=\sigma(X_t : t\leq n )$. 
 
 First we prove the claim. Clearly, there are only finitely many choices for $X_n$, and thus finitely many choices for $f(X_n)$, and thus $f(X_n)$ is integrable. Finally, 
 
 $$\begin{align}
-\mathbb{E}\_x(f(X\_{n+1}) | \mathbb{F}\_n  )&= \mathbb{E}\_x (f(X\_{n+1}) | X_n ) \\\\\\
+\dfrac{d\theta\_t^S}{dt} & = -\pi(t)\beta \theta\_t^S \theta\_t^I\\\\\\
+& \\\\\\
+\dfrac{d\theta\_t^I}{dt} & = \pi(t)\beta \theta\_t^S \theta\_t^I - \gamma \theta\_t^I\\\\\\
+& \\\\\\
+\dfrac{d\theta\_t^R}{dt} & = \gamma \theta\_t^I\\\\\\
+\end{align}$$
+
+$$\begin{align}
+\mathbb{E}_x(f(X\_{n+1}) | \mathbf{F}_n  )&= \mathbb{E}_x (f(X\_{n+1}) | X_n ) \\\\\\
 &= \frac{1}{4}  \sum_{y \sim X_n} f(y) \\\\\\
 &= f(X_n) \\\\\\
 \end{align}$$
