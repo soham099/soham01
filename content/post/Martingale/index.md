@@ -56,7 +56,7 @@ If we could do Taylor Series expansion of $f$ at $x+e_i$ centred around $x$ , th
 $$ f(x+e_i)= f(x)+ e\_i^T D(f)+ e\_i^T D^2(f(x+t\_i e\_i))e_i $$, where $t_i \in (0,1)$. 
 
 Summing over $i=1(1)4$, and noting that $\sum_i e_i=(0,0)$, we have:
-$$ 0=\sum_i (f(x+e\_i)- f(x))= \sum_i e\_i^T D^2(f(x+t\_i e\_i))e\_i = \sum_i \dfrac{\del^2 f(x+t\_i e\_i)}{\del x\_i^2}$$
+$$ 0=\sum_i (f(x+e\_i)- f(x))= \sum_i e\_i^T D^2(f(x+t\_i e\_i))e\_i = \sum_i \dfrac{\partial^2 f(x+t\_i e\_i)}{\partial x\_i^2}$$
 
 where the last expression on the equality is reminiscent of $\Delta f$ .
 
@@ -66,4 +66,4 @@ In fact, the **Problem 2** is widely popular because this is simply the Discrete
 
 # Discrete Dirichlet's Problem
 
-A pertinent and famous question involving Harmonic Functions is the **Dirichlet Problem**, which, given a function $\phi$ and a closed convex set $D$ , aims to find $f$, such that $f$ is harmonic on the interior of $D$ and $f|\_{\del D}=\phi$. This problem arises from physics, mainly from Thermodynamics and heat equations. Again, this is essentially a problem of analytic flavour, and one can think that any solution might involve muddling through the quagmire of PDEs, but mathematician Itô provided a solution involvinng *Brownian Motion*. Of course, this solution is not at all elementary, but -keeping in sync with the flavour of this post-if we investigate the *Discrete Dirichlet's Problem*, we get a nice elegant solution using Martingales . 
+A pertinent and famous question involving Harmonic Functions is the **Dirichlet Problem**, which, given a function $\phi$ and a closed convex set $D$ , aims to find $f$, such that $f$ is harmonic on the interior of $D$ and $f|\_{\partial D}=\phi$. This problem arises from physics, mainly from Thermodynamics and heat equations. Again, this is essentially a problem of analytic flavour, and one can think that any solution might involve muddling through the quagmire of PDEs, but mathematician Itô provided a solution involvinng *Brownian Motion*. Of course, this solution is not at all elementary, but -keeping in sync with the flavour of this post-if we investigate the *Discrete Dirichlet's Problem*, we get a nice elegant solution using Martingales . 
