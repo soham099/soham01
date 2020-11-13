@@ -38,9 +38,9 @@ $$\begin{align}
 \end{align}$$
 
 $$\begin{align}
-\mathbb{E}_x(f(X\_{n+1}) | \mathbf{F}_n  )& = \mathbb{E}_x (f(X\_{n+1}) | X_n )\\\\\\
-                                          & = \frac{1}{4}  \sum_{y \sim X_n} f(y)\\\\\\
-                                          & = f(X_n)\\\\\\
+\mathbb{E}_x(f(X\_{n+1}) | \mathbf{F}_n  )  & = \mathbb{E}_x (f(X\_{n+1}) | X_n )\\\\\\
+                                            & = \dfrac{1}{4}  \sum_{y \sim X_n} f(y)\\\\\\
+                                            & = f(X_n)\\\\\\
 \end{align}$$
 
 This proves the claim.
