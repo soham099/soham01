@@ -40,6 +40,30 @@ This proves the claim.
 
 Now note that $f$ is bounded, say by $M$. This implies that we can , without loss of generality, assume that the martingale $(f(X_n))\_{n \geq 1}$ is non-negative (otherwise just take a new martingale $g(X_n)=f(X_n)+M$ , and continue the proof ).  Then by Martingale Convegence Theorem (which states that *Any Non-negative Martingale converges to an integrable random variable almost surely*), we have that there exists an integrable random variable $M\_{\infty}$ such that $f(X_n) \to M\_{\infty}$ almost surely. 
 
-Now, time for our coup de grâce. Let $f$ be non-constant. Since the simple symmetric random walk on $\mathbb{Z}^2$ is Irreducible and Recurrent, $(X_n)\_{n \geq 1}$ visits all the lattices infintely often with probability 1. That is, with probability 1, $(f(X_n))\_{n \geq 1}$ takes all the distinct values of Range$(f)$ infinitely many times. Clearly this is a contradiction, for $(f(X_n))\_{n \geq 1}$ cannot take distinct values infinitely many times and still converge to $M\_{\infty}$. $\hfill$ $\blacksquare$
+Now, time for our coup de grâce. Let $f$ be non-constant. Since the simple symmetric random walk on $\mathbb{Z}^2$ is Irreducible and Recurrent, $(X_n)\_{n \geq 1}$ visits all the lattices infintely often with probability 1. That is, with probability 1, $(f(X_n))\_{n \geq 1}$ takes all the distinct values of Range$(f)$ infinitely many times. Clearly this is a contradiction, for $(f(X_n))\_{n \geq 1}$ cannot take distinct values infinitely many times and still converge to $M\_{\infty}$. $\qquad \qquad$ $\blacksquare$
 
 
+The function $f:\mathbb{Z}^2 \to R$ in **Problem 2** satisfying $f(x)=\frac{1}{4}\sum_{y \sim x} f(y)$, is called a **Discrete Harmonic Function** . One can see the intuition behind such a nomenclature from the following handwaving arguments:
+
+Let $e_1=(1,0)$, $e_2=(0,1)$, $e_3=(-1,0)$, $e_4=(0,-1)$. Then,
+
+$$\begin{align}
+& f(x)=\frac{1}{4}\sum_{y \sim x} f(y)=f(x)=\frac{1}{4}\sum_i f(x+e\_i)\\\\\\
+\implies & \frac{1}{4}\sum_i ( f(x+e\_i) - f(x) ) =0\\\\\\
+\end{align}$$
+
+If we could do Taylor Series expansion of $f$ at $x+e_i$ centred around $x$ , then :
+$$ f(x+e_i)= f(x)+ e\_i^T D(f)+ e\_i^T D^2(f(x+t\_i e\_i))e_i $$, where $t_i \in (0,1)$. 
+
+Summing over $i=1(1)4$, and noting that $\sum_i e_i=(0,0)$, we have:
+$$ 0=\sum_i (f(x+e\_i)- f(x))= \sum_i e\_i^T D^2(f(x+t\_i e\_i))e\_i = \sum_i \dfrac{\del^2 f(x+t\_i e\_i)}{\del x\_i^2}$$
+
+where the last expression on the equality is reminiscent of $\Delta f$ .
+
+In fact, the **Problem 2** is widely popular because this is simply the Discrete versions of the famous *Liouville's Theorem* :
+
+**Liouville's Theorem**: *A bounded harmonic function on $\mathbb{R}^n$ is constant.*
+
+# Discrete Dirichlet's Problem
+
+A pertinent and famous question involving Harmonic Functions is the **Dirichlet Problem**, which, given a function $\phi$ and a closed convex set $D$ , aims to find $f$, such that $f$ is harmonic on the interior of $D$ and $f|\_{\del D}=\phi$. This problem arises from physics, mainly from Thermodynamics and heat equations. Again, this is essentially a problem of analytic flavour, and one can think that any solution might involve muddling through the quagmire of PDEs, but mathematician Itô provided a solution involvinng *Brownian Motion*. Of course, this solution is not at all elementary, but -keeping in sync with the flavour of this post-if we investigate the *Discrete Dirichlet's Problem*, we get a nice elegant solution using Martingales . 
