@@ -49,11 +49,13 @@ Turns out, the multitude of solutions that exist to the **Problem 2**, is not at
 Consider a Simple Symmetric Random Walk $\{X_n\}_{n \geq 1}$ on $\Z^2$, starting from any fixed point $x \in \Z^2$.  Consider the stochastic process $\{f(X_n)\}_{n \geq 1}$. We claim that $\{f(X_n)\}$ is a Martingale with respect to the increasing filtration $\F_n$, where $\F_n=\sigma(X_t : t\leq n )$. The probability measure is that induced by $X_n$ . For simplicity we will denote any probability measure by $\prob$.
 
 First we prove the claim. Clearly, there are only finitely many choices for $X_n$, and thus finitely many choices for $f(X_n)$, and thus $f(X_n)$ is integrable. Finally, 
-\begin{align*}
+
+$$\begin{align}
 \E_x\left(f(X_{n+1}) | \F_n  \right)&= \E_x \left(f(X_{n+1}) | X_n \right) \quad \text{(Using Markov Property of SRW)} \\
 &= \frac{1}{4}  \sum_{y \sim X_n} f(y) \quad \text{(As the RW is Symmetric, it can jump to any of the $4$ equiprobable neighbors)}\\
 &= f(X_n) \quad \text{(by definition of $f$)}\\
-\end{align*}
+\end{align}$$
+
 This proves the claim.
 
 Now note that $f$ is bounded. This implies that the martingale $f(X_n)$ is Uniformly Bounded, and thus, Uniformly Integrable. This paves the way for **Levy's Upward Theorem**, which is as follows:
