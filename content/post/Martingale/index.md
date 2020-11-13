@@ -29,18 +29,11 @@ Consider a Simple Symmetric Random Walk $( X_n)\_{n \geq 1}$  on  $\mathbb{Z}^2$
 
 First we prove the claim. Clearly, there are only finitely many choices for $X_n$, and thus finitely many choices for $f(X_n)$, and thus $f(X_n)$ is integrable. Finally, 
 
-$$\begin{align}
-\dfrac{d\theta\_t^S}{dt} & = -\pi(t)\beta \theta\_t^S \theta\_t^I\\\\\\
-& \\\\\\
-\dfrac{d\theta\_t^I}{dt} & = \pi(t)\beta \theta\_t^S \theta\_t^I - \gamma \theta\_t^I\\\\\\
-& \\\\\\
-\dfrac{d\theta\_t^R}{dt} & = \gamma \theta\_t^I\\\\\\
-\end{align}$$
 
 $$\begin{align}
-\mathbb{E}\_x(f(X\_{n+1}) | \mathbf{F}\_n  )  & = \mathbb{E}\_x (f(X\_{n+1}) | X\_n )\\\\\\
-                                            & = \dfrac{1}{4}  \sum_{y \sim X\_n} f(y)\\\\\\
-                                            & = f(X\_n)\\\\\\
+\mathbb{E}\_x(f(X\_{n+1}) | \mathbf{F}\_n  )  & = \mathbb{E}\_x (f(X\_{n+1}) | X\_n ) \qquad \text{(Using Markov Property of SRW)}\\\\\\
+                                            & = \dfrac{1}{4}  \sum_{y \sim X\_n} f(y) \qquad \text{(As the RW is Symmetric, it can jump to any of the $4$ equiprobable neighbors)}\\\\\\
+                                            & = f(X\_n) \qquad \text{(by definition of $f$)}\\\\\\
 \end{align}$$
 
 This proves the claim.
