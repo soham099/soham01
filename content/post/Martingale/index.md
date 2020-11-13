@@ -33,7 +33,7 @@ $$\begin{align}
 \mathbb{E}_x\left(f(X_{n+1}) | \F_n  \right)&= \mathbb{E}_x \left(f(X_{n+1}) | X_n \right) \quad \text{(Using Markov Property of SRW)} \\\\
 &= \frac{1}{4}  \sum_{y \sim X_n} f(y) \quad \text{(As the RW is Symmetric, it can jump to any of the $4$ equiprobable neighbors)}\\\\
 &= f(X_n) \quad \text{(by definition of $f$)}\\\\
-\mathbb{E}nd{align}$$
+\end{align}$$
 
 This proves the claim.
 
