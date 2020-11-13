@@ -25,14 +25,14 @@ Turns out, the multitude of solutions that exist to the **Problem 2**, is not at
 
 **Solution to Problem 2** :
 
-Consider a Simple Symmetric Random Walk $\{X_n\}_{n \geq 1}$ on $\mathbb{Z}^2$, starting from any fixed point $x \in \mathbb{Z}^2$.  Consider the stochastic process $\{f(X_n)\}_{n \geq 1}$. We claim that $\{f(X_n)\}$ is a Martingale with respect to the increasing filtration $\F_n$, where $\F_n=\sigma(X_t : t\leq n )$. The probability measure is that induced by $X_n$ . For simplicity we will denote any probability measure by $\prob$.
+Consider a Simple Symmetric Random Walk $\{ X_n \}_{n \geq 1}$  on  $\mathbb{Z}^2$, starting from any fixed point $x \in \mathbb{Z}^2$.  Consider the stochastic process $\{f(X_n)\}_{n \geq 1}$. We claim that $\{f(X_n)\}$ is a Martingale with respect to the increasing filtration $\mathbf{F}_n$, where $\mathbf{F}_n=\sigma(X_t : t\leq n )$. 
 
 First we prove the claim. Clearly, there are only finitely many choices for $X_n$, and thus finitely many choices for $f(X_n)$, and thus $f(X_n)$ is integrable. Finally, 
 
 $$\begin{align}
-\mathbb{E}_x\left(f(X_{n+1}) | \F_n  \right)&= \mathbb{E}_x \left(f(X_{n+1}) | X_n \right) \quad \text{(Using Markov Property of SRW)} \\\\
-&= \frac{1}{4}  \sum_{y \sim X_n} f(y) \quad \text{(As the RW is Symmetric, it can jump to any of the $4$ equiprobable neighbors)}\\\\
-&= f(X_n) \quad \text{(by definition of $f$)}\\\\
+\mathbb{E}_x\left(f(X_{n+1}) | \mathbf{F}_n  \right)&= \mathbb{E}_x \left(f(X_{n+1}) | X_n \right) \quad \text{(Using Markov Property of SRW)} \\\\\\
+&= \frac{1}{4}  \sum_{y \sim X_n} f(y) \quad \text{(As the RW is Symmetric, it can jump to any of the 4 equiprobable neighbors)}\\\\\\
+&= f(X_n) \quad \text{(by definition of $f$)}\\\\\\
 \end{align}$$
 
 This proves the claim.
@@ -40,7 +40,7 @@ This proves the claim.
 Now note that $f$ is bounded. This implies that the martingale $f(X_n)$ is Uniformly Bounded, and thus, Uniformly Integrable. This paves the way for **Levy's Upward Theorem**, which is as follows:
 
 **Levy's Upward Theorem** :
-*If $(X_n, \F_n)$ are Uniformly Integrable Martingales, then there exists an integrable Random Variable $X$ such that $X_n \to X$ almost surely and in $L^1$, and further $X_n=\mathbb{E}(X | \F_n)$*
+*If $(X_n, \mathbf{F}_n)$ are Uniformly Integrable Martingales, then there exists an integrable Random Variable $X$ such that $X_n \to X$ almost surely and in $L^1$, and further $X_n=\mathbb{E}(X | \mathbf{F}_n)$*
 
 Using this , we get an integrable random variable $M_{\infty}$ such that $f(X_n) \to M_{\infty}$ almost surely. 
 
