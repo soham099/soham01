@@ -123,8 +123,8 @@ $$
 & \mathbb{E}\_x[g(X\_{k+1})| \mathbf{F}\_k]=\mathbb{E}\_x[g(X\_{k+1})| X\_k]=\dfrac{1}{d(X\_k)}\sum\_{v \sim X\_k} g(v) \qquad, \qquad T > k \\\\\\
 \end{cases} \\\\\\
 &= \begin{cases}
-& f(X_T) \qquad , \qquad T \leq k \\\\\\
-& f(X_k) \qquad , \qquad T > k \\\\\\
+& g(X_T) \qquad , \qquad T \leq k \\\\\\
+& g(X_k) \qquad , \qquad T > k \\\\\\
 \end{cases}\\\\\\
 &= M_k \\\\\\
 \end{align}
