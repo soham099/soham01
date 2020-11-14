@@ -68,7 +68,7 @@ In fact, the **Problem 2** is widely popular because this is simply the Discrete
 
 A pertinent and famous question involving Harmonic Functions is the **Dirichlet Problem**, which, given a function $\phi$ and a closed convex set $D$ , aims to find $f$, such that $f$ is harmonic on the interior of $D$ and $f|\_{\partial D}=\phi$.  This problem arises from physics, mainly from Thermodynamics and heat equations. Again, this is essentially a problem of analytic flavour, and one can think that any solution might involve muddling through the quagmire of PDEs, but mathematician Itô provided a solution involvinng *Brownian Motion*. Of course, this solution is not at all elementary, but - keeping in sync with the flavour of this post - if we investigate the *Discrete Dirichlet's Problem*, we get a nice elegant solution using Martingales . 
 
-**Problem 3**: *Let $G=(V,E)$ be a finite connected undirected graph. Given $\phi:A \to \mathbb{R}$, can we find a unique function $f:V \to \mathbb{R}$, such that $f|\_A=\phi$, and $f$ is Discrete Harmonic on $V\setminus A$ ? Note that, for a general graph, Discrete Harmonic Function is defined to be satisfying the following:  *
+**Problem 3**: *Let $G=(V,E)$ be a finite connected undirected graph. Given $\phi:A \to \mathbb{R}$, can we find a unique function $f:V \to \mathbb{R}$, such that $f|\_A=\phi$, and $f$ is Discrete Harmonic on $V\setminus A$ ? Note that, for a general graph, Discrete Harmonic Function is defined to be satisfying the following:*
 
 $$f(x)=\dfrac{1}{d(x)} \sum\_{y \sim x} f(y) $$
 *where $d(x)$ denotes the number of neighbors of $x$, and $\sim$ relation denotes tthe relation of being a neighbor.*
@@ -108,7 +108,8 @@ This shows that $f$ is *Discrete Harmonic* on $V\setminus A$, and thus is a solu
 
 Finally we have to prove that $f$ defined as above is  the unique solution to the problem. To this end, let $g(x)$ be any other solution to this problem. Define $$M_k = g(X\_{\min(T,k)})$$.
 
-**Claim** : *$M\_k$ is a martingale for any starting point $x$ *.
+**Claim** : *$M\_k$ is a martingale for any starting point $x$*.
+
 **Prove** : Integrability follows trivially. Thus it is enough to show that almost surely
 $$\mathbb{E}\_x[M\_{k+1}| \mathbf{F}\_k]=M\_k $$
 
@@ -122,7 +123,7 @@ $$
 & \mathbb{E}\_x[g(X\_{k+1})| \mathbf{F}\_k]=\mathbb{E}\_x[g(X\_{k+1})| X\_k]=\dfrac{1}{d(X\_k)}\sum\_{v \sim X\_k} g(v) \qquad, \qquad T > k \\\\\\
 \end{cases} \\\\\\
 &= \begin{cases}
-& f(X_T) \qquad , \qquad T \geq k \\\\\\
+& f(X_T) \qquad , \qquad T \leq k \\\\\\
 & f(X_k) \qquad , \qquad T > k \\\\\\
 \end{cases}\\\\\\
 &= M_k \\\\\\
@@ -148,7 +149,7 @@ $$\mathbb{E}\_x[\phi(X\_T)]=g(x)$$
 
 which, by definition of $f$, gives that $f(x)=g(x)$. 
 
-This ends our proof. $\qquad \qquad \blacksquare$
+This ends our proof. $\qquad \qquad \qquad \qquad \blacksquare$
 
 I thought of compiling this two results since I found this treatment, although famous, to be possessing a certain Cantor-esque panache to it. I hope I have conveyed the idea lucidly enough. The post would be incomplete without a HT to [Dr.Rajat Subhra Hazra](https://en.wikipedia.org/wiki/Rajat_Subhra_Hazra) for introducing to us this beautiful interplay between analysis and probability .
 
