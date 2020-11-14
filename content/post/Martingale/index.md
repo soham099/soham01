@@ -68,7 +68,7 @@ In fact, the **Problem 2** is widely popular because this is simply the Discrete
 
 A pertinent and famous question involving Harmonic Functions is the **Dirichlet Problem**, which, given a function $\phi$ and a closed convex set $D$ , aims to find $f$, such that $f$ is harmonic on the interior of $D$ and $f|\_{\partial D}=\phi$.  This problem arises from physics, mainly from Thermodynamics and heat equations. Again, this is essentially a problem of analytic flavour, and one can think that any solution might involve muddling through the quagmire of PDEs, but mathematician Itô provided a solution involvinng *Brownian Motion*. Of course, this solution is not at all elementary, but - keeping in sync with the flavour of this post - if we investigate the *Discrete Dirichlet's Problem*, we get a nice elegant solution using Martingales . 
 
-**Problem 3**: *Let $G=(V,E)$ be a finite connected nddirected graph. Given $\phi:A \to \mathbb{R}$ and a set $V\superseteq A$, can we find a unique function $f:V \to \mathbb{R}$, such that $f|\_A=\phi$, and $f$ is Discrete Harmonic on $V\setminus A$ ? Note that, for a general graph, Discrete Harmonic Function is defined to be satisfying the following:  *
+**Problem 3**: *Let $G=(V,E)$ be a finite connected undirected graph. Given $\phi:A \to \mathbb{R}$, can we find a unique function $f:V \to \mathbb{R}$, such that $f|\_A=\phi$, and $f$ is Discrete Harmonic on $V\setminus A$ ? Note that, for a general graph, Discrete Harmonic Function is defined to be satisfying the following:  *
 
 $$f(x)=\dfrac{1}{d(x)} \sum\_{y \sim x} f(y) $$
 *where $d(x)$ denotes the number of neighbors of $x$, and $\sim$ relation denotes tthe relation of being a neighbor.*
@@ -79,7 +79,7 @@ $$ P(x,y)=\dfrac{1}{d(x)}\mathbb{I}(y \sim x)$$
 
 Let $(X_n)\_{n \geq 1}$ denote the Simple Random Walk on $V$ with transition probabilities given by $P$. Let $\mathbf{F}\_k$ be defined as in **Problem 2**.  Let $T=\min (n \geq0 : X\_n \in A)$ . 
 
-Note that $$\{T=k \}=\{X_1 \notin A, \cdots, X\_{k-1} \notin A, X_k \in A \} \in \mathbf{F}_k$$, hence $T$ is a stopping time. Further, the graph $G$ being connected and finite, the simple symmetric random walk $(X_n)\_{n \geq 1}$ is **positively recurrent and irreducible**. Hence, $T<\infty$ with probability $1$ .
+Note that $$\\{T=k \\}=\\{X_1 \notin A, \cdots, X\_{k-1} \notin A, X_k \in A \\} \in \mathbf{F}_k$$, hence $T$ is a stopping time. Further, the graph $G$ being connected and finite, the simple symmetric random walk $(X_n)\_{n \geq 1}$ is **positively recurrent and irreducible**. Hence, $T<\infty$ with probability $1$ .
 
 Now, following Itô's suggestions (or by divine innterventions), we claim that our solution is 
 $$f(x)=\mathbb{E}\_x[ \phi(X\_T)] $$ where $\mathbb{E}\_x$ implies expectation with respect to the random walk starting at $x$.
@@ -88,31 +88,35 @@ Lets check if our claim is indeed true.
 
 * Let $x \in A$ . Then $T=0$, as the random walk is inside $A$ at the starting point itself. So $X_T=X_0=x$. Hence,
 
-$$f(x)=\mathbb{E}\_x [\phi(X\_T)]= \mathbb{E}\_x [phi(x)] = \phi(x) $$
+$$f(x)=\mathbb{E}\_x [\phi(X\_T)]= \mathbb{E}\_x [\phi(x)] = \phi(x) $$
 which shows that $f$ satisfies the first condition. Let's look at the condition of $f$ being harmonic on $V\setminus A$.
 
 * Let $x \notin A$. So with probability $1$, $T \geq 1$ (i.e $X_n$ has to take at least one step almost surely before it can hit $A$). Thus we can condition by the first step that the RW takes, i.e conditioning by $X_1$ or $\mathbf{F}_1$ is valid from Measure-Theoretic perspective.
 
 Thus, 
 
-$$ \mathbb{E}_x[\phi(X\_T)] &= \sum\_{y: y\sim x} P\_x(X\_1=y) \mathbb{E}_x[\phi(X\_T)|X\_1=y] \\\\\\
+$$\begin{align} 
+\mathbb{E}_x[\phi(X\_T)] &= \sum\_{y: y\sim x} P\_x(X\_1=y) \mathbb{E}_x[\phi(X\_T)|X\_1=y] \\\\\\
 &= \sum\_{y: y\sim x} \dfrac{1}{d(x)} \mathbb{E}_x[\phi(X\_T)|X\_1=y] \\\\\\
 &= \dfrac{1}{d(x)} \sum\_{y: y\sim x} f(y) \\\\\\
+\end{align}
 $$
 
-where the last equality follows because as $T \geq 1$ a.s, by the Markov Property , $\mathbb{E}_x[\phi(X\_T)|X\_1=y]=\mathbb{E}_y[\phi(X\_T)]=f(y)$ .
+where the last equality follows because as $T \geq 1$ a.s. , by the Markov Property , $\mathbb{E}\_x[\phi(X\_T)|X\_1=y]=\mathbb{E}\_y[\phi(X\_T)]=f(y)$ .
 
 This shows that $f$ is *Discrete Harmonic* on $V\setminus A$, and thus is a solution to the Discrete Dirichlet's Problem.
 
 Finally we have to prove that $f$ defined as above is  the unique solution to the problem. To this end, let $g(x)$ be any other solution to this problem. Define $$M_k = g(X\_{\min(T,k)})$$.
 
-**Claim** : $M_k$ is a martingale for any starting point $x$ .
+**Claim** : *$M\_k$ is a martingale for any starting point $x$ *.
 **Prove** : Integrability follows trivially. Thus it is enough to show that almost surely
 $$\mathbb{E}\_x[M\_{k+1}| \mathbf{F}\_k]=M\_k $$
 
 This is immediate, since, almost surely
 
-$$\mathbb{E}\_x[M\_{k+1}| \mathbf{F}\_k] &= \mathbb{E}\_x[g(X\_{\min(T,k+1)})| \mathbf{F}\_k]\\\\\\
+$$
+\begin{align}
+\mathbb{E}\_x[M\_{k+1}| \mathbf{F}\_k] &= \mathbb{E}\_x[g(X\_{\min(T,k+1)})| \mathbf{F}\_k]\\\\\\
 &= \begin{cases}
 & g(X\_T) \qquad , \qquad T\leq k \\\\\\
 & \mathbb{E}\_x[g(X\_{k+1})| \mathbf{F}\_k]=\mathbb{E}\_x[g(X\_{k+1})| X\_k]=\dfrac{1}{d(X\_k)}\sum\_{v \sim X\_k} g(v) \qquad, \qquad T > k \\\\\\
@@ -121,7 +125,8 @@ $$\mathbb{E}\_x[M\_{k+1}| \mathbf{F}\_k] &= \mathbb{E}\_x[g(X\_{\min(T,k+1)})| \
 & f(X_T) \qquad , \qquad T \geq k \\\\\\
 & f(X_k) \qquad , \qquad T > k \\\\\\
 \end{cases}\\\\\\
-&= M_k
+&= M_k \\\\\\
+\end{align}
 $$
 
 where the second case of the second equality follows from Markov Property and consequential one-line probability calculation pertaining to expected next step given previous step,  and that of the third equality follows from $g$ being harmonic.
